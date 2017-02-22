@@ -1,0 +1,65 @@
+body {
+  background: var(--background-color);
+}
+p {
+	font-size: 18px !important;
+}
+.btn {
+	border-radius: 0px;
+	outline: 0 !important;
+	font-weight: bold;
+}
+.btn:focus {
+	outline: 0;
+}
+.btn-default {
+  border-color: var(--source-color);
+}
+.btn-default:focus {
+  background: var(--source-color);
+}
+.btn-primary {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+}
+.btn-primary:focus {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+}
+.color-warning {
+  background: var(--warning-color) !important;
+}
+.color-primary {
+  background: var(--primary-color) !important;
+}
+.title-primary {
+	color: #FFFFFF;
+}
+.modal-title {
+	font-weight: bold;
+}
+.modal-content {
+	border-radius: 0px;
+}
+.dropdown-menu {
+	border-radius: 0px;
+}
+.dropdown-menu li a {
+	font-weight: bold !important;
+}
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  not supported by any browser */
+}
+.dropdown-submenu {
+    position: relative;
+}
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}

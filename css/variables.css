@@ -1,0 +1,30 @@
+:root {
+    --primary-color: #337AB7;
+    --secondary-color: lightblue;
+
+    --normal-color: #FFF;
+    --normal-accent-color: #DDD;
+
+    --settings-color: #FFF;
+    --settings-accent-color: #DDD;
+
+    --source-color: #DDD;
+    --source-accent-color: #B0B0B0;
+
+    --text-color: #7AA3FF;
+    --text-active-color: #6D92E5;
+
+    --scheme-color: lightgreen;
+    --scheme-active-color: #81D681;
+
+    --active-color: orange;
+
+    --highlight-color: yellow;
+
+    --success-color: #449D44;
+    --warning-color: #F0AD4E;
+    --danger-color: #D9534F;
+    --background-color: #DDD;
+    --navbar-hover-color: #3D6F9B;
+    --navbar-active-color: #286090;
+}

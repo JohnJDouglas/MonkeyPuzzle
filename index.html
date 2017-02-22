@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>MonkeyPuzzle</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/ico" href="res/favicon.ico">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+		<script src="https://d3js.org/d3.v4.js"></script>
+		<script src="js/index.js"></script>
+		<script src="js/modelling.js"></script>
+		<script src="js/modal.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/index.css">
+		<link rel="stylesheet" href="css/theme.css">
+		<link rel="stylesheet" href="css/modelling.css">
+		<link rel="stylesheet" href="css/buttons.css">
+		<link rel="stylesheet" href="css/variables.css">
+		<script src="js/saveSvgAsPng.js"></script>
+		<script type="text/javascript" src="js/jquery-resizable.js"></script>
+		<script type="text/javascript" src="js/jquery.highlight-within-textarea.js"></script>
+		<link rel="stylesheet" href="css/jquery.highlight-within-textarea.css">
+	</head>
+	<body>
+		<!--container-fluid-->
+		<div class="container-fluid">
+			<div id="row-1" class="row">
+				<div class="panel-container">
+					<!--col-left-->
+					<div id="col-left" class="panel-left">
+						<div class="row">
+							<div class="col-md-4 no-padding-lr">
+								<button class="btn btn-source btn-block" onclick="showModal(6)"><i class="fa fa-trash"></i> Clear Source</button>
+							</div>
+							<div class="col-md-4 no-padding-lr">
+								<form style="display:inline;">
+									<span class="btn btn-source btn-file btn-block"><i class="fa fa-upload"></i> Upload .txt<input id="fileInput" class="fileInput" type="file" accept=".txt"></span>
+								</form>
+							</div>
+							<div class="col-md-4 no-padding-lr">
+								<button class="btn btn-source btn-block" onclick="saveTextAsFile(1)"><i class="fa fa-save"></i> Save .txt</button>
+							</div>
+						</div>
+						<div class="row">
+							<div id="div-add-tab" class="no-padding-lr col-md-2">
+								<button class="btn btn-source btn-block" onclick="addTab()"><i class="fa fa-plus"></i></button>
+							</div>
+							<div id="div-source-tab-1" class="source-tab no-padding-lr col-md-1">
+								<button class="btn btn-source btn-block" onclick="showTab(1)"></span>1</button>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 no-padding-lr">
+								<textarea id="txta-tab-1" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 1</textarea>
+								<textarea id="txta-tab-2" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 2</textarea>
+								<textarea id="txta-tab-3" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 3</textarea>
+								<textarea id="txta-tab-4" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 4</textarea>
+								<textarea id="txta-tab-5" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 5</textarea>
+								<textarea id="txta-tab-6" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 6</textarea>
+								<textarea id="txta-tab-7" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 7</textarea>
+								<textarea id="txta-tab-8" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 8</textarea>
+								<textarea id="txta-tab-9" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 9</textarea>
+								<textarea id="txta-tab-10" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 10</textarea>
+							</div>
+						</div>
+						<div class="div-col-left-source">
+							<div class="row height-100-percent">
+								<div class="col-md-12 no-padding-lr height-100-percent">
+									<textarea id="txta-source-1" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									<textarea id="txta-source-2" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									<textarea id="txta-source-3" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									<textarea id="txta-source-4" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									<textarea id="txta-source-5" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									<textarea id="txta-source-6" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									<textarea id="txta-source-7" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									<textarea id="txta-source-8" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									<textarea id="txta-source-9" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									<textarea id="txta-source-10" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 no-padding-lr">
+								<div class="col-md-6 no-padding-lr">
+									<button id="btn-lock-tab" class="btn btn-primary btn-block" onclick="lockTab()"><i id="i-lock-tab" class="fa fa-lock"></i></span><span id="span-lock"> Unlock Tab</span></button>
+								</div>
+								<div class="col-md-6 no-padding-lr">
+									<button id="btn-remove-tab" class="btn btn-delete btn-block" onclick="showModal(7)"><i class="fa fa-trash"></i></span> Delete Tab</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--end-col-left-->
+					<div class="splitter">
+					</div>
+					<!--col-right-->
+					<div id="col-right" class="panel-right">
+						<div id="div-col-right-buttons">
+							<div class="row">
+								<div class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
+									<button class="btn btn-normal btn-block" onclick="toggleSource()"><i id="i-source" class="fa fa-chevron-left"></i></button>
+								</div>
+								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
+									<button class="btn btn-text-node btn-block" onclick="addNode(1)"><i class="fa fa-plus"></i> Text</button>
+								</div>
+								<div class="col-xs-2 col-md-2 col-lg-2 dropdown no-padding-lr">
+									<button class="btn btn-scheme-node dropdown-toggle btn-block" type="button" data-toggle="dropdown"><i class="fa fa-plus"></i> Scheme <span class="caret"></span></button>
+									<ul id="ul-scheme" class="dropdown-menu">
+									</ul>
+								</div>
+								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
+									<button class="btn btn-normal btn-block" onclick="showAllTextOverlay()"><i class="fa fa-eye"></i> Content</button>
+								</div>
+								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
+									<button id="btn-mouse-overlay" class="btn btn-normal btn-block" onclick=""><i class="fa fa-mouse-pointer"></i> Info</button>
+								</div>
+								<div class="col-xs-3 col-md-3 col-lg-3 no-padding-lr">
+									<button class="btn btn-primary btn-block" onclick="showModal(9)">MONKEYPUZZLE</button>
+								</div>
+							</div>
+						</div>
+						<div id="div-vis">
+						</div>
+					</div>
+					<!--end-col-right-->
+				</div>
+			</div>
+			<!--col-bottom-->
+			<div id="row-2" class="row">
+				<div id="col-bottom" class="col-md-12 col-lg-12 col-text-display no-padding-lr">
+					<div class="col-md-10 col-lg-10 no-padding-lr">
+						<textarea id="txta-node-text" readonly></textarea>
+					</div>
+					<div class="col-md-1 col-lg-1 no-padding-lr">
+						<button id="btn-edit-text" class="btn btn-normal btn-block" onclick="editNodeText()"><i id="i-edit" class="fa fa-edit"></i> Text</button>
+					</div>
+					<div class="col-md-1 col-lg-1 no-padding-lr">
+						<button id="btn-copy-text" class="btn btn-normal btn-block" onclick="copyNodeText()"><i class="fa fa-copy"></i> Text</button>
+					</div>
+				</div>
+			</div>
+			<!--end-col-bottom-->	
+			</div>		
+		</div>
+		<!--end-container-fluid-->
+		<!--modals-->
+		<div id="div-modals">
+			<!--Modal-->
+			<div id="modal-no-selection" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">No selection</h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-9 col-lg-9 no-padding-lr">
+									<p class="modal-text p-modal">There is no text selected, add custom text node?</p>
+								</div>
+								<div class="col-md-3 col-lg-3 no-padding-lr">
+									<button id="btn-no-selection" class="btn btn-default" onclick="showMissingTextOption()">Yes</button>
+								</div>
+							</div>
+							<div class="row">
+								<div id="div-add-missing-text">
+									<div class="col-md-12 col-lg-12 no-padding-lr">
+										<p class="modal-text">Enter the text you wish to add here</p>
+										<textarea id="txta-missing"></textarea>
+										<button id="btn-missing" type="button" class="btn btn-default btn-block" data-dismiss="modal" onclick="addNode(3)"><i class="fa fa-plus"></i> Add Text</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-already-source" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">Node already source</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">Nodes can only be the source of <b>one</b> link</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-existing-link" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">Link between nodes already exists</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">There is already a link between these nodes (links can only be <b>one</b> way)</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-controls" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-primary">
+							<h4 class="modal-title title-primary">Controls</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">
+								<table>
+									<tr>
+										<th class="contol-table-padding">Control</th>
+										<th class="contol-table-padding">Action</th>										
+									</tr>
+									<tr>
+										<td class="contol-table-padding"><i class="fa fa-mouse-pointer"></i></td>
+										<td class="contol-table-padding">Select a node or link</td>
+									</tr>
+									<tr>
+										<td class="contol-table-padding"><i class="fa fa-keyboard-o"></i> Control </td>
+										<td class="contol-table-padding">Show the text overlay for the currently selected node</td>
+									</tr>
+									<tr>
+										<td class="contol-table-padding"><i class="fa fa-keyboard-o"></i> Shift </td>
+										<td class="contol-table-padding">Create a link from the currently selected node</td>
+									</tr>
+									<tr>
+										<td class="contol-table-padding"><i class="fa fa-keyboard-o"></i> Delete / Backspace </td>
+										<td class="contol-table-padding">Remove the selected node or link</td>
+									</tr>
+								</table>
+							</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-link-text" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">Text node link</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">You can not link two text nodes</p>
+								<div class="row">
+								<div class="col-md-9 col-lg-9 no-padding-lr">
+									<p class="modal-text p-modal">Add a scheme node between these text nodes?</p>
+								</div>
+								<div class="col-md-3 col-lg-3 no-padding-lr">
+									<button id="btn-add-scheme-between-text" class="btn btn-default" data-dismiss="modal" onclick="">Yes</button>
+								</div>
+							</div>
+							<div class="row">
+								<div id="div-add-missing-text">
+									<div class="col-md-12 col-lg-12 no-padding-lr">
+										<p class="modal-text">Enter the text you wish to add here</p>
+										<textarea id="txta-missing"></textarea>
+										<button id="btn-missing" type="button" class="btn btn-default btn-block" data-dismiss="modal" onclick="addNode(3)"><i class="fa fa-plus"></i> Add Text</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-clear-source" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">Clear source</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">Are you sure you want to clear source?</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearSource()">Yes</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-remove-tab" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">Remove tab</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">Are you sure you want to remove this tab?</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="removeTab()">Yes</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-last-tab" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">Last tab</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">You can not remove this tab as it is the last one</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-settings" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-primary">
+							<h4 class="modal-title title-primary">Settings</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text p-settings">Controls:</p>
+							<button class="btn btn-settings btn-block btn-settings-margin" data-dismiss="modal" onclick="showModal(4)"><i class="fa fa-keyboard-o"></i> Controls</button>
+							<p class="modal-text p-settings">Save Visualisation As:</p>
+							<input id="input-file-name" type="text" class="form-control input-settings" placeholder="model">
+							<button id="btn-save-svg" class="btn btn-settings btn-block btn-settings-margin" onclick="saveSVG()"><i class="fa fa-save"></i> Visualisation</button>
+							<p class="modal-text p-settings">Upload JSON:</p>
+							<input id="input-upload-JSON" type="text" class="form-control input-settings" placeholder="JSON">
+							<button id="btn-upload-JSON" class="btn btn-settings btn-block btn-settings-margin" onclick="uploadJSON()"><i class="fa fa-upload"></i> JSON</button>
+							<p class="modal-text p-settings">Download JSON:</p>
+							<input id="input-download-JSON" type="text" class="form-control input-settings" placeholder="data">
+							<button id="btn-download-JSON" class="btn btn-settings btn-block btn-settings-margin" onclick="downloadJSON()"><i class="fa fa-download"></i> JSON</button>
+							<div class="row">
+								<p class="modal-text p-settings">Source Panel Maximum Width (min is 20% - max is 50%):</p>
+								<div class="col-md-4 col-lg-4 no-padding-l">
+									<button id="btn-decrease-source" class="btn btn-settings btn-block" onclick="sourceChange('0')"><i class="fa fa-minus"></i></button>
+								</div>
+								<div class="col-md-4 col-lg-4 no-padding-lr">
+									<button id="btn-increase-source" class="btn btn-settings btn-block" onclick="sourceChange('1')"><i class="fa fa-plus"></i></button>
+								</div>
+								<div class="col-md-4 col-lg-4 no-padding-r">
+									<input id="input-source-display" type="text" class="form-control btn-block btn-settings-margin" placeholder="30%" readonly>
+								</div>
+							</div>
+							<div class="row">
+								<button id="btn-testing" class="btn btn-normal dropdown-toggle btn-settings btn-block" type="button" data-toggle="dropdown">Testing <span class="caret"></span></button>
+									<ul class="dropdown-menu">
+										<li><a href="javascript:logDataToConsole('d')">Data</a></li>
+										<li><a href="javascript:logDataToConsole('n')">Data.nodes</a></li>
+										<li><a href="javascript:logDataToConsole('l')">Data.links</a></li>
+										<li><a href="javascript:logDataToConsole('t')">Data.tabs</a></li>
+										<li><a href="javascript:logDataToConsole('id')">Data.currentNodeID</a></li>
+										<li><a href="javascript:showAllTextOverlay()">showAllTextOverlay</a></li>
+										<li><a href="javascript:removeHighlight()">remHightlight</a></li>
+										<li><a href="javascript:logCount()">logCount</a></li>
+									</ul>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-maximum-tabs" class="modal fade" role="dialog" data-backdrop="static">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">Maximum tabs</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">You already have the maximum number of tabs</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-edit-node-text" class="modal fade" role="dialog" data-backdrop="static">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">Edit text node</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">You already have the maximum number of tabs</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--end-of-modals-->
+		<script>
+			$(".panel-left").resizable({
+				handleSelector: ".splitter",
+				resizeHeight: false,
+				onDragStart: function(e, $el, opt) {
+					panelResize('0');
+				},
+				onDragEnd: function(e, $el, opt) {
+					panelResize('1');
+				}
+				//onDrag: null
+			});
+		</script>
+	</body>
+</html>

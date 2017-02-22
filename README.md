@@ -1,2 +1,2 @@
 # MonkeyPuzzle
-Napier Honours Project
+Napier Honours Project - John Douglas

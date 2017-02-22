@@ -1,0 +1,292 @@
+/* Source button */
+.btn-source { 
+  color: #000000; 
+  background-color: var(--source-color); 
+  border-color: var(--source-color);
+}
+
+.btn-source:hover,
+.btn-source.active,
+.open .dropdown-toggle.btn-source { 
+  color: #000000; 
+  background-color: var(--source-accent-color); 
+  border-color: var(--source-accent-color); 
+}
+
+.btn-source.focus {
+  background-color: var(--source-color); 
+  border-color: var(--source-color); 
+}
+
+.btn-source.active, 
+.open .dropdown-toggle.btn-source { 
+  background-image: none; 
+}
+
+.btn-source.disabled, 
+.btn-source[disabled], 
+fieldset[disabled] .btn-source, 
+.btn-source.disabled:hover, 
+.btn-source[disabled]:hover, 
+fieldset[disabled] .btn-source:hover, 
+.btn-source.disabled:focus, 
+.btn-source[disabled]:focus, 
+fieldset[disabled] .btn-source:focus, 
+.btn-source.disabled:active, 
+.btn-source[disabled]:active, 
+fieldset[disabled] .btn-source:active, 
+.btn-source.disabled.active, 
+.btn-source[disabled].active, 
+fieldset[disabled] .btn-source.active { 
+  background-color: var(--source-color); 
+  border-color: var(--source-color); 
+}
+
+.btn-source .badge { 
+  color: var(--source-color); 
+  background-color: #000000; 
+}
+
+.btn-source.active-tab {
+  background-color: var(--source-accent-color); 
+  border-color: var(--source-accent-color);
+}
+
+/* Normal button */
+.btn-normal { 
+  color: #000000; 
+  background-color: var(--normal-color); 
+  border-color: var(--normal-color); 
+}
+
+.btn-normal:hover,
+.btn-normal.active, 
+.open .dropdown-toggle.btn-normal { 
+  color: #000000; 
+  background-color: var(--normal-accent-color); 
+  border-color: var(--normal-accent-color);
+}
+
+.btn-normal:focus {
+  background-color: var(--normal-accent-color);
+  border-color: var(--normal-accent-color);
+}
+
+.btn-normal.active, 
+.open .dropdown-toggle.btn-normal { 
+  background-image: none; 
+}
+
+.btn-normal.disabled, 
+.btn-normal[disabled], 
+fieldset[disabled] .btn-normal, 
+.btn-normal.disabled:hover, 
+.btn-normal[disabled]:hover, 
+fieldset[disabled] .btn-normal:hover, 
+.btn-normal.disabled:focus, 
+.btn-normal[disabled]:focus, 
+fieldset[disabled] .btn-normal:focus, 
+.btn-normal.disabled:active, 
+.btn-normal[disabled]:active, 
+fieldset[disabled] .btn-normal:active, 
+.btn-normal.disabled.active, 
+.btn-normal[disabled].active, 
+fieldset[disabled] .btn-normal.active { 
+  background-color: var(--normal-color); 
+  border-color: var(--normal-color); 
+}
+
+.btn-normal .badge { 
+  color: var(--normal-color); 
+  background-color: #000000; 
+}
+
+/* Settings button */
+.btn-settings { 
+  color: #000000; 
+  background-color: var(--settings-color); 
+  border-color: var(--settings-accent-color);
+}
+
+.btn-settings:hover,
+.btn-settings.active, 
+.open .dropdown-toggle.btn-settings { 
+  color: #000000; 
+  background-color: var(--settings-accent-color); 
+  border-color: var(--settings-accent-color);
+}
+
+.btn-settings:focus {
+  background-color: var(--settings-accent-color);
+  border-color: var(--settings-accent-color);
+}
+
+.btn-settings.active, 
+.open .dropdown-toggle.btn-settings { 
+  background-image: none; 
+}
+
+.btn-settings.disabled, 
+.btn-settings[disabled], 
+fieldset[disabled] .btn-settings, 
+.btn-settings.disabled:hover, 
+.btn-settings[disabled]:hover, 
+fieldset[disabled] .btn-settings:hover, 
+.btn-settings.disabled:focus, 
+.btn-settings[disabled]:focus, 
+fieldset[disabled] .btn-settings:focus, 
+.btn-settings.disabled:active, 
+.btn-settings[disabled]:active, 
+fieldset[disabled] .btn-settings:active, 
+.btn-settings.disabled.active, 
+.btn-settings[disabled].active, 
+fieldset[disabled] .btn-settings.active { 
+  background-color: var(--settings-color); 
+  border-color: var(--settings-color); 
+}
+
+.btn-settings .badge { 
+  color: var(--settings-color); 
+  background-color: #000000; 
+}
+
+/* Text node button */
+.btn-text-node { 
+  color: #000000; 
+  background-color: #ADD8E6; 
+  border-color: #ADD8E6; 
+} 
+
+.btn-text-node:hover, 
+.btn-text-node:focus, 
+.btn-text-node:active, 
+.btn-text-node.active, 
+.open .dropdown-toggle.btn-text-node { 
+  color: #000000; 
+  background-color: #9BC2CF; 
+  border-color: #9BC2CF;
+} 
+ 
+.btn-text-node:active, 
+.btn-text-node.active, 
+.open .dropdown-toggle.btn-text-node { 
+  background-image: none; 
+} 
+ 
+.btn-text-node.disabled, 
+.btn-text-node[disabled], 
+fieldset[disabled] .btn-text-node, 
+.btn-text-node.disabled:hover, 
+.btn-text-node[disabled]:hover, 
+fieldset[disabled] .btn-text-node:hover, 
+.btn-text-node.disabled:focus, 
+.btn-text-node[disabled]:focus, 
+fieldset[disabled] .btn-text-node:focus, 
+.btn-text-node.disabled:active, 
+.btn-text-node[disabled]:active, 
+fieldset[disabled] .btn-text-node:active, 
+.btn-text-node.disabled.active, 
+.btn-text-node[disabled].active, 
+fieldset[disabled] .btn-text-node.active { 
+  background-color: #ADD8E6; 
+  border-color: #ADD8E6; 
+} 
+ 
+.btn-text-node .badge { 
+  color: #ADD8E6; 
+  background-color: #000000; 
+}
+
+/* Scheme node button */
+.btn-scheme-node { 
+  color: #000000; 
+  background-color: #90EE90; 
+  border-color: #90EE90; 
+} 
+ 
+.btn-scheme-node:hover, 
+.btn-scheme-node:focus, 
+.btn-scheme-node:active, 
+.btn-scheme-node.active, 
+.open .dropdown-toggle.btn-scheme-node { 
+  color: #000000; 
+  background-color: #81d681; 
+  border-color: #81d681; 
+} 
+ 
+.btn-scheme-node:active, 
+.btn-scheme-node.active, 
+.open .dropdown-toggle.btn-scheme-node { 
+  background-image: none; 
+} 
+ 
+.btn-scheme-node.disabled, 
+.btn-scheme-node[disabled], 
+fieldset[disabled] .btn-scheme-node, 
+.btn-scheme-node.disabled:hover, 
+.btn-scheme-node[disabled]:hover, 
+fieldset[disabled] .btn-scheme-node:hover, 
+.btn-scheme-node.disabled:focus, 
+.btn-scheme-node[disabled]:focus, 
+fieldset[disabled] .btn-scheme-node:focus, 
+.btn-scheme-node.disabled:active, 
+.btn-scheme-node[disabled]:active, 
+fieldset[disabled] .btn-scheme-node:active, 
+.btn-scheme-node.disabled.active, 
+.btn-scheme-node[disabled].active, 
+fieldset[disabled] .btn-scheme-node.active { 
+  background-color: #90EE90; 
+  border-color: #90EE90; 
+} 
+ 
+.btn-scheme-node .badge { 
+  color: #90EE90; 
+  background-color: #000000; 
+}
+
+/* Delete button */
+.btn-delete { 
+  color: #FFFFFF; 
+  background-color: #D9534F; 
+  border-color: #D9534F; 
+} 
+ 
+.btn-delete:hover, 
+.btn-delete:focus, 
+.btn-delete:active, 
+.btn-delete.active, 
+.open .dropdown-toggle.btn-delete { 
+  color: #FFFFFF; 
+  background-color: #C34A47; 
+  border-color: #C34A47; 
+} 
+ 
+.btn-delete:active, 
+.btn-delete.active, 
+.open .dropdown-toggle.btn-delete { 
+  background-image: none; 
+} 
+ 
+.btn-delete.disabled, 
+.btn-delete[disabled], 
+fieldset[disabled] .btn-delete, 
+.btn-delete.disabled:hover, 
+.btn-delete[disabled]:hover, 
+fieldset[disabled] .btn-delete:hover, 
+.btn-delete.disabled:focus, 
+.btn-delete[disabled]:focus, 
+fieldset[disabled] .btn-delete:focus, 
+.btn-delete.disabled:active, 
+.btn-delete[disabled]:active, 
+fieldset[disabled] .btn-delete:active, 
+.btn-delete.disabled.active, 
+.btn-delete[disabled].active, 
+fieldset[disabled] .btn-delete.active { 
+  background-color: #D9534F; 
+  border-color: #D9534F; 
+} 
+ 
+.btn-delete .badge { 
+  color: #D9534F; 
+  background-color: #FFFFFF; 
+}

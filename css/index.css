@@ -1,0 +1,228 @@
+html,body {
+	height: 100%;
+}
+::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+::-webkit-scrollbar-thumb
+{
+	background-color: #909090;
+}
+.hwt-container {
+	height: 100%;
+	width: 100%;
+}
+.hwt-content {
+	border: none !important;
+}
+.row {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+.panel-container {
+	display: flex;
+	flex-direction: row;
+	border: 0px;
+	overflow: hidden;
+	height: 100%;
+
+	/* avoid browser level touch actions */
+	xtouch-action: none;
+}
+.panel-left {
+	background: var(--source-color);
+	flex: 0 0 auto;
+	/* only manually resize */
+	height: 100%;
+	width: 30%;
+	min-width: 20%;
+	max-width: 40%;
+	padding-left: 0px;
+	padding-right: 0px;
+	white-space: nowrap;
+}
+.splitter {
+	flex: 0 0 auto;
+	width: 18px;
+	/* The background color of the splitter is set without variable for compatibility */
+    background: #757575 url(../res/vsizegrip.png) center center no-repeat;
+	min-height: 200px;
+	cursor: col-resize;  
+}
+.panel-right {
+	flex: 1 1 auto;
+	/* resizable */
+	height: 100%;
+	width: 100%;
+	padding-left: 0px;
+	padding-right: 0px;
+	background: #eee;
+}
+.btn-file {
+    position: relative;
+    overflow: hidden;
+	height: 34px;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;	
+}
+.container-fluid { 
+	height: 100%;
+	padding: 0px;
+}
+.col-text-display {
+	height: 34px;
+    background: var(--secondary-color);
+}
+#div-col-left-tabs-name {
+	width: 100%;
+	height: 34px;
+}
+.div-col-left-source {
+	width: 100%;
+	height: calc(100% - 136px);
+}
+.height-100-percent {
+	height: 100%;
+}
+#row-1 {
+	height: calc(100% - 34px);
+}
+.no-padding-lr {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+.no-padding-l {
+	padding-left: 0px;
+}
+.no-padding-r {
+	padding-right: 0px;
+}
+.txta-source {
+	width: 100%;
+	height: 100%;
+    background: var(--source-color);
+	vertical-align: top;
+	border: none;
+	outline: none;
+	resize: none;
+}
+.txta-tab {
+	width: 100%;
+	height: 34px;
+	font-size: 20px;
+	color: #000;
+	font-weight: bold;
+    background: var(--source-color);
+	padding-top: 3px;
+	vertical-align: top;
+	border: none;
+	outline: none;
+	resize: none;
+}
+#txta-node-text {
+	height: 34px;
+	width: 100%;
+    background: var(--secondary-color);
+	vertical-align: top;
+	border: none;
+	outline: none;
+	resize: none;
+	padding-top: 6px;
+}
+#txta-missing {
+	width: 100%;
+	height: 100px;
+	border: 1px solid;
+    border-color: var(--source-color);
+	vertical-align: top;
+	outline: none;
+	resize: none;
+}
+#div-vis {
+	width: 100%;
+	height: calc(100% - 34px);
+	background: yellow;
+}
+.contol-table-padding {
+	padding-right: 5px;
+}
+#btn-copy-text {
+	display: inline-block;
+}
+#btn-no-selection {
+	float: right;
+	margin-right: 0px;
+}
+#btn-add-scheme-between-text {
+	float: right;
+	margin-right: 0px;
+}
+.modal-text {
+	margin-bottom: 0px;
+}
+#btn-missing {
+	margin-top: 15px;
+}
+.p-modal {
+	padding-top: 4px;
+}
+#div-add-missing-text {
+	margin-top: 15px;
+	display: none;
+}
+.p-settings {
+	margin-bottom: 0px !important;
+}
+.btn-settings-margin {
+	margin-bottom: 15px;
+}
+.form-control {
+	border-radius:0px;
+}
+#input-source-display {
+	vertical-align: top;
+	display: inline-block;
+}
+.input-settings {
+	margin-bottom: 15px;
+}
+.highlightTextarea {
+	height: 100% !important;
+}
+mark:nth-child(odd) {
+	/*background: var(--highlight-color);*/
+	background: yellow;
+}
+mark:nth-child(even) {
+	/*background: var(--highlight-color);*/
+	background: lightblue;
+}
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
