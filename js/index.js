@@ -477,7 +477,8 @@ function showMissingTextOption() {
 function uploadJSON() {
 
 }
-//TODO: allow the data object to be downloaded
+
+// Allow the data object to be downloaded
 function downloadJSON() {
 	// Save the data object as a string into a file
 	saveTextAsFile(2);

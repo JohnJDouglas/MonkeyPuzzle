@@ -32,6 +32,7 @@ function showModal(name) {
 			$("#modal-maximum-tabs").modal("show");
 			break;	
 		case 11:
+			$("#txta-edit-text").val("");
 			$("#modal-edit-node-text").modal("show");
 			break;	
 		default:

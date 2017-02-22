@@ -162,6 +162,7 @@ function update() {
 					.attr("height", nodeSchemeSize)
 					.attr("transform", function(d) { return "rotate(45 " + d.x + " " + d.y + ")"; })
 					.on("click", click)
+					.on("dblclick", doubleClick)
 					.call(d3.drag()
 						.on("drag", dragNode)
 						.on("end", dragEnd));
@@ -177,6 +178,7 @@ function update() {
 					.attr("cy", function(d) { return d.y; })
 					.attr("r", nodeRadius)
 					.on("click", click)
+					.on("dblclick", doubleClick)
 					.call(d3.drag()
 						.on("drag", dragNode)
 						.on("end", dragEnd));
@@ -216,6 +218,29 @@ function click(d) {
 	removeTextOverlay();
 	removeActive();
 	addActive(this);
+}
+
+// When double clicking a node - show modal to edit text
+function doubleClick(d) {
+	console.log("doubleClick!");
+	d3.event.stopPropagation();
+
+	var id = selectedElement.attr("id");
+	console.log("id="+id);
+
+	removeTextOverlay();
+	removeActive();
+	
+	// Set the parameter on the onclick button in the modal - the active element is remove to prevent issues such as delete
+	$("#btn-modal-edit-text").attr("onclick","modalEditNodeText("+id+")");
+	showModal(11);
+	// When the modal hide is called - before finishing
+	$("#modal-edit-node-text").on("hide.bs.modal", function(e) {
+		// Reset the parameter on the onclick button in the modal
+		$("#btn-modal-edit-text").attr("onclick","modalEditNodeText()");
+		// Remove this event listener - prevent additional scheme node shorcuts being added
+		$("#modal-edit-node-text").off("hide.bs.modal");
+	});
 }
 
 function dragNode(d) {
@@ -808,14 +833,9 @@ function addLink(idStart,idEnd) {
 
 		// Check both nodes being linked and if they are both text they can not be linked
 		if(id1Type == "text" && id2Type == "text") {
-			// Show modal 5 TODO
+			// Show modal 5
 			showModal(5);
-			count++;
-			console.log("count="+count);
 			$("#modal-link-text").on("hide.bs.modal", function(e) {
-				count2++;
-				console.log("count2="+count2);
-
 				var val = $(document.activeElement).attr("id");
 				console.log(val);
 
@@ -838,7 +858,7 @@ function addLink(idStart,idEnd) {
 					console.log("id2="+id2Filter[0].id);
 					console.log("id New="+data.currentNodeID);
 				}
-				//remove this event listener - prevent additional scheme node shorcuts being added
+				// Remove this event listener - prevent additional scheme node shorcuts being added
 				$("#modal-link-text").off("hide.bs.modal");
 			});
 			// Remove drag line
@@ -1055,7 +1075,10 @@ function editNodeText() {
 	if(selectedElement != null && editText == true) {
 		var id = selectedElement.attr("id");
 
-		data.nodes[id].displayText = $("#txta-node-text").val();
+		// If the new value is not empty - update value
+		if($("#txta-node-text").val() != "") {
+			data.nodes[id].displayText = $("#txta-node-text").val();
+		}
 		console.log("new node["+id+"] displayText="+data.nodes[id].displayText);
 
 		// Update the text row text
@@ -1069,6 +1092,17 @@ function editNodeText() {
 		editText = false;
 		return;
 	}
+}
+
+// Edit text function called when using the "Change Text" button on the double click node modal
+function modalEditNodeText(id) {
+	var val = $("#txta-edit-text").val();
+	console.log("val="+val);
+
+	// If the new value is not empty - update value
+	if($("#txta-edit-text").val() != "") {
+		data.nodes[id].displayText = $("#txta-edit-text").val();
+	}	
 }
 
 // Log the data object to console

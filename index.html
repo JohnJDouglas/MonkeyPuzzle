@@ -169,7 +169,7 @@
 									<div class="col-md-12 col-lg-12 no-padding-lr">
 										<p class="modal-text">Enter the text you wish to add here</p>
 										<textarea id="txta-missing"></textarea>
-										<button id="btn-missing" type="button" class="btn btn-default btn-block" data-dismiss="modal" onclick="addNode(3)"><i class="fa fa-plus"></i> Add Text</button>
+										<button type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal" onclick="addNode(3)"><i class="fa fa-plus"></i> Add Text</button>
 									</div>
 								</div>
 							</div>
@@ -277,7 +277,7 @@
 									<div class="col-md-12 col-lg-12 no-padding-lr">
 										<p class="modal-text">Enter the text you wish to add here</p>
 										<textarea id="txta-missing"></textarea>
-										<button id="btn-missing" type="button" class="btn btn-default btn-block" data-dismiss="modal" onclick="addNode(3)"><i class="fa fa-plus"></i> Add Text</button>
+										<button type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal" onclick="addNode(3)"><i class="fa fa-plus"></i> Add Text</button>
 									</div>
 								</div>
 							</div>
@@ -384,6 +384,7 @@
 										<li><a href="javascript:showAllTextOverlay()">showAllTextOverlay</a></li>
 										<li><a href="javascript:removeHighlight()">remHightlight</a></li>
 										<li><a href="javascript:logCount()">logCount</a></li>
+										<li><a href="javascript:showModal(11)">showModal(11)</a></li>
 									</ul>
 							</div>
 						</div>
@@ -419,7 +420,9 @@
 							<h4 class="modal-title">Edit text node</h4>
 						</div>
 						<div class="modal-body">
-							<p class="modal-text">You already have the maximum number of tabs</p>
+							<p class="modal-text">Enter the text you wish to update the node with</p>
+							<textarea id="txta-edit-text"></textarea>
+							<button id="btn-modal-edit-text" type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal" onclick="modalEditNodeText()"><i class="fa fa-plus"></i> Change Text</button>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
