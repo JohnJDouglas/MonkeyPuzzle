@@ -24,7 +24,7 @@ $(window).load(function() {
 	uploadText();
 	sampleText();
 	createSVG();
-	createSchemeDropdown();
+	//createSchemeDropdown();
 	showTab(1);
 	toggleSource(1);
 	textareaRemoveActive();
