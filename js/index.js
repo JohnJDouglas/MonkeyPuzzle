@@ -199,6 +199,7 @@ function sampleText() {
 }
 
 function textareaRemoveActive() {
+	console.log("textareaRemoveActive()");
 	// When any textarea is clicked, remove the active element from d3.js
 	$(".txta-source").on("focus",function() {
 		removeActive();
@@ -239,7 +240,7 @@ function clearSource() {
 }
 
 function uploadText() {
-	console.log("uploadText!");
+	console.log("uploadText()");
 	// This function allows the upload button to read and upload the text back to back
 	$("#fileInput").on("click", function(e){
     	$(this).prop("value", "");
@@ -459,7 +460,8 @@ function saveSVG() {
 	// Remove active element from the visualisation when saving
 	removeActive();
 
-	/* This can be used to identify what content the serialized svg will have
+	/* 
+	// This can be used to identify what content the serialized svg will have
 	var svg  = document.getElementById('svg-vis');
     var xml  = new XMLSerializer().serializeToString(svg);
 	console.log("xml="+xml);

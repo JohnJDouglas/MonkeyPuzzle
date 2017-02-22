@@ -756,6 +756,10 @@ function addNode(type,schemeName,nodePosition) {
 	// Increment the nodeId value
 	data.currentNodeID = data.currentNodeID+1;
 
+	// Reset textarea selection
+	textaSource.selectionStart = null;
+	textaSource.selectionEnd = null;
+
 	update();
 }
 
