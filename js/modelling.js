@@ -29,8 +29,16 @@ var count = 0,
 count2 = 0;
 
 // The object holding the existing visualisation data
+/*
 var data = {
 	nodes: [{id: 0, x: 200, y: 400, text: "lorem", displayText: "lorem", type:"text"},{id: 1, x: 400, y: 400, text: "ipsum", displayText: "ipsum", type:"scheme"},{id: 2, x: 400, y: 200, text: "dolor", displayText: "dolor", type:"text"},{id: 3, x: 600, y: 400, text: "sit", displayText: "sit", type:"scheme"},{id: 4, x: 400, y: 600, text: "amet", displayText: "amet", type:"text"}],
+	links: [{source:{id: 2, x: 400, y: 200, text: "dolor", type:"text"},target:{id: 3, x: 600, y: 400, text: "sit", type:"scheme"}}],
+	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""},],
+	currentNodeID: 0
+};
+*/
+var data = {
+	nodes: [{id: 0, x: 200, y: 400, text: "lorem", displayText: "lorem", type:"text"},{id: 1, x: 400, y: 400, text: "ipsum", displayText: "ipsum", type:"scheme"},{id: 2, x: 400, y: 200, text: "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", displayText: "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", type:"text"},{id: 3, x: 600, y: 400, text: "sit", displayText: "sit", type:"scheme"},{id: 4, x: 400, y: 600, text: "amet", displayText: "amet", type:"text"}],
 	links: [{source:{id: 2, x: 400, y: 200, text: "dolor", type:"text"},target:{id: 3, x: 600, y: 400, text: "sit", type:"scheme"}}],
 	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""},],
 	currentNodeID: 0
@@ -412,7 +420,7 @@ function removeNodeFromArray() {
 		return (n.id == removeId);
 	});	
 	
-	$.each(removal, function (index, value){
+	$.each(removal, function(index, value){
 		console.log(index + ':' + JSON.stringify(value));
 		data.nodes.splice(data.nodes.indexOf(value), 1);
 	});
@@ -431,7 +439,7 @@ function removeLinksFromNode() {
 	
 	console.log("removal="+JSON.stringify(removal));
 	
-	$.each(removal, function (index, value){
+	$.each(removal, function(index, value){
 		console.log(index + ':' + JSON.stringify(value));
 		data.links.splice(data.links.indexOf(value), 1);
 	});
@@ -455,11 +463,31 @@ function clearTextRow() {
 
 function showNodeTextOverlay(id, showAll) {
 	var svg = d3.select("svg");
+	// Number of characters per line
+	var overlayLengthPerLine = 40;
+	var nodeTextOverLengthPerLine = false;
 
 	// Set the bottom row text display
 	setTextRow(id);
 	
 	if(activeTextOverlay == false) {
+
+		if(data.nodes[id].displayText.length > overlayLengthPerLine) {
+			console.log("node text too long!");
+			var re = new RegExp('.{1,' + overlayLengthPerLine + '}', 'g');
+			var array = data.nodes[id].displayText.match(re);
+			console.log("array="+array);
+
+			// Trim leading whitespace from array
+			$.each(array, function(index, value) {
+				if(array[index].charAt(0) == " ") {
+					// Trim array element
+					array[index] = $.trim(array[index]);
+				}
+			});
+			nodeTextOverLengthPerLine = true;
+		}
+
 		// Text for the overlay
 		nodeTextBox = svg.append("text")
 			.attr("id", "svg-overlay"+id)
@@ -467,19 +495,39 @@ function showNodeTextOverlay(id, showAll) {
 			.classed("svg-overlay-text-text", function(d) { return data.nodes[id].type == "text"; })
 			.classed("svg-overlay-text-scheme", function(d) { return data.nodes[id].type == "scheme"; })
 			.attr("dy","0.35em")
-			//.text(function() { return data.nodes[id].text })
-			.text(function() { return data.nodes[id].displayText })
+			// If the node displayText is over length per line set text to first value of array - else just set text to displayText
+			.text(function() { 
+				if(nodeTextOverLengthPerLine == true) {
+					return array[0];
+				} else {
+					return data.nodes[id].displayText;
+				}
+			})
 			.attr("x", function() { return data.nodes[id].x + nodeTextBoxOffset; })
 			.attr("y", function() { return data.nodes[id].y + nodeTextBoxOffset; });
 
-		console.log("data.nodes[id].x="+data.nodes[id].x);
-		console.log("data.nodes[id].y="+data.nodes[id].y);
+		// If the node displayText will go over one line - append the additional lines
+		if(nodeTextOverLengthPerLine == true) {
+			// Loop through the array and add a line for each element
+			$.each(array, function(index, value) {
+				// Skip the first element - the first element is added above
+				if(index == 0) {
+					return true;
+				}
+				// Append tspans with the subsequent lines
+				nodeTextBox.append("tspan")
+					.classed("svg-overlay", true)
+					.attr("x",0)
+					.attr("dy","0.35em")
+					.attr("x", function() { return data.nodes[id].x + nodeTextBoxOffset; })
+					// Offset the line y attribute for each line
+					.attr("y", function() { return data.nodes[id].y + ((nodeTextBoxOffset * index) + nodeTextBoxOffset); })
+					.text(array[index]);
+			});
+		}
 					
 		var textBox = d3.select("#svg-overlay"+id);
 		var bbox = textBox.node().getBBox();
-
-		console.log("bbox="+bbox.x);
-		console.log("bbox="+bbox.y);
 		
 		// Rect background for the text overlay - insert the rectangle before the text element
 		rect = svg.insert("rect", "#svg-overlay"+id)
@@ -496,8 +544,16 @@ function showNodeTextOverlay(id, showAll) {
 		activeTextOverlay = true;
 
 	} else if(showAll == false) {
+		// If the function call does not request all text overlays to be shown - remove text overlay
 		removeTextOverlay();
 	}
+}
+
+function removeTextOverlay() {
+	// Remove other text boxes and set active to false
+	d3.selectAll(".svg-text-overlay, .svg-overlay").remove();
+	activeTextOverlay = false;
+	allActiveTextOverlay = false;
 }
 
 // Show node text overlays on mouseover when enabled
@@ -532,13 +588,6 @@ function mouseOverTextOverlay() {
 		nodeMouseOver = false;
 		return;
 	}
-}
-
-function removeTextOverlay() {
-	// Remove other text boxes and set active to false
-	d3.selectAll(".svg-text-overlay, .svg-overlay").remove();
-	activeTextOverlay = false;
-	allActiveTextOverlay = false;
 }
 
 function showAllTextOverlay() {
@@ -930,7 +979,7 @@ function moveElementsToFit(width, height) {
 	var text = svg.selectAll(".svg-text");
 
 	var schemeOffset = Math.sqrt((Math.pow((nodeSchemeSize/2), 2) + Math.pow((nodeSchemeSize/2), 2)));
-	$.each(data.nodes, function (index, value) {
+	$.each(data.nodes, function(index, value) {
 		if(value.type == "scheme") {
 			if(value.x >= (width - schemeOffset)) {
 				data.nodes[index].x = (width - schemeOffset);
@@ -966,7 +1015,7 @@ function moveElementsToFit(width, height) {
 function updateLinks() {
 	console.log("updateLinks()");
 
-	$.each(data.nodes, function (index, value) {
+	$.each(data.nodes, function(index, value) {
 		//console.log("source id="+JSON.stringify(value.source.id));
 		//console.log("target id="+JSON.stringify(value.target.id));
 	
