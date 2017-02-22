@@ -13,6 +13,7 @@ var highlightColor = "yellow";
 var wasUnlocked = null;
 /*
 $(window).bind("beforeunload",function(){
+	// TODO - update this to account for all 10 tabs
 	if(($("#txta-source-1").val() != "") || ($("#txta-source-2").val() != "") || ($("#txta-source-3").val() != "") || ($("#txta-source-4").val() != "") || ($("#txta-source-5").val() != "")) {
 		return confirm("Confirm refresh");
 	}

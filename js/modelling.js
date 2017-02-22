@@ -22,6 +22,8 @@ var editText = false;
 var addNodeOffset = 0;
 // Increment for increasing the distance a node moves when added in the centre of the screen
 var addNodeIncrement = 20;
+// Node mouseover overlay status
+var nodeMouseOver = false;
 
 var count = 0,
 count2 = 0;
@@ -498,8 +500,38 @@ function showNodeTextOverlay(id, showAll) {
 	}
 }
 
+// Show node text overlays on mouseover when enabled
 function mouseOverTextOverlay() {
-
+	if(nodeMouseOver == false) {
+		console.log("nodeMouseover = false!");
+		// Update button icon to represent action state
+		$("#i-mouseover-toggle").removeClass("fa-eye");
+		$("#i-mouseover-toggle").addClass("fa-eye-slash");
+		// Add mouseover event handler
+		$(".svg-node").on("mouseover", function(e) {
+			var id = $(this).attr("id");
+			console.log("id="+id);
+			// Show node text overlay passing id of the current node with mouseover and
+			showNodeTextOverlay(id, false);
+		});
+		// Add mouseout event handler
+		$(".svg-node").on("mouseout", function(e) {
+			removeTextOverlay();
+		});
+		nodeMouseOver = true;
+		return;
+	}
+	if(nodeMouseOver == true) {
+		console.log("nodeMouseover = true!");
+		// Revert button icon to represent action state
+		$("#i-mouseover-toggle").removeClass("fa-eye-slash");
+		$("#i-mouseover-toggle").addClass("fa-eye");
+		// Remove mouseover and mouseout event handler
+		$(".svg-node").off("mouseover");
+		$(".svg-node").off("mouseout");
+		nodeMouseOver = false;
+		return;
+	}
 }
 
 function removeTextOverlay() {
