@@ -25,9 +25,6 @@ var addNodeIncrement = 20;
 // Node mouseover overlay status
 var nodeMouseOverEnabled = false;
 
-var count = 0,
-count2 = 0;
-
 // The object holding the existing visualisation data
 /*
 var data = {
@@ -1133,8 +1130,4 @@ function logDataToConsole(type) {
 		default:
 			console.log("logDataToConsole switch error");
 	}
-}
-
-function logCount() {
-	console.log("count="+count+" count2="+count2);
 }
