@@ -14,7 +14,7 @@ var activeTextOverlay = false;
 var allActiveTextOverlay = false;
 // Currently selected element
 var selectedElement = null;
-// Node dragged status
+// Node drag event listener status
 var dragging = false;
 // Editing node text status
 var editText = false;
@@ -23,7 +23,7 @@ var addNodeOffset = 0;
 // Increment for increasing the distance a node moves when added in the centre of the screen
 var addNodeIncrement = 20;
 // Node mouseover overlay status
-var nodeMouseOver = false;
+var nodeMouseOverEnabled = false;
 
 var count = 0,
 count2 = 0;
@@ -78,7 +78,7 @@ function createSVG() {
 
 	var defs = d3.select("defs");
 	
-	// arrow marker for the end of a link (marker is back from end of link to sit on node perimeter)
+	// Arrow marker for the end of a link (marker is back from end of link to sit on node perimeter)
 	defs.append("marker")
 		.attr("id","arrow")
 		.classed("svg-marker-arrow", true)
@@ -91,7 +91,7 @@ function createSVG() {
 		.append("path")
 		.attr("d","M0,0 L0,6 L6,3 z");
 
-	// arrow marker for the end of the drag link
+	// Arrow marker for the end of the drag link
 	defs.append("marker")
 		.attr("id","arrow-drag")
 		.classed("svg-marker-arrow-drag", true)
@@ -104,7 +104,7 @@ function createSVG() {
 		.append("path")
 		.attr("d","M0,0 L0,6 L6,3 z");
 
-	// arrow marker for the end of an active link
+	// Arrow marker for the end of an active link
 	defs.append("marker")
 		.attr("id","arrow-active")
 		.classed("svg-marker-arrow-active", true)
@@ -125,7 +125,7 @@ function update() {
 	
 	deleteSVGElements();
 
-	// lines between nodes called links
+	// Lines between nodes called links
 	links = svg.selectAll("link")
 		.data(data.links)
 		.enter()
@@ -138,12 +138,12 @@ function update() {
 		.attr("y2", function(d) { return d.target.y; })
 		.attr("marker-end","url(#arrow)");
 
-	// hidden line which shows when creating a link
+	// Hidden line which shows when creating a link
 	dragLink = svg.append("line")
 		.classed("svg-link-drag", true)
 		.classed("hidden", true);
 
-	// circles representing nodes
+	// Circles representing nodes
 	nodes = svg.selectAll("circle")
 		.data(data.nodes)
 		.enter()
@@ -185,7 +185,7 @@ function update() {
 			}
 		})
 
-	// text displaying node identification 
+	// Text displaying node identification 
 	nodeId = svg.selectAll("text")
 		.data(data.nodes)
 		.enter()
@@ -198,10 +198,10 @@ function update() {
 		.text(function(d) { return  d.id + 1; })
 		.attr("pointer-events", "none");
 	
-	// link on click to allow selection and deletion
+	// Link on click to allow selection and deletion
 	links.on("click", click);
 
-	// remove the active element
+	// Remove the active element
 	svg.on("click", function() {	
 		console.log("svg click!");
 		d3.event.stopPropagation();
@@ -583,8 +583,8 @@ function removeTextOverlay() {
 
 // Show node text overlays on mouseover when enabled
 function mouseOverTextOverlay() {
-	if(nodeMouseOver == false) {
-		console.log("nodeMouseover = false!");
+	if(nodeMouseOverEnabled == false) {
+		console.log("Enabled nodeMouseover() Text Overlay");
 		// Update button icon to represent action state
 		$("#i-mouseover-toggle").removeClass("fa-eye");
 		$("#i-mouseover-toggle").addClass("fa-eye-slash");
@@ -599,18 +599,18 @@ function mouseOverTextOverlay() {
 		$(".svg-node").on("mouseout", function(e) {
 			removeTextOverlay();
 		});
-		nodeMouseOver = true;
+		nodeMouseOverEnabled = true;
 		return;
 	}
-	if(nodeMouseOver == true) {
-		console.log("nodeMouseover = true!");
+	if(nodeMouseOverEnabled == true) {
+		console.log("Disabled nodeMouseover() Text Overlay");
 		// Revert button icon to represent action state
 		$("#i-mouseover-toggle").removeClass("fa-eye-slash");
 		$("#i-mouseover-toggle").addClass("fa-eye");
 		// Remove mouseover and mouseout event handler
 		$(".svg-node").off("mouseover");
 		$(".svg-node").off("mouseout");
-		nodeMouseOver = false;
+		nodeMouseOverEnabled = false;
 		return;
 	}
 }
@@ -619,14 +619,13 @@ function showAllTextOverlay() {
 	console.log("showAllTextOverlay()");
 
 	if(allActiveTextOverlay == false) {
-		for(var i = 0; i < data.nodes.length; i++) {
-			var id = data.nodes[i].id;
-			console.log("id="+id);
+		$.each(data.nodes, function(index, value) {
+			var id = data.nodes[index].id;
 
 			activeTextOverlay = false;
 
 			showNodeTextOverlay(id, true);
-		}
+		});
 		allActiveTextOverlay = true;
 	}
 	// Clear the bottom row text display
@@ -685,7 +684,7 @@ function addNode(type,schemeName,nodePosition) {
 			// Reset textarea selection
 			textaSource.selectionStart = null;
 			textaSource.selectionEnd = null;
-			
+
 			break;
 		// Scheme node
 		case 2:
@@ -811,11 +810,14 @@ function addLink(idStart,idEnd) {
 	// Function which displays the drag line
 	dragLine(id1);
 
-	var id2 = 0;
+	// Because mouseover text overlays and the next part of addLink use the same event listener - disable mouseover text overlays before adding event listener for link target
+	// This variable is set to true - This simulates that it is on - next called will therefore turn off the functionality
+	nodeMouseOverEnabled = true;
+	mouseOverTextOverlay();
 
 	node.on("mouseover", function(d) {	
 		// The second id - the target of the link
-		id2 = d3.select(this).attr("id");
+		 var id2 = d3.select(this).attr("id");
 
 		console.log("id2="+id2);
 
