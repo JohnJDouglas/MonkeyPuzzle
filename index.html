@@ -106,8 +106,8 @@
 									<button class="btn btn-text-node btn-block" onclick="addNode(1)"><i class="fa fa-plus"></i> Text</button>
 								</div>
 								<div class="col-xs-2 col-md-2 col-lg-2 dropdown no-padding-lr">
-									<button class="btn btn-scheme-node dropdown-toggle btn-block" type="button" data-toggle="dropdown"><i class="fa fa-plus"></i> Scheme <span class="caret"></span></button>
-									<ul id="ul-scheme" class="dropdown-menu">
+									<!--<button class="btn btn-scheme-node dropdown-toggle btn-block" type="button" data-toggle="dropdown"><i class="fa fa-plus"></i> Scheme <span class="caret"></span></button>-->
+									<!--<ul id="ul-scheme" class="dropdown-menu">
 										<li><a>Default</a></li>
 										<li class="dropdown-submenu">
 											<a class="test" tabindex="-1" href="#">Source-based Schemes <span class="caret"></span></a>
@@ -195,29 +195,231 @@
 															</ul>
 														</li>
 													</ul>
-													<!--
-													<a class="test" tabindex="-2" href="#">Value-based Argument from Practical Reasoning <span class="caret"></span></a>
-													<a class="test" tabindex="-2" href="#">Arguments from Positive or Negative Consequences <span class="caret"></span></a>
-													<ul class="dropdown-menu">
-														<li><a tabindex="-2" href="#">Argument from Waste</a></li>
-														<li><a tabindex="-2" href="#">Argument from Threat</a></li>
-														<li><a tabindex="-2" href="#">Sunk Costs Arguments</a></li>
-														<li><a tabindex="-2" href="#">Precedent Slippery Slope Argument</a></li>
-														<li><a tabindex="-2" href="#">Sorites Slippery Slope Argument</a></li>
-													</ul>
-													-->
 												</li>
 											</ul>
 										</li>
-										
-										<li class="dropdown-submenu"><a>Non Source-based Schemes</a></li>
-									</ul>
+										<li class="dropdown-submenu">
+											<a class="test" tabindex="-1" href="#">Non Source-based Schemes <span class="caret"></span></a>
+											<ul class="dropdown-menu">	
+												<li>
+													<a class="test" tabindex="-1" href="#">Argument from Popular Acceptance <span class="caret"></span></a>
+													<ul class="dropdown-menu">
+														<li><a tabindex="-1" href="#">Argument from Popular Opinion</a></li>
+														<li><a tabindex="-1" href="#">Argument from Popular Practice</a></li>
+													</ul>
+												</li>
+												<li>
+													<a class="test" tabindex="-1" href="#">Ad Hominem Arguments <span class="caret"></span></a>
+													<ul class="dropdown-menu">
+														<li>
+															<a class="test" tabindex="-1" href="#">Direct Ad Hominem <span class="caret"></span></a>
+															<ul class="dropdown-menu">
+																<li><a tabindex="-1" href="#">Circumstantial Ad Hominem</a></li>
+															</ul>
+														</li>
+														<li>
+															<a class="test" tabindex="-1" href="#">Argument from Inconsistent Commitment <span class="caret"></span></a>
+															<ul class="dropdown-menu">
+																<li><a tabindex="-1" href="#">Circumstantial Ad Hominem</a></li>
+															</ul>
+														</li>
+														<li>
+															<a class="test" tabindex="-1" href="#">Poisoning the Well Ad Hominem <span class="caret"></span></a>
+															<ul class="dropdown-menu">
+																<li><a tabindex="-1" href="#">Poisoning the Well by Alleging Group Bias</a></li>
+															</ul>
+														</li>
+													</ul>
+												</li>
+												<li>
+													<a class="test" tabindex="-1" href="#">Arguments from Bias <span class="caret"></span></a>
+													<ul class="dropdown-menu">
+														<li><a tabindex="-1" href="#">Argument from Action to Motive</a></li>
+													</ul>
+												</li>
+												<li>
+													<a class="test" tabindex="-1" href="#">Arguments from Position to Know <span class="caret"></span></a>
+													<ul class="dropdown-menu">
+														<li><a tabindex="-1" href="#">Argument from Expert Opinion</a></li>
+														<li>
+															<a class="test" tabindex="-1" href="#">Arguments from Position to Know <span class="caret"></span></a>
+															<ul class="dropdown-menu">
+																<li><a tabindex="-1" href="#">Argument from Witness Testimony</a></li>
+														</ul>
+												</li>
+													</ul>
+												</li>
+											</ul>
+										</li>
+									</ul>-->
+									<div class="dropdown">
+										<a role="button" data-toggle="dropdown" class="btn btn-scheme-node btn-block" data-target="#">
+										<i class="fa fa-plus"></i> Scheme <span class="caret"></span>
+										</a>
+										<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+											<li><a href="#">Default</a></li>
+											<li class="divider"></li>
+											<li class="dropdown-submenu">
+												<a tabindex="-1" href="#">Source-based Schemes</a>
+												<ul class="dropdown-menu">
+													<li class="dropdown-submenu">
+														<a href="#">Practical Reasoning</a>
+														<ul class="dropdown-menu">
+															<li class="dropdown-submenu">
+																<a href="#">Instrumental Argument from Practical Reasoning</a>
+																<ul class="dropdown-menu">
+																	<li><a href="#">Argument from Action to Motive</a></li>
+																</ul>
+															</li>
+															<li class="dropdown-submenu">
+																<a href="#">Value-based Argument from Practical Reasoning</a>
+																<ul class="dropdown-menu">
+																	<li class="dropdown-submenu">
+																		<a href="#">Arguments from Positive or Negative Consequences</a>
+																		<ul class="dropdown-menu">
+																			<li><a href="#">Argument from Waste</a></li>
+																			<li><a href="#">Argument from Threat</a></li>
+																			<li><a href="#">Sunk Costs Arguments</a></li>
+																			<li><a href="#">Precedent Slippery Slope Argument</a></li>
+																			<li><a href="#">Sorites Slippery Slope Argument</a></li>
+																		</ul>
+																	</li>
+																	<li class="dropdown-submenu">
+																		<a href="#">Argument from Values</a>
+																		<ul class="dropdown-menu">
+																			<li><a href="#">Argument from Fairness</a></li>
+																		</ul>
+																	</li>
+																</ul>
+															</li>
+														</ul>
+													</li>
+													<li class="dropdown-submenu">
+														<a href="#">Epistemic Reasoning</a>
+														<ul class="dropdown-menu">
+															<li class="dropdown-submenu">
+																<a href="#">Discovery Arguments</a>
+																<ul class="dropdown-menu">
+																	<li class="dropdown-submenu">
+																		<a href="#">Arguments Establishing Rules</a>
+																		<ul class="dropdown-menu">
+																			<li><a href="#">Argument from a Random Sample to a Population</a></li>
+																			<li><a href="#">Argument from Best Explanation</a></li>
+																		</ul>
+																	</li>
+																	<li class="dropdown-submenu">
+																		<a href="#">Arguments Finding Entities</a>
+																		<ul class="dropdown-menu">
+																			<li><a href="#">Argument from Ignorance</a></li>
+																			<li><a href="#">Argument from Sign</a></li>
+																		</ul>
+																	</li>
+																</ul>
+															</li>
+															<li class="dropdown-submenu">
+																<a href="#">Applying Rules to Cases</a>
+																<ul class="dropdown-menu">
+																	<li class="dropdown-submenu">
+																		<a href="#">Chained Arguments Connecting Rules and Cases</a>
+																		<ul class="dropdown-menu">
+																			<li><a href="#">Argument from Gradualism</a></li>
+																			<li><a href="#">Precedent Slippery Slope Argument</a></li>
+																			<li><a href="#">Sorites Slippery Slope Argument</a></li>
+																		</ul>
+																	</li>
+																	<li class="dropdown-submenu">
+																		<a href="#">Arguments Based on Cases</a>
+																		<ul class="dropdown-menu">
+																			<li><a href="#">Argument from Verbal Classification</a></li>
+																			<li><a href="#">Argument from Cause to Effect</a></li>
+																			<li><a href="#">Argument from an Established Rule</a></li>
+																		</ul>
+																	</li>
+																	<li class="dropdown-submenu">
+																		<a href="#">Defeasible Rule Based Argument</a>
+																		<ul class="dropdown-menu">
+																			<li><a href="#">Argument from Precedent</a></li>
+																			<li><a href="#">Argument from Example</a></li>
+																			<li><a href="#">Argument from Analogy</a></li>
+																		</ul>
+																	</li>
+																	<li><a href="#">Argument from Evidence to a Hypothesis</a></li>
+																</ul>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</li>
+											<li class="divider"></li>
+											<li class="dropdown-submenu">
+												<a tabindex="-1" href="#">Non Source-based Schemes</a>
+												<ul class="dropdown-menu">
+													<li class="dropdown-submenu">
+														<a href="#">Argument from Popular Acceptance</a>
+														<ul class="dropdown-menu">
+															<li><a href="#">Argument from Popular Opinion</a></li>
+															<li><a href="#">Argument from Popular Practice</a></li>
+														</ul>
+													</li>
+													<li class="dropdown-submenu">
+														<a href="#">Ad Hominem Arguments</a>
+														<ul class="dropdown-menu">
+															<li class="dropdown-submenu">
+																<a href="#">Direct Ad Hominem</a>
+																<ul class="dropdown-menu">
+																	<li><a href="#">Circumstantial Ad Hominem</a></li>
+																</ul>
+															</li>													
+															<li class="dropdown-submenu">
+																<a href="#">Argument from Inconsistent Commitment</a>
+																<ul class="dropdown-menu">
+																	<li><a href="#">Circumstantial Ad Hominem</a></li>
+																</ul>
+															</li>													
+															<li class="dropdown-submenu">
+																<a href="#">Poisoning the Well Ad Hominem</a>
+																<ul class="dropdown-menu">
+																	<li><a href="#">Poisoning the Well by Alleging Group Bias</a></li>
+																</ul>
+															</li>
+														</ul>
+													</li>
+													<li class="dropdown-submenu">
+														<a href="#">Arguments from Bias</a>
+														<ul class="dropdown-menu">
+															<li class="dropdown-submenu">
+																<a href="#">Poisoning the Well Ad Hominem</a>
+																<ul class="dropdown-menu">
+																	<li><a href="#">Poisoning the Well by Alleging Group Bias</a></li>
+																</ul>
+															</li>
+														</ul>
+													</li>
+													<li class="dropdown-submenu">
+														<a href="#">Arguments from Position to Know</a>
+														<ul class="dropdown-menu">
+															<li><a href="#">Argument from Expert Opinion</a></li>
+															<li class="dropdown-submenu">
+																<a href="#">Argument from Position to Know</a>
+																<ul class="dropdown-menu">
+																	<li><a href="#">Argument from Witness Testimony	</a></li>
+																</ul>
+															</li>
+														</ul>
+													</li>
+												</ul>
+											</li>
+										</ul>
+									</div>
 								</div>
 								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
 									<button class="btn btn-normal btn-block" onclick="showAllTextOverlay()"><i class="fa fa-eye"></i> Content</button>
 								</div>
-								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
+								<div class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
 									<button id="btn-mouse-overlay" class="btn btn-normal btn-block" onclick="mouseOverTextOverlay()"><i id="i-mouseover-toggle" class="fa fa-eye"></i> Mouseover</button>
+								</div>
+								<div class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
+									<button id="" class="btn btn-normal btn-block" onclick="log()">LOG()</button>
 								</div>
 								<div class="col-xs-3 col-md-3 col-lg-3 no-padding-lr">
 									<button class="btn btn-primary btn-block" onclick="showModal(9)">MONKEYPUZZLE</button>

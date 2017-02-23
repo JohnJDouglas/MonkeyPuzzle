@@ -26,7 +26,7 @@ $(window).load(function() {
 	createSVG();
 	//createSchemeDropdown();
 	showTab(1);
-	toggleSource(1);
+	toggleSource(0);
 	textareaRemoveActive();
 
 	var w = $("svg").width();
@@ -42,15 +42,37 @@ $(window).load(function() {
 		var currentTab = (activeTab-1);
 		data.tabs[currentTab].text = this.value;
 	});
-
+	
+	/*
 	// Function to allow multiple level dropdown menus
 	$(".dropdown-submenu a.test").on("click", function(e){
+		if($(this).hasClass("level-1")) {
+			console.log("level-1");
+			$(".ul-level-2").hide();
+			$(".ul-level-3").hide();
+			$(".ul-level-4").hide();
+		}
+		if($(this).hasClass("level-2")) {
+			console.log("level-2");
+			$(".ul-level-3").hide();
+			$(".ul-level-4").hide();
+		}
+		if($(this).hasClass("level-3")) {
+			console.log("level-3");
+			$(".ul-level-4").hide();
+		}
+		if($(this).hasClass("level-4")) {
+			console.log("level-4");
+		}
+		//console.log("ul-level-1 status="+$("#ul-level-1").is(":visible"));
 		//hide open menus before opening another
-		$(".li-menu").hide();
+		//$(".li-menu").hide();
+		//$(".ul-menu").hide();
 		$(this).next("ul").toggle();
 		e.stopPropagation();
 		e.preventDefault();
 	});
+	*/
 });
 
 function createSchemeDropdown() {
@@ -148,6 +170,8 @@ function sourceChange(type) {
 function toggleSource(toggle) {
 	if(toggle == 1) {
 		sourceToggle = true;
+	} else if(toggle == 0) {
+		sourceToggle = false;
 	}
 	console.log("toggleSource!");
 	if(sourceToggle == false) {
@@ -484,4 +508,8 @@ function uploadJSON() {
 function downloadJSON() {
 	// Save the data object as a string into a file
 	saveTextAsFile(2);
+}
+
+function log() {
+	console.log("status="+$("#ul-level-1").is(":visible"));
 }

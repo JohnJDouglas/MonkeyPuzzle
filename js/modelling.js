@@ -30,21 +30,21 @@ var nodeMouseOverEnabled = false;
 var data = {
 	nodes: [{id: 0, x: 200, y: 400, text: "lorem", displayText: "lorem", type:"text"},{id: 1, x: 400, y: 400, text: "ipsum", displayText: "ipsum", type:"scheme"},{id: 2, x: 400, y: 200, text: "dolor", displayText: "dolor", type:"text"},{id: 3, x: 600, y: 400, text: "sit", displayText: "sit", type:"scheme"},{id: 4, x: 400, y: 600, text: "amet", displayText: "amet", type:"text"}],
 	links: [{source:{id: 2, x: 400, y: 200, text: "dolor", type:"text"},target:{id: 3, x: 600, y: 400, text: "sit", type:"scheme"}}],
-	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""},],
+	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""}],
 	currentNodeID: 0
 };
 */
 var data = {
 	nodes: [{id: 0, x: 200, y: 400, text: "lorem", displayText: "lorem", type:"text"},{id: 1, x: 400, y: 400, text: "ipsum", displayText: "ipsum", type:"scheme"},{id: 2, x: 400, y: 200, text: "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", displayText: "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", type:"text"},{id: 3, x: 600, y: 400, text: "sit", displayText: "sit", type:"scheme"},{id: 4, x: 400, y: 600, text: "amet", displayText: "amet", type:"text"}],
 	links: [{source:{id: 2, x: 400, y: 200, text: "dolor", type:"text"},target:{id: 3, x: 600, y: 400, text: "sit", type:"scheme"}}],
-	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""},],
+	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""}],
 	currentNodeID: 0
 };
 /*
 var data = {
 	nodes: [],
 	links: [],
-	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""},],
+	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""}],
 	currentNodeID: 0
 };
 */
