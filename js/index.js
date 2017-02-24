@@ -26,7 +26,7 @@ $(window).load(function() {
 	createSVG();
 	setupSchemeDropdown();
 	showTab(1);
-	toggleSource(0);
+	toggleSource(1);
 	textareaRemoveActive();
 
 	var w = $("svg").width();
@@ -516,8 +516,4 @@ function uploadJSON() {
 function downloadJSON() {
 	// Save the data object as a string into a file
 	saveTextAsFile(2);
-}
-
-function log() {
-	console.log("value="+$("#a-scheme-default").text());
 }
