@@ -153,18 +153,18 @@ fieldset[disabled] .btn-settings.active {
 /* Text node button */
 .btn-text-node { 
   color: #000000; 
-  background-color: #ADD8E6; 
-  border-color: #ADD8E6; 
+  background-color: #7AA3FF; 
+  border-color: #7AA3FF;
 } 
-
+ 
 .btn-text-node:hover, 
 .btn-text-node:focus, 
 .btn-text-node:active, 
 .btn-text-node.active, 
 .open .dropdown-toggle.btn-text-node { 
   color: #000000; 
-  background-color: #9BC2CF; 
-  border-color: #9BC2CF;
+  background-color: #6d92e5; 
+  border-color: #7AA3FF; 
 } 
  
 .btn-text-node:active, 
@@ -188,12 +188,12 @@ fieldset[disabled] .btn-text-node:active,
 .btn-text-node.disabled.active, 
 .btn-text-node[disabled].active, 
 fieldset[disabled] .btn-text-node.active { 
-  background-color: #ADD8E6; 
-  border-color: #ADD8E6; 
+  background-color: #7AA3FF; 
+  border-color: #7AA3FF; 
 } 
  
 .btn-text-node .badge { 
-  color: #ADD8E6; 
+  color: #7AA3FF; 
   background-color: #000000; 
 }
 
