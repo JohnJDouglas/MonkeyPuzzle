@@ -24,7 +24,7 @@ $(window).load(function() {
 	uploadText();
 	sampleText();
 	createSVG();
-	//createSchemeDropdown();
+	setupSchemeDropdown();
 	showTab(1);
 	toggleSource(0);
 	textareaRemoveActive();
@@ -75,7 +75,8 @@ $(window).load(function() {
 	*/
 });
 
-function createSchemeDropdown() {
+function setupSchemeDropdown() {
+	/*
 	console.log("createSchemeDropdown()");
 	var schemeTypeArray = ["Perception","Memory","Statistical Syllogism","Induction","Temporal persistence","General Knowledge","Witness Testimony","Argument From Sign","Argument from Example","Argument from Verbal Classification","Argument from Commitment","Circumstantial Argument Against the Person","Argument from Position to Know","Argument from Expert Opinion","Argument from Evidence to a Hypothesis","Argument from Falsification of a Hypothesis","Argument from Correlation to Cause","Argument from Cause to Effect","Argument from Consequences","Argument from Analogy","Argument from Waste","Argument from Popular Opinion","Argument from Popular Practice","Ethotic Argument","Argument from Bias","Argument from an Established Rule","Argument from an Exceptional Case","Argument from Precedent","Argument from Gradualism","Causal Slippery Slope Argument","Precedent Slippery Slope Argument","Argument from Vagueness of a Verbal Classification","Argument from Arbitrariness of a Verbal Classification","Verbal Slippery Slope Argument","Full Slippery Slope Argument","Deductive Argument from Ignorance","Plausible Argument from Ignorance","Probabilifying Conveyance Argument","Argument from the Sameness of Meaning","Argument from Singular Cause","Argument to Common Cause","Class-Membership Argument","Argument from Species to Genus","Argument to Singular Cause","Argument from Numerical Identity","Argument from Causal Law","Argument from the Constitution of Concrete Facts.","Argument from the Constitution of Properties","Argument from the Constitution of Positive Normative Facts","Argument from the Constitution of Causal Laws","Argument from Implication","Argument from the Constitution of Negative Normative Facts","Argument from the Constitution of Constitution Facts","Argument from the Constitution of Necessary Conditions","Argument from the Constitution of Possibilities","Argument from the Constitution of Singular Causal Conditionals","Argument from the Constitution of Singular Causal Facts","Argument from the Constitution of Kind Instance","Argument from Whole to Part","Argument from Non-Causal Law","Argument from the Constitution of Impossibilities","Argument from Part to Whole"];
 
@@ -113,7 +114,14 @@ function createSchemeDropdown() {
 			$(this).attr("onclick","addNode(2,'"+schemeTypeArray[index]+"')");
 		});
 	}
+	*/
+	// Set the onclick to addNode - with scheme type parameter and the value parameter as the text of the link
+	$(".a-scheme-option").each(function(index) {
+		//$(".a-scheme-option").eq(index).attr("onclick","addNode(2,'"+$(".a-scheme-option").eq(index).text()+"')");
+		$(this).attr("onclick","addNode(2,'"+$(this).text()+"')");
+	});
 }
+
 
 function panelResize(type) {
 	// If the parameter is 0 - start dragging - else end
@@ -511,5 +519,5 @@ function downloadJSON() {
 }
 
 function log() {
-	console.log("status="+$("#ul-level-1").is(":visible"));
+	console.log("value="+$("#a-scheme-default").text());
 }
