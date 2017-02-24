@@ -225,19 +225,26 @@ function doubleClick(d) {
 	var id = selectedElement.attr("id");
 	console.log("id="+id);
 
-	removeTextOverlay();
-	removeActive();
-	
-	// Set the parameter on the onclick button in the modal - the active element is remove to prevent issues such as delete
-	$("#btn-modal-edit-text").attr("onclick","modalEditNodeText("+id+")");
-	showModal(11);
-	// When the modal hide is called - before finishing
-	$("#modal-edit-node-text").on("hide.bs.modal", function(e) {
-		// Reset the parameter on the onclick button in the modal
-		$("#btn-modal-edit-text").attr("onclick","modalEditNodeText()");
-		// Remove this event listener - prevent additional scheme node shorcuts being added
-		$("#modal-edit-node-text").off("hide.bs.modal");
+	// Only open a modal if the node type is text
+	var type = data.nodes.filter(function(n) {
+		return (n.id == id);
 	});
+
+	if(type == "text") {
+		removeTextOverlay();
+		removeActive();
+		
+		// Set the parameter on the onclick button in the modal - the active element is remove to prevent issues such as delete
+		$("#btn-modal-edit-text").attr("onclick","modalEditNodeText("+id+")");
+		showModal(11);
+		// When the modal hide is called - before finishing
+		$("#modal-edit-node-text").on("hide.bs.modal", function(e) {
+			// Reset the parameter on the onclick button in the modal
+			$("#btn-modal-edit-text").attr("onclick","modalEditNodeText()");
+			// Remove this event listener - prevent additional scheme node shorcuts being added
+			$("#modal-edit-node-text").off("hide.bs.modal");
+		});
+	}
 }
 
 function dragNode(d) {
@@ -812,7 +819,7 @@ function addLink(idStart,idEnd) {
 	nodeMouseOverEnabled = true;
 	mouseOverTextOverlay();
 
-	node.on("mouseover", function(d) {	
+	node.on("mouseup", function(d) {	
 		// The second id - the target of the link
 		 var id2 = d3.select(this).attr("id");
 

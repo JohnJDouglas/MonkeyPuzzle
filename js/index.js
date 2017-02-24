@@ -311,6 +311,7 @@ function saveTextAsFile(type) {
 	try {
 		switch(Number(type)) {
 			case 1:
+				// TODO - Update this to check for a title
 				var textToWrite = $("#txta-source-"+activeTab).val();
 				var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/plain' });
 				var fileNameToSaveAs = "MonkeyPuzzleTab"+activeTab;
