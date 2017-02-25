@@ -238,20 +238,27 @@ function doubleClick(d) {
 
 	if(type[0].type == "text") {
 		// Text node
-		$("#div-modal-edit-text-node").show();
 
-		// Set the parameter on the onclick button in the modal - removing the active element prevents issues such as delete
-		$("#btn-modal-edit-text-node").attr("onclick","modalEditNodeText("+id+",'"+type[0].type+"')");
-		
+		// Show text node div
+		$("#div-modal-edit-text-node").show();
+	
 		// When the modal hide is called - before finishing
 		$("#modal-edit-node").on("hide.bs.modal", function(e) {
-			// Reset the parameter on the onclick button in the modal
-			$("#btn-modal-edit-text-node").attr("onclick", null);
+			var val = $(document.activeElement).attr("id");
+			if(val == "btn-modal-edit-text-node") {
+				var value = $("#txta-edit-text").val();
+				// If the new value is not empty - update node value
+				if(value != "") {
+					data.nodes[id].displayText = value;
+				}
+			}
 			// Remove this event listener - prevent additional scheme node shorcuts being added
 			$("#modal-edit-node").off("hide.bs.modal");
 		});	
 	} else {
-		// Scheme node	
+		// Scheme node
+
+		// Show scheme node div
 		$("#div-modal-edit-scheme-node").show();
 
 		// Append an option for each element in the schemesArray
@@ -259,13 +266,15 @@ function doubleClick(d) {
 			$("#select-schemes").append("<option value='"+schemesArray[index]+"'>"+schemesArray[index]+"</option>");
 		});
 
-		// Set the parameter on the onclick button in the modal - removing the active element prevents issues such as delete
-		$("#btn-modal-edit-scheme-node").attr("onclick","modalEditNodeText("+id+",'"+type[0].type+"')");
-
 		// When the modal hide is called - before finishing
 		$("#modal-edit-node").on("hide.bs.modal", function(e) {
-			// Reset the parameter on the onclick button in the modal
-			$("#btn-modal-edit-scheme-node").attr("onclick", null);
+			var val = $(document.activeElement).attr("id");
+			if(val == "btn-modal-edit-scheme-node") {
+				var value = $('#select-schemes').find(":selected").text();
+				if(value != "") {
+					data.nodes[id].displayText = value;
+				}
+			}
 			// Remove this event listener - prevent additional scheme node shorcuts being added
 			$("#modal-edit-node").off("hide.bs.modal");
 		});
@@ -1127,23 +1136,6 @@ function editNodeText() {
 
 		editText = false;
 		return;
-	}
-}
-
-// Edit text function called when using the "Change Text" button on the double click node modal
-function modalEditNodeText(id,type) {
-	if(type == "text") {
-		var val = $("#txta-edit-text").val();
-		console.log("val="+val);
-
-		// If the new value is not empty - update node value
-		if($("#txta-edit-text").val() != "") {
-			data.nodes[id].displayText = $("#txta-edit-text").val();
-		}
-	} else {
-		// Get the selection from the menu - update node value
-		var option = $('#select-schemes').find(":selected").text();
-		data.nodes[id].displayText = option;
 	}
 }
 
