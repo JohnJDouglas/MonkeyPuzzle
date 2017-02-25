@@ -230,19 +230,44 @@ function doubleClick(d) {
 		return (n.id == id);
 	});
 
-	if(type == "text") {
-		removeTextOverlay();
-		removeActive();
+	console.log("type="+type[0].type);
+
+	removeTextOverlay();
+	removeActive();
+	showModal(11);
+
+	if(type[0].type == "text") {
+		// Text node
+		$("#div-modal-edit-text-node").show();
+
+		// Set the parameter on the onclick button in the modal - removing the active element prevents issues such as delete
+		$("#btn-modal-edit-text-node").attr("onclick","modalEditNodeText("+id+",'"+type[0].type+"')");
 		
-		// Set the parameter on the onclick button in the modal - the active element is remove to prevent issues such as delete
-		$("#btn-modal-edit-text").attr("onclick","modalEditNodeText("+id+")");
-		showModal(11);
 		// When the modal hide is called - before finishing
-		$("#modal-edit-node-text").on("hide.bs.modal", function(e) {
+		$("#modal-edit-node").on("hide.bs.modal", function(e) {
 			// Reset the parameter on the onclick button in the modal
-			$("#btn-modal-edit-text").attr("onclick","modalEditNodeText()");
+			$("#btn-modal-edit-text-node").attr("onclick", null);
 			// Remove this event listener - prevent additional scheme node shorcuts being added
-			$("#modal-edit-node-text").off("hide.bs.modal");
+			$("#modal-edit-node").off("hide.bs.modal");
+		});	
+	} else {
+		// Scheme node	
+		$("#div-modal-edit-scheme-node").show();
+
+		// Append an option for each element in the schemesArray
+		$.each(schemesArray, function(index, value) {
+			$("#select-schemes").append("<option value='"+schemesArray[index]+"'>"+schemesArray[index]+"</option>");
+		});
+
+		// Set the parameter on the onclick button in the modal - removing the active element prevents issues such as delete
+		$("#btn-modal-edit-scheme-node").attr("onclick","modalEditNodeText("+id+",'"+type[0].type+"')");
+
+		// When the modal hide is called - before finishing
+		$("#modal-edit-node").on("hide.bs.modal", function(e) {
+			// Reset the parameter on the onclick button in the modal
+			$("#btn-modal-edit-scheme-node").attr("onclick", null);
+			// Remove this event listener - prevent additional scheme node shorcuts being added
+			$("#modal-edit-node").off("hide.bs.modal");
 		});
 	}
 }
@@ -449,7 +474,7 @@ function removeNodeFromArray() {
 		return (n.id == removeId);
 	});	
 	
-	$.each(removal, function(index, value){
+	$.each(removal, function(index, value) {
 		console.log(index + ':' + JSON.stringify(value));
 		data.nodes.splice(data.nodes.indexOf(value), 1);
 	});
@@ -468,7 +493,7 @@ function removeLinksFromNode() {
 	
 	console.log("removal="+JSON.stringify(removal));
 	
-	$.each(removal, function(index, value){
+	$.each(removal, function(index, value) {
 		console.log(index + ':' + JSON.stringify(value));
 		data.links.splice(data.links.indexOf(value), 1);
 	});
@@ -1106,14 +1131,20 @@ function editNodeText() {
 }
 
 // Edit text function called when using the "Change Text" button on the double click node modal
-function modalEditNodeText(id) {
-	var val = $("#txta-edit-text").val();
-	console.log("val="+val);
+function modalEditNodeText(id,type) {
+	if(type == "text") {
+		var val = $("#txta-edit-text").val();
+		console.log("val="+val);
 
-	// If the new value is not empty - update value
-	if($("#txta-edit-text").val() != "") {
-		data.nodes[id].displayText = $("#txta-edit-text").val();
-	}	
+		// If the new value is not empty - update node value
+		if($("#txta-edit-text").val() != "") {
+			data.nodes[id].displayText = $("#txta-edit-text").val();
+		}
+	} else {
+		// Get the selection from the menu - update node value
+		var option = $('#select-schemes').find(":selected").text();
+		data.nodes[id].displayText = option;
+	}
 }
 
 // Log the data object to console

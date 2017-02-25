@@ -110,7 +110,7 @@
 										<a role="button" data-toggle="dropdown" class="btn btn-scheme-node btn-block" data-target="#">
 										<i class="fa fa-plus"></i> Scheme <span class="caret"></span>
 										</a>
-										<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+										<ul id="ul-schemes" class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
 											<li><a class="a-scheme-option">Default</a></li>
 											<li class="divider"></li>
 											<li class="dropdown-submenu">
@@ -568,7 +568,7 @@
 				</div>
 			</div>
 			<!--Modal-->
-			<div id="modal-edit-node-text" class="modal fade" role="dialog" data-backdrop="static">
+			<div id="modal-edit-node" class="modal fade" role="dialog" data-backdrop="static">
 				<div class="modal-dialog">
 					<!-- Modal content-->
 					<div class="modal-content">
@@ -576,9 +576,17 @@
 							<h4 class="modal-title">Edit text node</h4>
 						</div>
 						<div class="modal-body">
-							<p class="modal-text">Enter the text you wish to update the node with</p>
-							<textarea id="txta-edit-text"></textarea>
-							<button id="btn-modal-edit-text" type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal" onclick="modalEditNodeText()"><i class="fa fa-plus"></i> Change Text</button>
+							<div id="div-modal-edit-text-node">
+								<p class="modal-text">Enter the text you want to update the node with</p>
+								<textarea id="txta-edit-text"></textarea>
+								<button id="btn-modal-edit-text-node" type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal" onclick="modalEditNodeText()"><i class="fa fa-plus"></i> Update Text</button>
+							</div>
+							<div id="div-modal-edit-scheme-node">
+								<p class="modal-text">Choose the scheme option you want to update the node to</p>
+								<select id="select-schemes" class="form-control">
+								</select>
+								<button id="btn-modal-edit-scheme-node" type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal" onclick="modalEditNodeText()"><i class="fa fa-plus"></i> Update Scheme</button>
+							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -226,6 +226,16 @@ mark:nth-child(even) {
 	/*background: var(--highlight-color);*/
 	background: lightblue;
 }
+#div-modal-edit-node-text {
+	display: none;
+}
+#div-modal-edit-scheme-type {
+	display: none;
+}
+#select-schemes {
+	box-shadow: none;
+	border-color: #DDD;
+}
 
 /* Dropdown css */
 .dropdown-submenu {

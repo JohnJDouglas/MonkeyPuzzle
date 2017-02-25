@@ -32,8 +32,15 @@ function showModal(name) {
 			$("#modal-maximum-tabs").modal("show");
 			break;	
 		case 11:
+			// Empty the textarea of the new node text
 			$("#txta-edit-text").val("");
-			$("#modal-edit-node-text").modal("show");
+			// Hide both modal-body divs
+			$("#div-modal-edit-text-node").hide();
+			$("#div-modal-edit-scheme-node").hide();
+			// Reset the dropdown to the top option
+			$("#select-schemes").val("1");
+
+			$("#modal-edit-node").modal("show");
 			break;	
 		default:
 			console.log("showModal Error!");
