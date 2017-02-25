@@ -1,7 +1,8 @@
 function showModal(name) {
 	switch(name) {
 		case 1:
-			$("#div-add-missing-text").hide();
+			// Empty the textarea of the new node text
+			$("#txta-missing").val("");
 			$("#modal-no-selection").modal("show");
 			break;
 		case 2:
@@ -34,9 +35,9 @@ function showModal(name) {
 		case 11:
 			// Empty the textarea of the new node text
 			$("#txta-edit-text").val("");
-			// Hide both modal-body divs
-			$("#div-modal-edit-text-node").hide();
-			$("#div-modal-edit-scheme-node").hide();
+			// Hide both modal-body divs and buttons
+			$(".modal-edit-text-node").hide();
+			$(".modal-edit-scheme-node").hide();
 			// Reset the dropdown to the top option
 			$("#select-schemes").val("1");
 

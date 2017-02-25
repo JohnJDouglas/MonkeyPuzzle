@@ -508,11 +508,6 @@ function saveSVG() {
 	saveSvgAsPng(document.getElementById("svg-vis"), filename);
 }
 
-function showMissingTextOption() {
-	$("#txta-missing").val("");
-	$("#div-add-missing-text").show();
-}
-
 //TODO: check uploaded JSON for correct format
 function uploadJSON() {
 

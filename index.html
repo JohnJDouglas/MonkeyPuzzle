@@ -312,25 +312,11 @@
 							<h4 class="modal-title">No selection</h4>
 						</div>
 						<div class="modal-body">
-							<div class="row">
-								<div class="col-md-9 col-lg-9 no-padding-lr">
-									<p class="modal-text p-modal">There is no text selected, add custom text node?</p>
-								</div>
-								<div class="col-md-3 col-lg-3 no-padding-lr">
-									<button id="btn-no-selection" class="btn btn-default" onclick="showMissingTextOption()">Yes</button>
-								</div>
-							</div>
-							<div class="row">
-								<div id="div-add-missing-text">
-									<div class="col-md-12 col-lg-12 no-padding-lr">
-										<p class="modal-text">Enter the text you wish to add here</p>
-										<textarea id="txta-missing"></textarea>
-										<button type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal" onclick="addNode(3)"><i class="fa fa-plus"></i> Add Text</button>
-									</div>
-								</div>
-							</div>
+							<p class="modal-text">There is no text selection, enter the text you want to add below.</p>
+							<textarea id="txta-missing"></textarea>
 						</div>
 						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="addNode(3)"><i class="fa fa-plus"></i> Add Text</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
 					</div>
@@ -431,7 +417,7 @@
 							<div class="row">
 								<div id="div-add-missing-text">
 									<div class="col-md-12 col-lg-12 no-padding-lr">
-										<p class="modal-text">Enter the text you wish to add here</p>
+										<p class="modal-text">Enter the text you want to add here</p>
 										<textarea id="txta-missing"></textarea>
 										<button type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal" onclick="addNode(3)"><i class="fa fa-plus"></i> Add Text</button>
 									</div>
@@ -576,19 +562,19 @@
 							<h4 class="modal-title">Edit text node</h4>
 						</div>
 						<div class="modal-body">
-							<div id="div-modal-edit-text-node">
+							<div id="div-modal-edit-text-node" class="modal-edit-text-node">
 								<p class="modal-text">Enter the text you want to update the node with</p>
 								<textarea id="txta-edit-text"></textarea>
-								<button id="btn-modal-edit-text-node" type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal"><i class="fa fa-plus"></i> Update Text</button>
 							</div>
-							<div id="div-modal-edit-scheme-node">
+							<div id="div-modal-edit-scheme-node" class="modal-edit-scheme-node">
 								<p class="modal-text">Choose the scheme option you want to update the node to</p>
 								<select id="select-schemes" class="form-control">
 								</select>
-								<button id="btn-modal-edit-scheme-node" type="button" class="btn btn-default btn-block btn-confirm-margin" data-dismiss="modal"><i class="fa fa-plus"></i> Update Scheme</button>
 							</div>
 						</div>
 						<div class="modal-footer">
+							<button id="btn-modal-edit-text-node" type="button" class="btn btn-default modal-edit-text-node" data-dismiss="modal"><i class="fa fa-plus"></i> Update Text</button>
+							<button id="btn-modal-edit-scheme-node" type="button" class="btn btn-default modal-edit-scheme-node" data-dismiss="modal"><i class="fa fa-plus"></i> Update Scheme</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
 					</div>

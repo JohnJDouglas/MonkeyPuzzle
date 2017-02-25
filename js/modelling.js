@@ -241,8 +241,8 @@ function doubleClick(d) {
 	if(type[0].type == "text") {
 		// Text node
 
-		// Show text node div
-		$("#div-modal-edit-text-node").show();
+		// Show text node div and button
+		$(".modal-edit-text-node").show();
 	
 		// When the modal hide is called - before finishing
 		$("#modal-edit-node").on("hide.bs.modal", function(e) {
@@ -260,8 +260,8 @@ function doubleClick(d) {
 	} else {
 		// Scheme node
 
-		// Show scheme node div
-		$("#div-modal-edit-scheme-node").show();
+		// Show scheme node div and button
+		$(".modal-edit-scheme-node").show();
 
 		// Append an option for each element in the schemesArray
 		$.each(schemesArray, function(index, value) {
@@ -744,14 +744,16 @@ function addNode(type,schemeName,nodePosition) {
 			newNode.start = 0;
 			newNode.end = 0;
 
+			// Get the text the user entered
 			var missingText = $("#txta-missing").val();
 			
+			// If the text entered is not empty set the text and displayText property to the value - else return and don't add node
 			if(missingText != "") {
 				newNode.text = missingText;
 				newNode.displayText = missingText;
 			} else {
-				newNode.text = "Missing Text node";
-				newNode.displayText = "Missing Text node";
+				// Quit adding node
+				return;
 			}
 
 			break;
@@ -764,8 +766,6 @@ function addNode(type,schemeName,nodePosition) {
 			newNode.type = "scheme";
 			newNode.text = "Default";
 			newNode.displayText = "Default";
-			break;
-
 			break;
 		default:
 			console.log("addNode switch error!");
@@ -1097,7 +1097,6 @@ function updateLinks() {
 			}
 		})
 	});
-
 	update();
 }
 

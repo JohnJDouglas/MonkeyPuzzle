@@ -178,10 +178,6 @@ html,body {
 #btn-copy-text {
 	display: inline-block;
 }
-#btn-no-selection {
-	float: right;
-	margin-right: 0px;
-}
 #btn-add-scheme-between-text {
 	float: right;
 	margin-right: 0px;
@@ -197,7 +193,6 @@ html,body {
 }
 #div-add-missing-text {
 	margin-top: 15px;
-	display: none;
 }
 .p-settings {
 	margin-bottom: 0px !important;
