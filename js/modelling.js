@@ -5,7 +5,9 @@ var nodeIdOffset = 4;
 // Size (width and height) of scheme nodes
 var nodeSchemeSize = 22;
 // Offset for scheme nodes
-var nodeSchemeOffset = 11;
+var nodeSchemeOffset = (nodeSchemeSize / 2);
+// Offset for positioning scheme nodes
+var schemeContainOffset = Math.sqrt((Math.pow((nodeSchemeSize/2), 2) + Math.pow((nodeSchemeSize/2), 2))) + 1;
 // Offset for the text overlays
 var nodeTextBoxOffset = 20;
 // If a text overlay is open (active)
@@ -296,20 +298,18 @@ function dragNode(d) {
 	d.y = d3.event.y;
 
 	// Containment function for nodes to prevent them being dragged off screen
-	// Scheme nodes are squares rotated 45deg - calculate the offset the make the node appear fully inside the boundary(w) - add 1 to this calculation to account for the border
-	var schemeOffset = Math.sqrt((Math.pow((nodeSchemeSize/2), 2) + Math.pow((nodeSchemeSize/2), 2))) + 1;
 	if(d.type == "scheme") {
-		if(d3.event.x >= (w - schemeOffset)) {
-			d.x = (w - schemeOffset);
+		if(d3.event.x >= (w - schemeContainOffset)) {
+			d.x = (w - schemeContainOffset);
 		}
-		if(d3.event.y >= (h - schemeOffset)) {
-			d.y = (h - schemeOffset);
+		if(d3.event.y >= (h - schemeContainOffset)) {
+			d.y = (h - schemeContainOffset);
 		}
-		if(d3.event.x <= (0 + schemeOffset)) {
-			d.x = schemeOffset;
+		if(d3.event.x <= (0 + schemeContainOffset)) {
+			d.x = schemeContainOffset;
 		}
-		if(d3.event.y <= (0 + schemeOffset)) {
-			d.y = schemeOffset;
+		if(d3.event.y <= (0 + schemeContainOffset)) {
+			d.y = schemeContainOffset;
 		}
 	}
 	// Take the nodeRadius and increment it by 1 to account for the border
@@ -1043,34 +1043,35 @@ function moveElementsToFit(width, height) {
 	var links = svg.selectAll(".svg-link");
 	var text = svg.selectAll(".svg-text");
 
-	var schemeOffset = Math.sqrt((Math.pow((nodeSchemeSize/2), 2) + Math.pow((nodeSchemeSize/2), 2)));
 	$.each(data.nodes, function(index, value) {
 		if(value.type == "scheme") {
-			if(value.x >= (width - schemeOffset)) {
-				data.nodes[index].x = (width - schemeOffset);
+			if(value.x >= (width - schemeContainOffset)) {
+				data.nodes[index].x = (width - schemeContainOffset);
 			}
-			if(value.y >= (height - schemeOffset)) {
-				data.nodes[index].y = (height - schemeOffset);
+			if(value.y >= (height - schemeContainOffset)) {
+				data.nodes[index].y = (height - schemeContainOffset);
 			}
-			if(value.x <= (0 + schemeOffset)) {
-				data.nodes[index].x = schemeOffset;
+			if(value.x <= (0 + schemeContainOffset)) {
+				data.nodes[index].x = schemeContainOffset;
 			}
-			if(value.y <= (0 + schemeOffset)) {
-				data.nodes[index].y = schemeOffset;
+			if(value.y <= (0 + schemeContainOffset)) {
+				data.nodes[index].y = schemeContainOffset;
 			}
 		}
+		// Increment the node radius by 1 to push entire node inside container
+		var nodeOffset = nodeRadius + 1
 		if(value.type == "text") {
-			if(value.x >= (width - nodeRadius)) {
-				data.nodes[index].x = (width - nodeRadius);
+			if(value.x >= (width - nodeOffset)) {
+				data.nodes[index].x = (width - nodeOffset);
 			}
-			if(value.y >= (height - nodeRadius)) {
-				data.nodes[index].y = (height - nodeRadius);
+			if(value.y >= (height - nodeOffset)) {
+				data.nodes[index].y = (height - nodeOffset);
 			}
-			if(value.x <= (0 + nodeRadius)) {
-				data.nodes[index].x = nodeRadius;
+			if(value.x <= (0 + nodeOffset)) {
+				data.nodes[index].x = nodeOffset;
 			}
-			if(value.y <= (0 + nodeRadius)) {
-				data.nodes[index].y = nodeRadius;
+			if(value.y <= (0 + nodeOffset)) {
+				data.nodes[index].y = nodeOffset;
 			}
 		}	
 	});
