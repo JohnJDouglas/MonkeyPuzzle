@@ -11,13 +11,8 @@
 .svg-marker-arrow-active {
 	fill: var(--active-color);
 }
-.svg-link {
-	stroke: #000;
-	stroke-width: 2;
-	cursor: pointer;
-}
 .svg-link.active {
-	stroke: var(--active-color);
+	stroke: var(--active-color) !important;
 	stroke-dasharray: 10,4;
 }
 .svg-node.active {

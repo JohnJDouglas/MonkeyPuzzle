@@ -129,7 +129,9 @@ function update() {
 		.data(data.links)
 		.enter()
 		.append("line")
-		//.classed("svg-link", true)
+		// This class is added to allow the active state to be applied
+		.classed("svg-link", true)
+		// CSS Styles are applied here because saving visualisations as images rely on inline styles
 		.style("stroke","#000")
 		.style("stroke-width","2")
 		.style("cursor","pointer")
@@ -154,6 +156,7 @@ function update() {
 				d3.select(this)
 					.append("rect")
 					.classed("svg-node", true)		
+					// CSS Styles are applied here because saving visualisations as images rely on inline styles
 					.style("fill","lightgreen")
 					.style("stroke","lightgreen")
 					.style("stroke-width","2")
@@ -172,6 +175,7 @@ function update() {
 				d3.select(this)
 					.append("circle")
 					.classed("svg-node", true)
+					// CSS Styles are applied here because saving visualisations as images rely on inline styles
 					.style("fill","#7AA3FF")
 					.style("stroke","#7AA3FF")
 					.style("stroke-width","2")					

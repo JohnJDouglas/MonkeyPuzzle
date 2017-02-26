@@ -178,10 +178,6 @@ html,body {
 #btn-copy-text {
 	display: inline-block;
 }
-#btn-add-scheme-between-text {
-	float: right;
-	margin-right: 0px;
-}
 .modal-text {
 	margin-bottom: 0px;
 }
@@ -190,9 +186,6 @@ html,body {
 }
 .p-modal {
 	padding-top: 4px;
-}
-#div-add-missing-text {
-	margin-top: 15px;
 }
 .p-settings {
 	margin-bottom: 0px !important;
