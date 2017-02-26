@@ -885,34 +885,27 @@ function addLink(idStart,idEnd) {
 
 		// Check both nodes being linked and if they are both text they can not be linked
 		if(id1Type == "text" && id2Type == "text") {
-			// Show modal 5
-			showModal(5);
-			$("#modal-link-text").on("hide.bs.modal", function(e) {
-				var val = $(document.activeElement).attr("id");
-				console.log(val);
+			var val = $(document.activeElement).attr("id");
+			console.log(val);
 
-				if(val == "btn-add-scheme-between-text") {
-					var position = {};
-					position.x1 = Number(id1Filter[0].x);
-					position.y1 = Number(id1Filter[0].y);
-					position.x2 = Number(id2Filter[0].x);
-					position.y2 = Number(id2Filter[0].y);
+			var position = {};
+			position.x1 = Number(id1Filter[0].x);
+			position.y1 = Number(id1Filter[0].y);
+			position.x2 = Number(id2Filter[0].x);
+			position.y2 = Number(id2Filter[0].y);
 
-					// Add a default scheme node
-					addNode(4,"",position);
+			// Add a default scheme node
+			addNode(4,"",position);
 
-					currentNodeId = (data.currentNodeID - 1);
+			currentNodeId = (data.currentNodeID - 1);
 
-					addLinkToData(id1Filter[0].id,currentNodeId);
-					addLinkToData(currentNodeId,id2Filter[0].id);
+			addLinkToData(id1Filter[0].id,currentNodeId);
+			addLinkToData(currentNodeId,id2Filter[0].id);
 
-					console.log("id1="+id1Filter[0].id);
-					console.log("id2="+id2Filter[0].id);
-					console.log("id New="+data.currentNodeID);
-				}
-				// Remove this event listener - prevent additional scheme node shorcuts being added
-				$("#modal-link-text").off("hide.bs.modal");
-			});
+			console.log("id1="+id1Filter[0].id);
+			console.log("id2="+id2Filter[0].id);
+			console.log("id New="+data.currentNodeID);
+
 			// Remove drag line
 			removeDragLine();
 			// Remove the node as active

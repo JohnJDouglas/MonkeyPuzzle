@@ -15,7 +15,7 @@ function showModal(name) {
 			$("#modal-controls").modal("show");
 			break;
 		case 5:
-			$("#modal-link-text").modal("show");
+			// Modal in this location was removed
 			break;
 		case 6:
 			$("#modal-clear-source").modal("show");
