@@ -834,16 +834,18 @@ function addLink(idStart,idEnd) {
 	// Nodes can only connect to one other node - whilst being able to receive any number of links to it
 	var alreadySource = false;
 	
-	// Links can only exist one way
-	var reverseLink = false;
-
-	// Loop through data.links (links array) and check if there is a link with the source of the current node - if so set alreadySource to true
-	for(var i = 0; i < data.links.length; i++) {
-		if(data.links[i].source.id == id1) {
-			alreadySource = true;
+	// Loop through data.links and check for a link with the source of the current node - if one is found with type scheme - prevent the link being added
+	//for(var i = 0; i < data.links.length; i++) {
+	$.each(data.links, function(index, value) {
+		if(data.links[index].source.id == id1 && id1Type == "scheme") {
+			//alreadySource = true;
+			showModal(2);
+			removeActive();
+			return;
 		}
-	}
+	});
 
+	/*
 	// If the node already has a link from it - show error modal and return
 	if(alreadySource == true) {
 		// show modal 2
@@ -851,12 +853,12 @@ function addLink(idStart,idEnd) {
 		removeActive();
 		return;
 	}
-	
+	*/
+
 	// Function which displays the drag line
 	dragLine(id1);
 
-	// Because mouseover text overlays and the next part of addLink use the same event listener - disable mouseover text overlays before adding event listener for link target
-	// This variable is set to true - This simulates that it is on - next called will therefore turn off the functionality
+	// Disable the mouseover shortcut to show text overlays
 	nodeMouseOverEnabled = true;
 	mouseOverTextOverlay();
 
