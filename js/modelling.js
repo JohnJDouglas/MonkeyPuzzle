@@ -966,6 +966,7 @@ function dragLine(id) {
 		var sourceX = $("#"+id).attr("cx");
 		var sourceY = $("#"+id).attr("cy");
 
+		// Append a circle which can be dragged from to show the line
 		node = svg.append("circle")
 			.classed("svg-drag-node", true)
 			.attr("cx", sourceX)
@@ -981,6 +982,7 @@ function dragLine(id) {
 		var sourceX = Number($("#"+id).attr("x"));
 		var sourceY = Number($("#"+id).attr("y"));
 
+		// Append a rect which can be dragged from to show the line
 		node = svg.append("rect")
 			.classed("svg-drag-node", true)
 			.attr("x", sourceX)
@@ -1033,9 +1035,9 @@ function removeDragLine() {
 	d3.select(".svg-drag-node").remove();
 	svg.on("mousemove", null);
 	
-	// Prevent mousing over a node still completing the link
+	// Prevent mousing up over a node still completing the link
 	var node = d3.selectAll(".svg-node");
-	node.on("mouseover", null);
+	node.on("mouseup", null);
 }
 
 function moveElementsToFit(width, height) {
