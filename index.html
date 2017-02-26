@@ -495,14 +495,19 @@
 							<p class="modal-text p-settings">Controls:</p>
 							<button class="btn btn-settings btn-block btn-settings-margin" data-dismiss="modal" onclick="showModal(4)"><i class="fa fa-keyboard-o"></i> Controls</button>
 							<p class="modal-text p-settings">Save Visualisation As:</p>
-							<input id="input-file-name" type="text" class="form-control input-settings" placeholder="model">
-							<button id="btn-save-svg" class="btn btn-settings btn-block btn-settings-margin" onclick="saveSVG()"><i class="fa fa-save"></i> Visualisation</button>
+							<input id="input-SVG-file-name" type="text" class="form-control input-settings" placeholder="model">
+							<div class="col-md-6 col-lg-6 no-padding-l">
+								<button class="btn btn-settings btn-block btn-settings-margin" onclick="saveSVGAsPNG()"><i class="fa fa-save"></i> Visualisation (.PNG)</button>
+							</div>
+							<div class="col-md-6 col-lg-6 no-padding-r">
+								<button class="btn btn-settings btn-block btn-settings-margin" onclick="saveSVGAsSVG()"><i class="fa fa-save"></i> Visualisation (.SVG)</button>
+							</div>
 							<p class="modal-text p-settings">Upload JSON:</p>
 							<input id="input-upload-JSON" type="text" class="form-control input-settings" placeholder="JSON">
 							<button id="btn-upload-JSON" class="btn btn-settings btn-block btn-settings-margin" onclick="uploadJSON()"><i class="fa fa-upload"></i> JSON</button>
 							<p class="modal-text p-settings">Download JSON:</p>
 							<input id="input-download-JSON" type="text" class="form-control input-settings" placeholder="data">
-							<button id="btn-download-JSON" class="btn btn-settings btn-block btn-settings-margin" onclick="downloadJSON()"><i class="fa fa-download"></i> JSON</button>
+							<button id="btn-download-JSON" class="btn btn-settings btn-block btn-settings-margin" onclick="saveDataAsJSON()"><i class="fa fa-download"></i> JSON</button>
 							<div class="row">
 								<p class="modal-text p-settings">Source Panel Maximum Width (min is 20% - max is 50%):</p>
 								<div class="col-md-4 col-lg-4 no-padding-l">

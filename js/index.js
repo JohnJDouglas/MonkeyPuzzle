@@ -43,37 +43,6 @@ $(window).load(function() {
 		var currentTab = (activeTab-1);
 		data.tabs[currentTab].text = this.value;
 	});
-	
-	/*
-	// Function to allow multiple level dropdown menus
-	$(".dropdown-submenu a.test").on("click", function(e){
-		if($(this).hasClass("level-1")) {
-			console.log("level-1");
-			$(".ul-level-2").hide();
-			$(".ul-level-3").hide();
-			$(".ul-level-4").hide();
-		}
-		if($(this).hasClass("level-2")) {
-			console.log("level-2");
-			$(".ul-level-3").hide();
-			$(".ul-level-4").hide();
-		}
-		if($(this).hasClass("level-3")) {
-			console.log("level-3");
-			$(".ul-level-4").hide();
-		}
-		if($(this).hasClass("level-4")) {
-			console.log("level-4");
-		}
-		//console.log("ul-level-1 status="+$("#ul-level-1").is(":visible"));
-		//hide open menus before opening another
-		//$(".li-menu").hide();
-		//$(".ul-menu").hide();
-		$(this).next("ul").toggle();
-		e.stopPropagation();
-		e.preventDefault();
-	});
-	*/
 });
 
 function setupSchemes() {
@@ -181,12 +150,12 @@ function sourceChange(type) {
 }
 
 function toggleSource(toggle) {
+	console.log("toggleSource()");
 	if(toggle == 1) {
 		sourceToggle = true;
 	} else if(toggle == 0) {
 		sourceToggle = false;
 	}
-	console.log("toggleSource!");
 	if(sourceToggle == false) {
 		$("#col-left").hide();
 		$(".splitter").hide();
@@ -423,15 +392,8 @@ function removeTab() {
 }
 
 function reorderTabs(sourceTextArray,sourceTitleArray) {
-	// For each tab - get the text into an array - set the id of the containing div - the button onclick parameter - the button text (note index starts at 0)
+	// For each tab - set the id of the containing div - the button onclick parameter - the button text (note index starts at 0)
 	$(".source-tab").each(function(index) {
-		// If the tab source value is not empty - add the text to the sourceTextArray
-		/*
-		if($("#txta-source-"+(index+1)).val() != "") {
-			sourceTextArray.push($("#txta-source-"+(index+1)).val());
-			//sourceTitleArray.push($("#txta-source-"+(index+1)).val());
-		}
-		*/
 		// Update the tab title container properties - id - the parameter passed in the onclick - the text - the tab titles 
 		$(this).attr("id","div-source-tab-"+(index+1));
 		$(this).children().attr("onclick","showTab("+(index+1)+")");
@@ -490,31 +452,67 @@ function copyNodeText() {
 	}
 }
 
-function saveSVG() {
-	var filename = $("#input-file-name").val();
-
-	console.log("filename="+filename);
-
+function saveSVGAsPNG() {
 	// Remove active element from the visualisation when saving
 	removeActive();
 
-	/* 
-	// This can be used to identify what content the serialized svg will have
-	var svg  = document.getElementById('svg-vis');
-    var xml  = new XMLSerializer().serializeToString(svg);
-	console.log("xml="+xml);
-	*/
+	// Use the library to get a PNG of the SVG
+	saveSvgAsPng(document.getElementById("svg-vis"), $("#input-SVG-file-name").val());
+}
 
-	saveSvgAsPng(document.getElementById("svg-vis"), filename);
+function saveSVGAsSVG() {
+	// Remove active element from the visualisation when saving
+	removeActive();
+
+	var SVGToWrite = $("#svg-vis")[0].outerHTML;
+	var SVGFileAsBlob = new Blob([ SVGToWrite ], { type: "image/svg+xml;charset=utf-8" });
+	var fileNameToSaveAs = $("#input-SVG-file-name").val();
+	var fileExtension = ".svg";
+
+	var downloadLink = document.createElement("a");
+	downloadLink.download = fileNameToSaveAs+fileExtension;
+	if(window.URL != null) {
+		// Chrome allows the link to be clicked without actually adding it to the DOM.
+		downloadLink.href = window.URL.createObjectURL(SVGFileAsBlob);
+	} else {
+		// Firefox requires the link to be added to the DOM before it can be clicked.
+		downloadLink.href = window.URL.createObjectURL(SVGFileAsBlob);
+		downloadLink.onclick = destroyClickedElement;
+		downloadLink.style.display = "none";
+		document.body.appendChild(downloadLink);
+	}
+	downloadLink.click();
+}
+
+// Allow the data object to be downloaded
+function saveDataAsJSON() {
+	console.log("saveDataAsJSON()");
+	try {
+		var JSONToWrite = JSON.stringify(data);
+		var JSONFileAsBlob = new Blob([JSONToWrite], {type: "octet/stream"});
+		var fileNameToSaveAs = $("#input-download-JSON").val();
+		var fileExtension = ".json";
+
+		var downloadLink = document.createElement("a");
+		downloadLink.download = fileNameToSaveAs+fileExtension;
+		if(window.URL != null) {
+			// Chrome allows the link to be clicked without actually adding it to the DOM.
+			downloadLink.href = window.URL.createObjectURL(JSONFileAsBlob);
+		} else {
+			// Firefox requires the link to be added to the DOM before it can be clicked.
+			downloadLink.href = window.URL.createObjectURL(JSONFileAsBlob);
+			downloadLink.onclick = destroyClickedElement;
+			downloadLink.style.display = "none";
+			document.body.appendChild(downloadLink);
+		}
+		downloadLink.click();
+	}
+	catch (e) {
+		logMyErrors(e); // pass exception object to error handler
+	}
 }
 
 //TODO: check uploaded JSON for correct format
 function uploadJSON() {
 
-}
-
-// Allow the data object to be downloaded
-function downloadJSON() {
-	// Save the data object as a string into a file
-	saveTextAsFile(2);
 }
