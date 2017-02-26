@@ -778,27 +778,14 @@ function addNode(type,schemeName,nodePosition) {
 			console.log("addNode switch error!");
 	}
 
-	// Variable to hold if a node is already in the centre of the svg
-	var positionTaken = false;
+	var newPos = findNewNodePosition(nodeX,nodeY);
 
-	// Find whether or not a node is in the centre of the svg
-	data.nodes.filter(function(n) {
-		if((n.x == nodeX) && (n.y == nodeY)) {
-			positionTaken = true;
-		};
-	});
+	console.log("newPos.x="+newPos.x);
+	console.log("newPos.y="+newPos.y);
 
-	// If a node has been found to be in the centre of the svg - update the node location to be offset
-	if(positionTaken == true) {
-		addNodeOffset = addNodeOffset + addNodeIncrement;
-		newNode.x = nodeX + addNodeOffset;
-		newNode.y = nodeY + addNodeOffset;
-	} else {
-		// Set the new node to appear at the centre of the svg
-		newNode.x = Number(nodeX);
-		newNode.y = Number(nodeY);
-	}
-	
+	newNode.x = Number(newPos.x);
+	newNode.y = Number(newPos.y);
+
 	// Add the new node to the array
 	data.nodes.push(newNode);
 
@@ -806,6 +793,60 @@ function addNode(type,schemeName,nodePosition) {
 	data.currentNodeID = data.currentNodeID+1;
 
 	update();
+}
+
+function findNewNodePosition(nodeX, nodeY) {
+	console.log("nodeX="+nodeX);
+	console.log("nodeY="+nodeY);
+
+	// Variable to hold if a node is already in the centre of the svg
+	var originalPositionTaken = false;
+
+	// Find whether or not a node is already in the centre of the svg
+	data.nodes.filter(function(n) {
+		if((n.x == nodeX) && (n.y == nodeY)) {
+			originalPositionTaken = true;
+		}
+	});
+
+	addNodeOffset = 0;
+	var newX = 0, newY = 0;
+
+	// If the original position passed to this function has been taken - run the loop and find a new position - else add the node at the original position
+	if(originalPositionTaken == true) {
+		while(originalPositionTaken == true) {
+			addNodeOffset = addNodeOffset + addNodeIncrement;
+			newX = nodeX + addNodeOffset;
+			newY = nodeY + addNodeOffset;
+
+			console.log("newX="+newX);
+			console.log("newY="+newY);
+
+			var newPositionTaken = false;
+
+			data.nodes.filter(function(n) {
+				if((n.x == newX) && (n.y == newY)) {
+					newPositionTaken = true;
+				}
+			});
+
+			if(newPositionTaken == false) {
+				var newPos = {};
+				newPos.x = newX;
+				newPos.y = newY;
+				console.log("newPos.x="+newPos.x);
+				console.log("newPos.y="+newPos.y);
+				return newPos;
+			}
+		}
+	} else {
+		var newPos = {};
+		newPos.x = nodeX;
+		newPos.y = nodeY;
+		console.log("newPos.x="+newPos.x);
+		console.log("newPos.y="+newPos.y);
+		return newPos;
+	}
 }
 
 function addLink(idStart,idEnd) {
