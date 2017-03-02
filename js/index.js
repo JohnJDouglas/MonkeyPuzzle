@@ -36,7 +36,7 @@ $(window).load(function() {
 	console.log("svg w="+w);
 	console.log("svg h="+h);
 
-	moveElementsToFit(w, h);
+	//moveElementsToFit(w, h);
 
 	// Set the text currently in the tab to the data object tabs sub-array
 	$(".txta-source").on("keyup paste", function() {

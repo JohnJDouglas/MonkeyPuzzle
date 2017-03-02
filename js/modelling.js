@@ -28,12 +28,23 @@ var addNodeIncrement = 20;
 var nodeMouseOverEnabled = false;
 
 // The object holding the existing visualisation data
+
+/*
 var data = {
 	"nodes": [{"id": 0, "x": 200, "y": 400, "text": "lorem", "displayText": "lorem", "type":"text"},{"id": 1, "x": 400, "y": 400, "text": "ipsum", "displayText": "ipsum", "type":"scheme"},{"id": 2, "x": 400, "y": 200, "text": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "displayText": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "type":"text"},{"id": 3, "x": 600, "y": 400, "text": "sit", "displayText": "sit", "type":"scheme"},{"id": 4, "x": 400, "y": 600, "text": "amet", "displayText": "amet", "type":"text"}],
 	"links": [{"source":{"id": 2, "x": 400, "y": 200, "text": "dolor", "type":"text"},"target":{"id": 3, "x": 600, "y": 400, "text": "sit", "type":"scheme"}}],
 	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
 	"currentNodeID": 0
 };
+*/
+///*
+var data = {
+	"nodes": [{"id": 0, "x": 200, "y": 400, "text": "lorem", "displayText": "lorem", "type":"text"},{"id": 1, "x": 400, "y": 400, "text": "ipsum", "displayText": "ipsum", "type":"scheme"},{"id": 2, "x": 400, "y": 200, "text": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "displayText": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "type":"text"},{"id": 3, "x": 600, "y": 400, "text": "sit", "displayText": "sit", "type":"scheme"},{"id": 4, "x": 400, "y": 600, "text": "amet", "displayText": "amet", "type":"text"}],
+	"links": [{"source":2,"target":3}],
+	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
+	"currentNodeID": 0
+};
+//*/
 /*
 var data = {
 	"nodes": [],
@@ -128,10 +139,59 @@ function update() {
 		.style("stroke-width","2")
 		.style("cursor","pointer")
 		//.attr("id", function(d) { return "l"+d.source.id })
-		.attr("x1", function(d) { return d.source.x; })
-		.attr("y1", function(d) { return d.source.y; })
-		.attr("x2", function(d) { return d.target.x; })
-		.attr("y2", function(d) { return d.target.y; })
+		/*
+		.attr("x1", function(d) { return 400; })
+		.attr("y1", function(d) { return 200; })
+		.attr("x2", function(d) { return 600; })
+		.attr("y2", function(d) { return 400; })
+		*/
+		// TODO : WORK ON THIS TO ALLOW YOU TO SPECIFY ONLY A NUMBER FOR THE ID
+		///*
+		.attr("x1", function(d) {  
+			var x1;
+			//console.log("x1 : d.source="+d.source);
+			data.nodes.filter(function(n) {
+				if(n.id == d.source) {
+					console.log("x1 : n.x="+n.x);
+					x1 = n.x;
+				}
+			});
+			return x1;
+		})
+		.attr("y1", function(d) {
+			var y1;
+			//console.log("y1 : d.source="+d.source);
+			data.nodes.filter(function(n) {
+				if(n.id == d.source) {
+					console.log("y1 : n.y="+n.y);
+					y1 = n.y;
+				}
+			});
+			return y1;
+		})
+		.attr("x2", function(d) {
+			var x2;
+			//console.log("x2 : d.target="+d.target);
+			data.nodes.filter(function(n) {
+				if(n.id == d.target) {
+					console.log("x2 : n.x="+n.x);
+					x2 = n.x;
+				}
+			});
+			return x2;
+		})
+		.attr("y2", function(d) {
+			var y2;
+			//console.log("y2 : d.target="+d.target);
+			data.nodes.filter(function(n) {
+				if(n.id == d.target) {
+					console.log("x2 : n.y="+n.y);
+					y2 = n.y;
+				}
+			});
+			return y2;
+		})
+		//*/
 		.attr("marker-end","url(#arrow)");
 
 	// Hidden line which shows when creating a link
