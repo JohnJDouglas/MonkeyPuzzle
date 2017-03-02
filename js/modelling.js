@@ -28,26 +28,18 @@ var addNodeIncrement = 20;
 var nodeMouseOverEnabled = false;
 
 // The object holding the existing visualisation data
-/*
 var data = {
-	nodes: [{id: 0, x: 200, y: 400, text: "lorem", displayText: "lorem", type:"text"},{id: 1, x: 400, y: 400, text: "ipsum", displayText: "ipsum", type:"scheme"},{id: 2, x: 400, y: 200, text: "dolor", displayText: "dolor", type:"text"},{id: 3, x: 600, y: 400, text: "sit", displayText: "sit", type:"scheme"},{id: 4, x: 400, y: 600, text: "amet", displayText: "amet", type:"text"}],
-	links: [{source:{id: 2, x: 400, y: 200, text: "dolor", type:"text"},target:{id: 3, x: 600, y: 400, text: "sit", type:"scheme"}}],
-	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""}],
-	currentNodeID: 0
-};
-*/
-var data = {
-	nodes: [{id: 0, x: 200, y: 400, text: "lorem", displayText: "lorem", type:"text"},{id: 1, x: 400, y: 400, text: "ipsum", displayText: "ipsum", type:"scheme"},{id: 2, x: 400, y: 200, text: "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", displayText: "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", type:"text"},{id: 3, x: 600, y: 400, text: "sit", displayText: "sit", type:"scheme"},{id: 4, x: 400, y: 600, text: "amet", displayText: "amet", type:"text"}],
-	links: [{source:{id: 2, x: 400, y: 200, text: "dolor", type:"text"},target:{id: 3, x: 600, y: 400, text: "sit", type:"scheme"}}],
-	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""}],
-	currentNodeID: 0
+	"nodes": [{"id": 0, "x": 200, "y": 400, "text": "lorem", "displayText": "lorem", "type":"text"},{"id": 1, "x": 400, "y": 400, "text": "ipsum", "displayText": "ipsum", "type":"scheme"},{"id": 2, "x": 400, "y": 200, "text": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "displayText": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "type":"text"},{"id": 3, "x": 600, "y": 400, "text": "sit", "displayText": "sit", "type":"scheme"},{"id": 4, "x": 400, "y": 600, "text": "amet", "displayText": "amet", "type":"text"}],
+	"links": [{"source":{"id": 2, "x": 400, "y": 200, "text": "dolor", "type":"text"},"target":{"id": 3, "x": 600, "y": 400, "text": "sit", "type":"scheme"}}],
+	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
+	"currentNodeID": 0
 };
 /*
 var data = {
-	nodes: [],
-	links: [],
-	tabs: [{tab: 1, text: ""}, {tab: 2, text: ""}, {tab: 3, text: ""}, {tab: 4, text: ""}, {tab: 5, text: ""}, {tab: 6, text: ""}, {tab: 7, text: ""}, {tab: 8, text: ""}, {tab: 9, text: ""}, {tab: 10, text: ""}],
-	currentNodeID: 0
+	"nodes": [],
+	"links": [],
+	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
+	"currentNodeID": 0
 };
 */
 
@@ -562,6 +554,7 @@ function showNodeTextOverlay(id, showAll) {
 		nodeTextBox = svg.append("text")
 			.attr("id", "svg-overlay"+id)
 			.classed("svg-overlay", true)
+			.classed("no-select", true)
 			.classed("svg-overlay-text-text", function(d) { return data.nodes[id].type == "text"; })
 			.classed("svg-overlay-text-scheme", function(d) { return data.nodes[id].type == "scheme"; })
 			.attr("dy","0.35em")
@@ -636,7 +629,6 @@ function mouseOverTextOverlay() {
 		// Add mouseover event handler
 		$(".svg-node").on("mouseover", function(e) {
 			var id = $(this).attr("id");
-			console.log("id="+id);
 			// Show node text overlay passing id of the current node with mouseover and
 			showNodeTextOverlay(id, false);
 		});
@@ -945,10 +937,6 @@ function addLink(idStart,idEnd) {
 			addLinkToData(id1Filter[0].id,currentNodeId);
 			addLinkToData(currentNodeId,id2Filter[0].id);
 
-			console.log("id1="+id1Filter[0].id);
-			console.log("id2="+id2Filter[0].id);
-			console.log("id New="+data.currentNodeID);
-
 			// Remove drag line
 			removeDragLine();
 			// Remove the node as active
@@ -963,8 +951,8 @@ function addLink(idStart,idEnd) {
 		if(id1 != id2) {
 			addLinkToData(id1,id2);
 		}
-	});
-	// Set the selectedElement back to null
+	});	
+	// Set the selectedElement to null
 	selectedElement = null;
 }
 
@@ -1085,8 +1073,6 @@ function moveElementsToFit(width, height) {
 	console.log("moveElementsToFit()");
 	var svg = d3.select("svg");
 	var nodes = d3.select(".svg-node");
-	var links = svg.selectAll(".svg-link");
-	var text = svg.selectAll(".svg-text");
 
 	$.each(data.nodes, function(index, value) {
 		if(value.type == "scheme") {
@@ -1126,18 +1112,12 @@ function moveElementsToFit(width, height) {
 function updateLinks() {
 	console.log("updateLinks()");
 
-	$.each(data.nodes, function(index, value) {
-		//console.log("source id="+JSON.stringify(value.source.id));
-		//console.log("target id="+JSON.stringify(value.target.id));
-	
+	$.each(data.nodes, function(index, value) {	
 		links = $.map(data.links, function(obj, index) {
-			//console.log("obj.id="+obj.id);
 			if(obj.source.id == value.id) {
-				//console.log("obj="+JSON.stringify(obj));
 				obj.source = value;
 			}
 			if(obj.target.id == value.id) {
-				//console.log("obj="+JSON.stringify(obj));
 				obj.target = value;
 			}
 		})

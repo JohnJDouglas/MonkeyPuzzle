@@ -43,6 +43,8 @@ $(window).load(function() {
 		var currentTab = (activeTab-1);
 		data.tabs[currentTab].text = this.value;
 	});
+
+	mouseOverTextOverlay();
 });
 
 function setupSchemes() {
