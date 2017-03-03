@@ -40,6 +40,7 @@ var data = {
 ///*
 var data = {
 	"nodes": [{"id": 0, "x": 200, "y": 400, "text": "lorem", "displayText": "lorem", "type":"text"},{"id": 1, "x": 400, "y": 400, "text": "ipsum", "displayText": "ipsum", "type":"scheme"},{"id": 2, "x": 400, "y": 200, "text": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "displayText": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "type":"text"},{"id": 3, "x": 600, "y": 400, "text": "sit", "displayText": "sit", "type":"scheme"},{"id": 4, "x": 400, "y": 600, "text": "amet", "displayText": "amet", "type":"text"}],
+	//"links": [{"source":2,"target":3},{"source":1,"target":2}],
 	"links": [{"source":2,"target":3}],
 	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
 	"currentNodeID": 0
@@ -140,10 +141,10 @@ function update() {
 		.style("cursor","pointer")
 		//.attr("id", function(d) { return "l"+d.source.id })
 		/*
-		.attr("x1", function(d) { return 400; })
-		.attr("y1", function(d) { return 200; })
-		.attr("x2", function(d) { return 600; })
-		.attr("y2", function(d) { return 400; })
+		.attr("x1", function(d) { return d.source.x; })
+		.attr("y1", function(d) { return d.source.y; })
+		.attr("x2", function(d) { return d.target.x; })
+		.attr("y2", function(d) { return d.target.y; })
 		*/
 		// TODO : WORK ON THIS TO ALLOW YOU TO SPECIFY ONLY A NUMBER FOR THE ID
 		///*
@@ -388,21 +389,29 @@ function dragNode(d) {
 		}
 	}	
 
-	// for each link check if the source or target is equal to the id of the dragged element
 	links.each(function(l) {
-		// if the id of the current source of the link is equal to the currently dragged items id - update position of link x1,y1 and update link position in data.links
-		if(l.source.id == d.id) {
-			l.source.x = d.x;
-			l.source.y = d.y;
+		if(l.source == d.id) {
 			d3.select(this).attr("x1", d.x).attr("y1", d.y);
 		}
 		// if the id of the current target of the link is equal to the currently dragged items id - update position of link x2,y2 and update link position in data.links
-		if(l.target.id == d.id) {
-			l.target.x = d.x;
-			l.target.y = d.y;
+		if(l.target == d.id) {
 			d3.select(this).attr("x2", d.x).attr("y2", d.y);
 		}
 	});
+	/*
+	// if the id of the current source of the link is equal to the currently dragged items id - update position of link x1,y1 and update link position in data.links
+	if(l.source.id == d.id) {
+		l.source.x = d.x;
+		l.source.y = d.y;
+		d3.select(this).attr("x1", d.x).attr("y1", d.y);
+	}
+	// if the id of the current target of the link is equal to the currently dragged items id - update position of link x2,y2 and update link position in data.links
+	if(l.target.id == d.id) {
+		l.target.x = d.x;
+		l.target.y = d.y;
+		d3.select(this).attr("x2", d.x).attr("y2", d.y);
+	}
+	*/
 	
 	// if the node id is equal to the currently dragged node - update the position of the element accounting for the text offset
 	nodeId.each(function(l) {
@@ -415,6 +424,7 @@ function dragNode(d) {
 			}
 		}
 	});
+	
 	
 	// if the type of node is scheme the node is a square rotated 45deg so apply different transform - else the node is a circle so apply circle specific action
 	if(d.type == "scheme") {
@@ -516,19 +526,27 @@ function keyDown() {
 
 // Remove link from data object and update
 function removeLinkFromArray() {
-	// Get all coordinates from the link line element
-	var coords = {x1: Number(d3.select(selectedElement).node().attr("x1")), y1: Number(d3.select(selectedElement).node().attr("y1")),
-				  x2: Number(d3.select(selectedElement).node().attr("x2")), y2: Number(d3.select(selectedElement).node().attr("y2"))};
+	var source = data.nodes.filter(function(n) {
+		return ( n.x == Number(d3.select(selectedElement).node().attr("x1")) && n.y && Number(d3.select(selectedElement).node().attr("y1")) );
+	});
 
+	var target = data.nodes.filter(function(n) {
+		return (n.x == Number(d3.select(selectedElement).node().attr("x2")) && n.y && Number(d3.select(selectedElement).node().attr("y2")));
+	});
+
+	// Find the exact link
+	var removal = data.links.filter(function(l) {
+		return (l.source == source[0] && l.target == target[0]);
+	});
+
+	/*
 	// Find the exact link
 	var removal = data.links.filter(function(l) {
 		return (l.source.x == coords.x1 && l.source.y == coords.y1 && l.target.x == coords.x2 && l.target.y == coords.y2);
 	});
-
-	// Get the first element of the removal array
-	toRemove = removal[0];
+	*/
 	
-	data.links.splice(data.links.indexOf(toRemove), 1);
+	data.links.splice(data.links.indexOf(removal[0]), 1);
 		
 	update();
 }
@@ -542,10 +560,12 @@ function removeNodeFromArray() {
 		return (n.id == removeId);
 	});	
 	
+	data.nodes.splice(data.nodes.indexOf(removal[0]), 1);
+	/*
 	$.each(removal, function(index, value) {
-		console.log(index + ':' + JSON.stringify(value));
 		data.nodes.splice(data.nodes.indexOf(value), 1);
 	});
+	*/
 	
 	update();
 }
@@ -554,9 +574,16 @@ function removeNodeFromArray() {
 function removeLinksFromNode() {
 	var removeId = Number(d3.select(selectedElement).node().attr("id"));
 	
+	/*
 	// Find link with source or target equal to the id
 	var removal = data.links.filter(function(l) {
 		return (l.source.id == removeId || l.target.id == removeId);
+	});
+	*/
+
+	// Find link with source or target equal to the id
+	var removal = data.links.filter(function(l) {
+		return (l.source == removeId || l.target == removeId);
 	});
 	
 	console.log("removal="+JSON.stringify(removal));
@@ -570,12 +597,13 @@ function removeLinksFromNode() {
 }
 
 function setTextRow(id) {
+	console.log("id="+id);
 	//console.log("setTextRow!");
 	// Set the bottom row text display
-	var element = data.nodes.filter(function(n) {
+	var node = data.nodes.filter(function(n) {
 		return (n.id == Number(id));
 	});
-	$("#txta-node-text").val(element[0].displayText);
+	$("#txta-node-text").val(node[0].displayText);
 }
 
 // Clear the text row
@@ -584,6 +612,8 @@ function clearTextRow() {
 }
 
 function showNodeTextOverlay(id, showAll) {
+	console.log("id="+id);
+
 	var svg = d3.select("svg");
 	// Number of characters per line
 	var overlayLengthPerLine = 40;
@@ -592,12 +622,18 @@ function showNodeTextOverlay(id, showAll) {
 	// Set the bottom row text display
 	setTextRow(id);
 	
+	// Get the node which is to have an overlay opened over it
+	var node = data.nodes.filter(function(n) {
+		return (n.id == id);
+	});
+
 	if(activeTextOverlay == false) {
 
-		if(data.nodes[id].displayText.length > overlayLengthPerLine) {
+		//if(data.nodes[id].displayText.length > overlayLengthPerLine) {
+		if(node[0].displayText.length > overlayLengthPerLine) {
 			console.log("node text too long!");
 			var re = new RegExp('.{1,' + overlayLengthPerLine + '}', 'g');
-			var array = data.nodes[id].displayText.match(re);
+			var array = node[0].displayText.match(re);
 			console.log("array="+array);
 
 			// Trim leading whitespace from array
@@ -611,23 +647,23 @@ function showNodeTextOverlay(id, showAll) {
 		}
 
 		// Text for the overlay
-		nodeTextBox = svg.append("text")
+		nodeText = svg.append("text")
 			.attr("id", "svg-overlay"+id)
 			.classed("svg-overlay", true)
 			.classed("no-select", true)
-			.classed("svg-overlay-text-text", function(d) { return data.nodes[id].type == "text"; })
-			.classed("svg-overlay-text-scheme", function(d) { return data.nodes[id].type == "scheme"; })
+			.classed("svg-overlay-text-text", function(d) { return node[0].type == "text"; })
+			.classed("svg-overlay-text-scheme", function(d) { return node[0].type == "scheme"; })
 			.attr("dy","0.35em")
 			// If the node displayText is over length per line set text to first value of array - else just set text to displayText
 			.text(function() { 
 				if(nodeTextOverLengthPerLine == true) {
 					return array[0];
 				} else {
-					return data.nodes[id].displayText;
+					return node[0].displayText;
 				}
 			})
-			.attr("x", function() { return data.nodes[id].x + nodeTextBoxOffset; })
-			.attr("y", function() { return data.nodes[id].y + nodeTextBoxOffset; });
+			.attr("x", function() { return node[0].x + nodeTextBoxOffset; })
+			.attr("y", function() { return node[0].y + nodeTextBoxOffset; });
 
 		// If the node displayText will go over one line - append the additional lines
 		if(nodeTextOverLengthPerLine == true) {
@@ -638,13 +674,13 @@ function showNodeTextOverlay(id, showAll) {
 					return true;
 				}
 				// Append tspans with the subsequent lines
-				nodeTextBox.append("tspan")
+				nodeText.append("tspan")
 					.classed("svg-overlay", true)
 					.attr("x",0)
 					.attr("dy","0.35em")
-					.attr("x", function() { return data.nodes[id].x + nodeTextBoxOffset; })
+					.attr("x", function() { return node[0].x + nodeTextBoxOffset; })
 					// Offset the line y attribute for each line
-					.attr("y", function() { return data.nodes[id].y + ((nodeTextBoxOffset * index) + nodeTextBoxOffset); })
+					.attr("y", function() { return node[0].y + ((nodeTextBoxOffset * index) + nodeTextBoxOffset); })
 					.text(array[index]);
 			});
 		}
@@ -656,8 +692,8 @@ function showNodeTextOverlay(id, showAll) {
 		rect = svg.insert("rect", "#svg-overlay"+id)
 			.attr("id", "svg-overlay-rect-"+id)
 			.classed("svg-overlay", true)
-			.classed("svg-overlay-rect-text", function(d) { return data.nodes[id].type == "text"; })
-			.classed("svg-overlay-rect-scheme", function(d) { return data.nodes[id].type == "scheme"; })
+			.classed("svg-overlay-rect-text", function(d) { return node[0].type == "text"; })
+			.classed("svg-overlay-rect-scheme", function(d) { return node[0].type == "scheme"; })
 			.attr("x", bbox.x - 10)
 			.attr("y", bbox.y - 5)
 			.attr("width", bbox.width + 20)
@@ -689,6 +725,7 @@ function mouseOverTextOverlay() {
 		// Add mouseover event handler
 		$(".svg-node").on("mouseover", function(e) {
 			var id = $(this).attr("id");
+			console.log("id="+id);
 			// Show node text overlay passing id of the current node with mouseover and
 			showNodeTextOverlay(id, false);
 		});
@@ -928,15 +965,17 @@ function addLink(idStart,idEnd) {
 	var alreadySource = false;
 	
 	// Loop through data.links and check for a link with the source of the current node - if one is found with type scheme - prevent the link being added
-	//for(var i = 0; i < data.links.length; i++) {
-	$.each(data.links, function(index, value) {
-		if(data.links[index].source.id == id1 && id1Type == "scheme") {
+	for(var i = 0; i < data.links.length; i++) {
+	//$.each(data.links, function(index, value) {
+		//if(data.links[index].source.id == id1 && id1Type == "scheme") {
+		if(data.links[i].source == id1 && id1Type == "scheme") {
 			//alreadySource = true;
 			showModal(2);
 			removeActive();
 			return;
 		}
-	});
+	}
+	//});
 
 	/*
 	// If the node already has a link from it - show error modal and return
@@ -968,10 +1007,11 @@ function addLink(idStart,idEnd) {
 		id2Type = id2Filter[0].type;
 		console.log("id2Type="+id2Type);
 		
-		// Check for a link with the reverse source and target - if found prevent addition, remove dragline and show modal
+		
+		// Check for a link with the reverse source and target - if found prevent addition, remove dragline -show modal - return
 		for(var i = 0; i < data.links.length; i++) {
-			if(data.links[i].source.id == id2 && data.links[i].target.id == id1) {
-				// show modal 3
+			if(data.links[i].source == id2 && data.links[i].target == id1) {
+				// Show modal 3
 				showModal(3);
 				removeDragLine();
 				return;
@@ -1021,6 +1061,11 @@ function addLinkToData(id1,id2) {
 	console.log("id2="+id2);
 
 	var link = {};
+
+	link.source = id1;
+	link.target = id2;
+
+	/*
 	var source = data.nodes.filter(function(n) {
 		return (n.id == Number(id1));
 	});
@@ -1038,7 +1083,8 @@ function addLinkToData(id1,id2) {
 	link.target = target[0];
 
 	console.log("target="+JSON.stringify(target[0]));
-	
+	*/
+
 	// Push the link to the data object
 	data.links.push(link);
 	
@@ -1171,13 +1217,14 @@ function moveElementsToFit(width, height) {
 
 function updateLinks() {
 	console.log("updateLinks()");
-
 	$.each(data.nodes, function(index, value) {	
 		links = $.map(data.links, function(obj, index) {
-			if(obj.source.id == value.id) {
+			//if(obj.source.id == value.id) {
+			if(obj.source == value.id) {
 				obj.source = value;
 			}
-			if(obj.target.id == value.id) {
+			//if(obj.target.id == value.id) {
+			if(obj.target == value.id) {
 				obj.target = value;
 			}
 		})
