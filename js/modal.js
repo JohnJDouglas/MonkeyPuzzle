@@ -15,7 +15,7 @@ function showModal(name) {
 			$("#modal-controls").modal("show");
 			break;
 		case 5:
-			// Modal in this location was removed
+			$("#modal-upload-JSON-Invalid").modal("show");
 			break;
 		case 6:
 			$("#modal-clear-source").modal("show");

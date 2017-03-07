@@ -1,7 +1,7 @@
 /* Source button */
 .btn-source { 
   color: #000000; 
-  background-color: var(--source-color); 
+  background-color: var(--source-color);
   border-color: var(--source-color);
 }
 
@@ -50,55 +50,6 @@ fieldset[disabled] .btn-source.active {
 .btn-source.active-tab {
   background-color: var(--source-accent-color); 
   border-color: var(--source-accent-color);
-}
-
-/* Normal button */
-.btn-normal { 
-  color: #000000; 
-  background-color: var(--normal-color); 
-  border-color: var(--normal-color); 
-}
-
-.btn-normal:hover,
-.btn-normal.active, 
-.open .dropdown-toggle.btn-normal { 
-  color: #000000; 
-  background-color: var(--normal-accent-color); 
-  border-color: var(--normal-accent-color);
-}
-
-.btn-normal:focus {
-  background-color: var(--normal-accent-color);
-  border-color: var(--normal-accent-color);
-}
-
-.btn-normal.active, 
-.open .dropdown-toggle.btn-normal { 
-  background-image: none; 
-}
-
-.btn-normal.disabled, 
-.btn-normal[disabled], 
-fieldset[disabled] .btn-normal, 
-.btn-normal.disabled:hover, 
-.btn-normal[disabled]:hover, 
-fieldset[disabled] .btn-normal:hover, 
-.btn-normal.disabled:focus, 
-.btn-normal[disabled]:focus, 
-fieldset[disabled] .btn-normal:focus, 
-.btn-normal.disabled:active, 
-.btn-normal[disabled]:active, 
-fieldset[disabled] .btn-normal:active, 
-.btn-normal.disabled.active, 
-.btn-normal[disabled].active, 
-fieldset[disabled] .btn-normal.active { 
-  background-color: var(--normal-color); 
-  border-color: var(--normal-color); 
-}
-
-.btn-normal .badge { 
-  color: var(--normal-color); 
-  background-color: #000000; 
 }
 
 /* Settings button */
@@ -150,100 +101,6 @@ fieldset[disabled] .btn-settings.active {
   background-color: #000000; 
 }
 
-/* Text node button */
-.btn-text-node { 
-  color: #000000; 
-  background-color: #7AA3FF; 
-  border-color: #7AA3FF;
-} 
- 
-.btn-text-node:hover, 
-.btn-text-node:focus, 
-.btn-text-node:active, 
-.btn-text-node.active, 
-.open .dropdown-toggle.btn-text-node { 
-  color: #000000; 
-  background-color: #6d92e5; 
-  border-color: #7AA3FF; 
-} 
- 
-.btn-text-node:active, 
-.btn-text-node.active, 
-.open .dropdown-toggle.btn-text-node { 
-  background-image: none; 
-} 
- 
-.btn-text-node.disabled, 
-.btn-text-node[disabled], 
-fieldset[disabled] .btn-text-node, 
-.btn-text-node.disabled:hover, 
-.btn-text-node[disabled]:hover, 
-fieldset[disabled] .btn-text-node:hover, 
-.btn-text-node.disabled:focus, 
-.btn-text-node[disabled]:focus, 
-fieldset[disabled] .btn-text-node:focus, 
-.btn-text-node.disabled:active, 
-.btn-text-node[disabled]:active, 
-fieldset[disabled] .btn-text-node:active, 
-.btn-text-node.disabled.active, 
-.btn-text-node[disabled].active, 
-fieldset[disabled] .btn-text-node.active { 
-  background-color: #7AA3FF; 
-  border-color: #7AA3FF; 
-} 
- 
-.btn-text-node .badge { 
-  color: #7AA3FF; 
-  background-color: #000000; 
-}
-
-/* Scheme node button */
-.btn-scheme-node { 
-  color: #000000; 
-  background-color: #90EE90; 
-  border-color: #90EE90; 
-} 
- 
-.btn-scheme-node:hover, 
-.btn-scheme-node:focus, 
-.btn-scheme-node:active, 
-.btn-scheme-node.active, 
-.open .dropdown-toggle.btn-scheme-node { 
-  color: #000000; 
-  background-color: #81d681; 
-  border-color: #81d681; 
-} 
- 
-.btn-scheme-node:active, 
-.btn-scheme-node.active, 
-.open .dropdown-toggle.btn-scheme-node { 
-  background-image: none; 
-} 
- 
-.btn-scheme-node.disabled, 
-.btn-scheme-node[disabled], 
-fieldset[disabled] .btn-scheme-node, 
-.btn-scheme-node.disabled:hover, 
-.btn-scheme-node[disabled]:hover, 
-fieldset[disabled] .btn-scheme-node:hover, 
-.btn-scheme-node.disabled:focus, 
-.btn-scheme-node[disabled]:focus, 
-fieldset[disabled] .btn-scheme-node:focus, 
-.btn-scheme-node.disabled:active, 
-.btn-scheme-node[disabled]:active, 
-fieldset[disabled] .btn-scheme-node:active, 
-.btn-scheme-node.disabled.active, 
-.btn-scheme-node[disabled].active, 
-fieldset[disabled] .btn-scheme-node.active { 
-  background-color: #90EE90; 
-  border-color: #90EE90; 
-} 
- 
-.btn-scheme-node .badge { 
-  color: #90EE90; 
-  background-color: #000000; 
-}
-
 /* Delete button */
 .btn-delete { 
   color: #FFFFFF; 
@@ -288,5 +145,99 @@ fieldset[disabled] .btn-delete.active {
  
 .btn-delete .badge { 
   color: #D9534F; 
+  background-color: #FFFFFF; 
+}
+
+/* Lock button */
+.btn-lock { 
+  color: #FFFFFF; 
+  background-color: #F0AD4E; 
+  border-color: #F0AD4E; 
+} 
+ 
+.btn-lock:hover, 
+.btn-lock:focus, 
+.btn-lock:active, 
+.btn-lock.active, 
+.open .dropdown-toggle.btn-lock { 
+  color: #FFFFFF; 
+  background-color: #D89B46; 
+  border-color: #D89B46; 
+} 
+ 
+.btn-lock:active, 
+.btn-lock.active, 
+.open .dropdown-toggle.btn-lock { 
+  background-image: none; 
+} 
+ 
+.btn-lock.disabled, 
+.btn-lock[disabled], 
+fieldset[disabled] .btn-lock, 
+.btn-lock.disabled:hover, 
+.btn-lock[disabled]:hover, 
+fieldset[disabled] .btn-lock:hover, 
+.btn-lock.disabled:focus, 
+.btn-lock[disabled]:focus, 
+fieldset[disabled] .btn-lock:focus, 
+.btn-lock.disabled:active, 
+.btn-lock[disabled]:active, 
+fieldset[disabled] .btn-lock:active, 
+.btn-lock.disabled.active, 
+.btn-lock[disabled].active, 
+fieldset[disabled] .btn-lock.active { 
+  background-color: #F0AD4E; 
+  border-color: #F0AD4E; 
+} 
+ 
+.btn-lock .badge { 
+  color: #F0AD4E; 
+  background-color: #FFFFFF; 
+}
+
+/* Menu button */
+.btn-menu { 
+  color: #FFFFFF;
+  background-color: #337AB7;
+  border-color: #337AB7;
+} 
+ 
+.btn-menu:hover, 
+.btn-menu:focus, 
+.btn-menu:active, 
+.btn-menu.active, 
+.open .dropdown-toggle.btn-menu { 
+  color: #FFFFFF;
+  background-color: #2D6DA4;
+  border-color: #2D6DA4;
+} 
+ 
+.btn-menu:active, 
+.btn-menu.active, 
+.open .dropdown-toggle.btn-menu { 
+  background-image: none;
+} 
+ 
+.btn-menu.disabled, 
+.btn-menu[disabled], 
+fieldset[disabled] .btn-menu, 
+.btn-menu.disabled:hover, 
+.btn-menu[disabled]:hover, 
+fieldset[disabled] .btn-menu:hover, 
+.btn-menu.disabled:focus, 
+.btn-menu[disabled]:focus, 
+fieldset[disabled] .btn-menu:focus, 
+.btn-menu.disabled:active, 
+.btn-menu[disabled]:active, 
+fieldset[disabled] .btn-menu:active, 
+.btn-menu.disabled.active, 
+.btn-menu[disabled].active, 
+fieldset[disabled] .btn-menu.active { 
+  background-color: #337AB7; 
+  border-color: #337AB7; 
+} 
+ 
+.btn-menu .badge { 
+  color: #337AB7; 
   background-color: #FFFFFF; 
 }

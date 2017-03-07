@@ -7,9 +7,11 @@
 		<link rel="icon" type="image/ico" href="res/favicon.ico">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
 		<script src="https://d3js.org/d3.v4.js"></script>
+		<script src="js/tv4.js"></script>
 		<script src="js/index.js"></script>
 		<script src="js/modelling.js"></script>
 		<script src="js/modal.js"></script>
+		<script src="js/clipboard.js"></script>
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -31,16 +33,16 @@
 					<!--col-left-->
 					<div id="col-left" class="panel-left">
 						<div class="row">
-							<div class="col-md-4 no-padding-lr">
-								<button class="btn btn-source btn-block" onclick="showModal(6)"><i class="fa fa-trash"></i> Clear Source</button>
+							<div id="div-col-left-button" class="col-md-4 no-padding-lr">
+								<button class="btn btn-source btn-block" onclick="showModal(6)"><i class="fa fa-trash"></i><span class="span-col-left-button"> Clear Source</span></button>
 							</div>
 							<div class="col-md-4 no-padding-lr">
 								<form style="display:inline;">
-									<span class="btn btn-source btn-file btn-block"><i class="fa fa-upload"></i> Upload .txt<input id="fileInput" class="fileInput" type="file" accept=".txt"></span>
+									<span class="btn btn-source btn-file btn-block"><i class="fa fa-upload"></i><span class="span-col-left-button"> Upload .txt</span><input id="fileSourceInput" class="fileSourceInput" type="file" accept=".txt"></span>
 								</form>
 							</div>
 							<div class="col-md-4 no-padding-lr">
-								<button class="btn btn-source btn-block" onclick="saveTextAsFile(1)"><i class="fa fa-save"></i> Save .txt</button>
+								<button class="btn btn-source btn-block" onclick="saveTextAsFile(1)"><i class="fa fa-save"></i><span class="span-col-left-button"> Save .txt</span></button>
 							</div>
 						</div>
 						<div class="row">
@@ -48,7 +50,7 @@
 								<button class="btn btn-source btn-block" onclick="addTab()"><i class="fa fa-plus"></i></button>
 							</div>
 							<div id="div-source-tab-1" class="source-tab no-padding-lr col-md-1">
-								<button class="btn btn-source btn-block" onclick="showTab(1)"></span>1</button>
+								<button class="btn btn-source btn-block btn-tab" onclick="showTab(1)"></span>1</button>
 							</div>
 						</div>
 						<div class="row">
@@ -65,7 +67,7 @@
 								<textarea id="txta-tab-10" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 10</textarea>
 							</div>
 						</div>
-						<div class="div-col-left-source">
+						<div id="div-col-left-source">
 							<div class="row height-100-percent">
 								<div class="col-md-12 no-padding-lr height-100-percent">
 									<textarea id="txta-source-1" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
@@ -84,7 +86,7 @@
 						<div class="row">
 							<div class="col-md-12 no-padding-lr">
 								<div class="col-md-6 no-padding-lr">
-									<button id="btn-lock-tab" class="btn btn-primary btn-block" onclick="lockTab()"><i id="i-lock-tab" class="fa fa-lock"></i></span><span id="span-lock"> Unlock Tab</span></button>
+									<button id="btn-lock-tab" class="btn btn-lock btn-block" onclick="lockTab()"><i id="i-lock-tab" class="fa fa-lock"></i></span><span id="span-lock"> Unlock Tab</span></button>
 								</div>
 								<div class="col-md-6 no-padding-lr">
 									<button id="btn-remove-tab" class="btn btn-delete btn-block" onclick="showModal(7)"><i class="fa fa-trash"></i></span> Delete Tab</button>
@@ -100,15 +102,15 @@
 						<div id="div-col-right-buttons">
 							<div class="row">
 								<div class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
-									<button class="btn btn-normal btn-block" onclick="toggleSource()"><i id="i-source" class="fa fa-chevron-left"></i></button>
+									<button class="btn btn-menu btn-block" onclick="toggleSource()"><i id="i-source" class="fa fa-chevron-left"></i></button>
 								</div>
 								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-									<button class="btn btn-text-node btn-block" onclick="addNode(1)"><i class="fa fa-plus"></i> Text</button>
+									<button class="btn btn-menu btn-block" onclick="addNode(1)"><i class="fa fa-plus"></i> Text</button>
 								</div>
 								<div class="col-xs-2 col-md-2 col-lg-2 dropdown no-padding-lr">
 									<div class="dropdown">
-										<a role="button" data-toggle="dropdown" class="btn btn-scheme-node btn-block" data-target="#">
-										<i class="fa fa-plus"></i> Scheme <span class="caret"></span>
+										<a role="button" data-toggle="dropdown" class="btn btn-menu btn-block" data-target="#">
+											<i class="fa fa-plus"></i> Scheme <span class="caret"></span>
 										</a>
 										<ul id="ul-schemes" class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
 											<li><a class="a-scheme-option">Default</a></li>
@@ -267,13 +269,13 @@
 									</div>
 								</div>
 								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-									<button class="btn btn-normal btn-block" onclick="showAllTextOverlay()"><i class="fa fa-eye"></i> Content</button>
+									<button class="btn btn-menu btn-block" onclick="showAllTextOverlay()"><i class="fa fa-eye"></i> Content</button>
 								</div>
 								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-									<button id="btn-mouse-overlay" class="btn btn-normal btn-block" onclick="mouseOverTextOverlay()"><i id="i-mouseover-toggle" class="fa fa-eye"></i> Mouseover</button>
+									<button id="btn-mouse-overlay" class="btn btn-menu btn-block" onclick="mouseOverTextOverlay()"><i id="i-mouseover-toggle" class="fa fa-eye"></i> Mouseover</button>
 								</div>
 								<div class="col-xs-3 col-md-3 col-lg-3 no-padding-lr">
-									<button class="btn btn-primary btn-block" onclick="showModal(9)">MONKEYPUZZLE</button>
+									<button class="btn btn-menu btn-block" onclick="showModal(9)">MONKEYPUZZLE</button>
 								</div>
 							</div>
 						</div>
@@ -290,10 +292,10 @@
 						<textarea id="txta-node-text" readonly></textarea>
 					</div>
 					<div class="col-md-1 col-lg-1 no-padding-lr">
-						<button id="btn-edit-text" class="btn btn-normal btn-block" onclick="editNodeText()"><i id="i-edit" class="fa fa-edit"></i> Text</button>
+						<button id="btn-edit-text" class="btn btn-menu btn-block" onclick="editNodeText()"><i id="i-edit" class="fa fa-edit"></i> Text</button>
 					</div>
 					<div class="col-md-1 col-lg-1 no-padding-lr">
-						<button id="btn-copy-text" class="btn btn-normal btn-block" onclick="copyNodeText()"><i class="fa fa-copy"></i> Text</button>
+						<button id="btn-clipboard" class="btn btn-menu btn-block" data-clipboard-action="copy" data-clipboard-target="#txta-node-text"><i class="fa fa-copy"></i> Text</button>
 					</div>
 				</div>
 			</div>
@@ -458,9 +460,9 @@
 							<h4 class="modal-title title-primary">Settings</h4>
 						</div>
 						<div class="modal-body">
-							<p class="modal-text p-settings">Controls:</p>
+							<p class="modal-text p-settings">Controls</p>
 							<button class="btn btn-settings btn-block btn-settings-margin" data-dismiss="modal" onclick="showModal(4)"><i class="fa fa-keyboard-o"></i> Controls</button>
-							<p class="modal-text p-settings">Save Visualisation As:</p>
+							<p class="modal-text p-settings">Save Visualisation As</p>
 							<input id="input-SVG-file-name" type="text" class="form-control input-settings" placeholder="model">
 							<div class="col-md-6 col-lg-6 no-padding-l">
 								<button class="btn btn-settings btn-block btn-settings-margin" onclick="saveSVGAsPNG()"><i class="fa fa-save"></i> Visualisation (.PNG)</button>
@@ -468,26 +470,15 @@
 							<div class="col-md-6 col-lg-6 no-padding-r">
 								<button class="btn btn-settings btn-block btn-settings-margin" onclick="saveSVGAsSVG()"><i class="fa fa-save"></i> Visualisation (.SVG)</button>
 							</div>
-							<p class="modal-text p-settings">Upload JSON:</p>
-							<input id="input-upload-JSON" type="text" class="form-control input-settings" placeholder="JSON">
-							<button id="btn-upload-JSON" class="btn btn-settings btn-block btn-settings-margin" onclick="uploadJSON()"><i class="fa fa-upload"></i> JSON</button>
-							<p class="modal-text p-settings">Download JSON:</p>
+							<p class="modal-text p-settings">Upload JSON</p>
+							<form style="display:inline;">
+								<span class="btn btn-settings btn-file btn-block btn-settings-margin"><i class="fa fa-upload"></i> Upload JSON<input id="fileJSONInput" class="fileJSONInput" type="file" accept=".json"></span>
+							</form>
+							<p class="modal-text p-settings">Download JSON</p>
 							<input id="input-download-JSON" type="text" class="form-control input-settings" placeholder="data">
-							<button id="btn-download-JSON" class="btn btn-settings btn-block btn-settings-margin" onclick="saveDataAsJSON()"><i class="fa fa-download"></i> JSON</button>
+							<button id="btn-download-JSON" class="btn btn-settings btn-block btn-settings-margin" onclick="saveDataAsJSON()"><i class="fa fa-download"></i> Download JSON</button>
 							<div class="row">
-								<p class="modal-text p-settings">Source Panel Maximum Width (min is 20% - max is 50%):</p>
-								<div class="col-md-4 col-lg-4 no-padding-l">
-									<button id="btn-decrease-source" class="btn btn-settings btn-block" onclick="sourceChange('0')"><i class="fa fa-minus"></i></button>
-								</div>
-								<div class="col-md-4 col-lg-4 no-padding-lr">
-									<button id="btn-increase-source" class="btn btn-settings btn-block" onclick="sourceChange('1')"><i class="fa fa-plus"></i></button>
-								</div>
-								<div class="col-md-4 col-lg-4 no-padding-r">
-									<input id="input-source-display" type="text" class="form-control btn-block btn-settings-margin" placeholder="30%" readonly>
-								</div>
-							</div>
-							<div class="row">
-								<button id="btn-testing" class="btn btn-normal dropdown-toggle btn-settings btn-block" type="button" data-toggle="dropdown">Testing <span class="caret"></span></button>
+								<button id="btn-testing" class="btn btn-settings dropdown-toggle btn-settings btn-block" type="button" data-toggle="dropdown">Testing <span class="caret"></span></button>
 									<ul class="dropdown-menu">
 										<li><a href="javascript:logDataToConsole('d')">Data</a></li>
 										<li><a href="javascript:logDataToConsole('n')">Data.nodes</a></li>
@@ -546,6 +537,23 @@
 						<div class="modal-footer">
 							<button id="btn-modal-edit-text-node" type="button" class="btn btn-default modal-edit-text-node" data-dismiss="modal"><i class="fa fa-edit"></i> Update Text</button>
 							<button id="btn-modal-edit-scheme-node" type="button" class="btn btn-default modal-edit-scheme-node" data-dismiss="modal"><i class="fa fa-edit"></i> Update Scheme</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Modal-->
+			<div id="modal-upload-JSON-Invalid" class="modal fade" role="dialog" data-backdrop="static">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header color-warning">
+							<h4 class="modal-title">Uploaded JSON is invalid</h4>
+						</div>
+						<div class="modal-body">
+							<p class="modal-text">The uploaded JSON file is invalid, please edit and reupload</p>
+						</div>
+						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
 					</div>

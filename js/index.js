@@ -4,8 +4,6 @@ var sourceToggle = false;
 var numberTabs = 1;
 var activeTab = 1;
 var maxTabs = 10;
-var sourceMaxWidth = 30;
-var sourceIncrement = 5;
 //var highlightRange = [[100, 200], [350, 400]];
 var highlightRange = [];
 //var highlightRange = [[0,80],[656,716]];
@@ -21,8 +19,9 @@ $(window).bind("beforeunload",function(){
 });
 */
 //ONLOAD FUNCTION
-$(window).load(function() {
+$(window).load(function () {
 	uploadText();
+	uploadJSON();
 	sampleText();
 	createSVG();
 	setupSchemes();
@@ -30,17 +29,19 @@ $(window).load(function() {
 	toggleSource(1);
 	textareaRemoveActive();
 
+	new Clipboard("#btn-clipboard");
+
 	var w = $("svg").width();
 	var h = $("svg").height();
 
-	console.log("svg w="+w);
-	console.log("svg h="+h);
+	console.log("svg w=" + w);
+	console.log("svg h=" + h);
 
 	//moveElementsToFit(w, h);
 
 	// Set the text currently in the tab to the data object tabs sub-array
-	$(".txta-source").on("keyup paste", function() {
-		var currentTab = (activeTab-1);
+	$(".txta-source").on("keyup paste", function () {
+		var currentTab = (activeTab - 1);
 		data.tabs[currentTab].text = this.value;
 	});
 
@@ -88,128 +89,119 @@ function setupSchemes() {
 	}
 	*/
 	// Set the onclick to addNode - with scheme type parameter and the value parameter as the text of the link - Fill the schemesArray with all schemes
-	$(".a-scheme-option").each(function(index) {
+	$(".a-scheme-option").each(function (index) {
 		//$(".a-scheme-option").eq(index).attr("onclick","addNode(2,'"+$(".a-scheme-option").eq(index).text()+"')");
-		$(this).attr("onclick","addNode(2,'"+$(this).text()+"')");
+		$(this).attr("onclick", "addNode(2,'" + $(this).text() + "')");
 		// Add the value of the text to the array of scheme types
 		schemesArray.push($(this).text());
 	});
 
-	console.log("schemesArray="+schemesArray);
+	console.log("schemesArray=" + schemesArray);
 }
 
 
 function panelResize(type) {
 	// If the parameter is 0 - start dragging - else end
-	if(Number(type) == 0) {
+	if (Number(type) == 0) {
 		console.log("Resizing Start");
-		$("#txta-source-"+activeTab).addClass("noSelect");
+		$("#txta-source-" + activeTab).addClass("noSelect");
 		// Start - if the tab is not readonly (aka you could edit this)
-		if(!$("#txta-source-"+activeTab).prop("readonly")) {
+		if (!$("#txta-source-" + activeTab).prop("readonly")) {
 			console.log("you could edit this tab");
 			// Prevent editing
-			$("#txta-source-"+activeTab).prop("readonly", true);
+			$("#txta-source-" + activeTab).prop("readonly", true);
 			wasUnlocked = true;
 		}
 	} else {
 		console.log("Resizing End");
-		$("#txta-source-"+activeTab).removeClass("noSelect");
-		if(wasUnlocked == true) {
+		$("#txta-source-" + activeTab).removeClass("noSelect");
+		if (wasUnlocked == true) {
 			console.log("wasUnlocked == true!");
-			$("#txta-source-"+activeTab).prop("readonly", false);
+			$("#txta-source-" + activeTab).prop("readonly", false);
 		}
 		// Update the node positions when a drag is finished
 		var w = $("#svg-vis").width();
 		var h = $("#svg-vis").height();
 
-		moveElementsToFit(w,h);
+		var buttonWidth = $("#div-col-left-button").width();
+
+		if (buttonWidth < 120) {
+			$(".span-col-left-button").hide();
+		} else {
+			$(".span-col-left-button").show();
+		}
+
+		moveElementsToFit(w, h);
 	}
 }
 
 function removeHighlight() {
-	$("#txta-source-"+activeTab).data('hwt').destroy();
+	$("#txta-source-" + activeTab).data('hwt').destroy();
 }
 
 function onInputArray(input) {
 	return highlightRange;
 }
 
-function sourceChange(type) {
-	// If the parameter is 0 then decrease the source max width - else increase the value
-	if(Number(type) == 0) {
-		if(sourceMaxWidth > 20) {
-			sourceMaxWidth = sourceMaxWidth - sourceIncrement;
-			$("#input-source-display").val(sourceMaxWidth+"%");
-			$(".panel-left").css("max-width",sourceMaxWidth+"%");
-		}
-	} else {
-		if(sourceMaxWidth < 50) {
-			sourceMaxWidth = sourceMaxWidth + sourceIncrement;
-			$("#input-source-display").val(sourceMaxWidth+"%");
-			$(".panel-left").css("max-width",sourceMaxWidth+"%");
-		}
-	}
-}
-
 function toggleSource(toggle) {
 	console.log("toggleSource()");
-	if(toggle == 1) {
+	if (toggle == 1) {
 		sourceToggle = true;
-	} else if(toggle == 0) {
+	} else if (toggle == 0) {
 		sourceToggle = false;
 	}
-	if(sourceToggle == false) {
+	if (sourceToggle == false) {
 		$("#col-left").hide();
 		$(".splitter").hide();
-		
+
 		$("#i-source").removeClass("fa-chevron-left");
 		$("#i-source").addClass("fa-chevron-right");
-		
+
 		sourceToggle = true;
 	} else {
-		$("#col-left").show();	
+		$("#col-left").show();
 		$(".splitter").show();
-		
+
 		$("#i-source").removeClass("fa-chevron-right");
 		$("#i-source").addClass("fa-chevron-left");
 
 		var w = $("#svg-vis").width();
 		var h = $("#svg-vis").height();
 
-		moveElementsToFit(w,h);
-		
+		moveElementsToFit(w, h);
+
 		sourceToggle = false;
 	}
 }
 
 function sampleText() {
-	$("#txta-source"+activeTab).val("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex."
-	+"Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis. Phasellus a congue purus. Vestibulum fringilla lectus ac massa volutpat cursus. Donec ac eleifend"
-	+"tortor, et blandit erat. Quisque a consequat ligula, non tincidunt mauris. Quisque tincidunt ultrices tortor, a venenatis sapien facilisis sed. Aliquam nisl elit, tempor at"
-	+"feugiat non, tempus quis enim. Donec cursus tempus augue, vitae dapibus sem volutpat eu. Vivamus dolor sapien, porttitor fermentum tortor at, placerat malesuada sem. Sed vitae enim scelerisque,"
-	+"fringilla urna sed, tempor turpis. Fusce ac molestie dui, ut lobortis libero. Maecenas leo tellus, tempus id dictum sed, facilisis quis augue. Integer at ullamcorper enim."
-	+"Sed viverra tortor non urna hendrerit euismod. In magna ligula, faucibus at lobortis at, interdum a turpis. Maecenas laoreet lobortis elit, at commodo metus congue quis. Integer"
-	+"in egestas diam. In at velit ut lorem feugiat pulvinar in vestibulum leo. Aliquam eu eros non massa fermentum malesuada efficitur a ligula. Donec posuere consequat enim nec eleifend."
-	+"Curabitur suscipit metus et tincidunt condimentum. Ut porttitor eros fringilla, tincidunt augue vel, ultricies elit. Integer porttitor, tellus a vulputate vulputate, mauris diam mattis"
-	+"enim, et finibus sem enim maximus enim. In sollicitudin lacus fermentum tellus molestie aliquam. Donec faucibus dolor nec ex suscipit lobortis. Sed ut eros ipsum."
-	+"Suspendisse pellentesque sagittis ligula non facilisis. Nulla sed turpis eget nunc pharetra lobortis elementum vitae ante. Morbi vehicula, quam ac ultricies eleifend, ante elit semper lectus,"
-	+"tempor tincidunt erat sem fermentum libero. Vivamus semper nulla vel arcu tincidunt semper ut nec arcu. Sed in iaculis mauris. Vivamus molestie est dui, at iaculis dolor egestas id. Nullam pulvinar"
-	+"consectetur mi sit amet aliquet. Curabitur id venenatis urna. Vivamus id massa sapien. Morbi porttitor urna fermentum mi blandit, sed lacinia mi elementum. Sed nec tempus mauris. Sed quis lorem sapien."
-	+"Morbi vel maximus nisi. Ut orci mi, ultrices nec lorem sagittis, congue dictum quam. Maecenas placerat, ipsum ut consequat eleifend, metus ipsum ornare quam, eu semper purus mi nec turpis. Curabitur ut accumsan arcu."
-	+"Nam dolor nunc, tincidunt sed nunc eget, pulvinar sollicitudin arcu. Nulla et dictum erat. Phasellus pulvinar blandit mauris, aliquet pellentesque tortor sagittis sit amet. Nullam vel ex odio."
-	+"Maecenas posuere gravida mi tempor tristique. Nullam facilisis, lacus sed vestibulum hendrerit, dui felis mattis turpis, nec pellentesque diam leo eu nulla. Donec egestas risus erat, vitae efficitur ante gravida nec."
-	+"Donec accumsan, leo semper rutrum interdum, tellus felis imperdiet libero, id rutrum libero neque interdum mauris. Phasellus pharetra molestie nisi ac ullamcorper. Vestibulum nec volutpat leo. "
-	+"Maecenas eu ullamcorper metus. Aliquam commodo, justo eu accumsan sollicitudin, turpis odio rutrum ipsum, ut finibus neque lorem at nulla. Nunc eu felis volutpat, egestas felis in, vulputate ipsum."
-	+"Maecenas ullamcorper. Aliquam ut finibus neque lorem at nulla. commodo, turpis odio rutrum ipsum, justo eu accumsan sollicitudin. Nunc eu felis volutpat, egestas felis in, vulputate ipsum."
-	+"accumsan, leo semper rutrum interdum, tellus felis imperdiet libero, id rutr Phasellus pharetra molestie nisi ac ullamcorper. Vestibulum nec volutpat leo. "
-	+"semper rutrum interdum, tet libero, id rutrum libero neque interdum mauris. Phasellus pharetra molestie npat leo. "
-	+"Donec accumsan, um interdum, tellus felis  id rutrum libero neque interdum mauris. Phasellus pharetra molestie nisi ac ullamcorper. Vestibulum nec volutpat leo. ");
+	$("#txta-source" + activeTab).val("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex."
+		+ "Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis. Phasellus a congue purus. Vestibulum fringilla lectus ac massa volutpat cursus. Donec ac eleifend"
+		+ "tortor, et blandit erat. Quisque a consequat ligula, non tincidunt mauris. Quisque tincidunt ultrices tortor, a venenatis sapien facilisis sed. Aliquam nisl elit, tempor at"
+		+ "feugiat non, tempus quis enim. Donec cursus tempus augue, vitae dapibus sem volutpat eu. Vivamus dolor sapien, porttitor fermentum tortor at, placerat malesuada sem. Sed vitae enim scelerisque,"
+		+ "fringilla urna sed, tempor turpis. Fusce ac molestie dui, ut lobortis libero. Maecenas leo tellus, tempus id dictum sed, facilisis quis augue. Integer at ullamcorper enim."
+		+ "Sed viverra tortor non urna hendrerit euismod. In magna ligula, faucibus at lobortis at, interdum a turpis. Maecenas laoreet lobortis elit, at commodo metus congue quis. Integer"
+		+ "in egestas diam. In at velit ut lorem feugiat pulvinar in vestibulum leo. Aliquam eu eros non massa fermentum malesuada efficitur a ligula. Donec posuere consequat enim nec eleifend."
+		+ "Curabitur suscipit metus et tincidunt condimentum. Ut porttitor eros fringilla, tincidunt augue vel, ultricies elit. Integer porttitor, tellus a vulputate vulputate, mauris diam mattis"
+		+ "enim, et finibus sem enim maximus enim. In sollicitudin lacus fermentum tellus molestie aliquam. Donec faucibus dolor nec ex suscipit lobortis. Sed ut eros ipsum."
+		+ "Suspendisse pellentesque sagittis ligula non facilisis. Nulla sed turpis eget nunc pharetra lobortis elementum vitae ante. Morbi vehicula, quam ac ultricies eleifend, ante elit semper lectus,"
+		+ "tempor tincidunt erat sem fermentum libero. Vivamus semper nulla vel arcu tincidunt semper ut nec arcu. Sed in iaculis mauris. Vivamus molestie est dui, at iaculis dolor egestas id. Nullam pulvinar"
+		+ "consectetur mi sit amet aliquet. Curabitur id venenatis urna. Vivamus id massa sapien. Morbi porttitor urna fermentum mi blandit, sed lacinia mi elementum. Sed nec tempus mauris. Sed quis lorem sapien."
+		+ "Morbi vel maximus nisi. Ut orci mi, ultrices nec lorem sagittis, congue dictum quam. Maecenas placerat, ipsum ut consequat eleifend, metus ipsum ornare quam, eu semper purus mi nec turpis. Curabitur ut accumsan arcu."
+		+ "Nam dolor nunc, tincidunt sed nunc eget, pulvinar sollicitudin arcu. Nulla et dictum erat. Phasellus pulvinar blandit mauris, aliquet pellentesque tortor sagittis sit amet. Nullam vel ex odio."
+		+ "Maecenas posuere gravida mi tempor tristique. Nullam facilisis, lacus sed vestibulum hendrerit, dui felis mattis turpis, nec pellentesque diam leo eu nulla. Donec egestas risus erat, vitae efficitur ante gravida nec."
+		+ "Donec accumsan, leo semper rutrum interdum, tellus felis imperdiet libero, id rutrum libero neque interdum mauris. Phasellus pharetra molestie nisi ac ullamcorper. Vestibulum nec volutpat leo. "
+		+ "Maecenas eu ullamcorper metus. Aliquam commodo, justo eu accumsan sollicitudin, turpis odio rutrum ipsum, ut finibus neque lorem at nulla. Nunc eu felis volutpat, egestas felis in, vulputate ipsum."
+		+ "Maecenas ullamcorper. Aliquam ut finibus neque lorem at nulla. commodo, turpis odio rutrum ipsum, justo eu accumsan sollicitudin. Nunc eu felis volutpat, egestas felis in, vulputate ipsum."
+		+ "accumsan, leo semper rutrum interdum, tellus felis imperdiet libero, id rutr Phasellus pharetra molestie nisi ac ullamcorper. Vestibulum nec volutpat leo. "
+		+ "semper rutrum interdum, tet libero, id rutrum libero neque interdum mauris. Phasellus pharetra molestie npat leo. "
+		+ "Donec accumsan, um interdum, tellus felis  id rutrum libero neque interdum mauris. Phasellus pharetra molestie nisi ac ullamcorper. Vestibulum nec volutpat leo. ");
 }
 
 function textareaRemoveActive() {
 	console.log("textareaRemoveActive()");
 	// When any textarea is clicked, remove the active element from d3.js
-	$(".txta-source").on("focus",function() {
+	$(".txta-source").on("focus", function () {
 		removeActive();
 		removeDragLine();
 		removeTextOverlay();
@@ -219,21 +211,21 @@ function textareaRemoveActive() {
 
 function lockTab() {
 	// If the current tab (source and title) is readonly (locked) unlock it - else lock it
-	if($("#txta-tab-"+activeTab).prop("readonly") && $("#txta-source-"+activeTab).prop("readonly")) {
-		$("#txta-tab-"+activeTab).prop("readonly", false);
-		$("#txta-source-"+activeTab).prop("readonly", false);
+	if ($("#txta-tab-" + activeTab).prop("readonly") && $("#txta-source-" + activeTab).prop("readonly")) {
+		$("#txta-tab-" + activeTab).prop("readonly", false);
+		$("#txta-source-" + activeTab).prop("readonly", false);
 
 		$("#i-lock-tab").removeClass("fa-unlock");
 		$("#i-lock-tab").addClass("fa-lock");
 		$("#span-lock").text(" Lock Tab");
 	} else {
-		$("#txta-tab-"+activeTab).prop("readonly", true);
-		$("#txta-source-"+activeTab).prop("readonly", true);
+		$("#txta-tab-" + activeTab).prop("readonly", true);
+		$("#txta-source-" + activeTab).prop("readonly", true);
 
 		// If the tab title is empty when they lock it - set the title to default (Tab X).
-		if(!$("#txta-tab-"+activeTab).val()) {
+		if (!$("#txta-tab-" + activeTab).val()) {
 			console.log("tab title empty locking!");
-			$("#txta-tab-"+activeTab).val("Tab "+activeTab);
+			$("#txta-tab-" + activeTab).val("Tab " + activeTab);
 		}
 
 		$("#i-lock-tab").removeClass("fa-lock");
@@ -244,39 +236,39 @@ function lockTab() {
 
 function clearSource() {
 	// Clear the textarea of the current textarea
-	$("#txta-source-"+activeTab).val("");
+	$("#txta-source-" + activeTab).val("");
 }
 
 function uploadText() {
 	console.log("uploadText()");
 	// This function allows the upload button to read and upload the text back to back
-	$("#fileInput").on("click", function(e){
-    	$(this).prop("value", "");
+	$("#fileSourceInput").on("click", function (e) {
+		$(this).prop("value", "");
 	});
 
-	$("#fileInput").on("change", function(e) {
-		var name = readFile(this.files[0], function(e) {
+	$("#fileSourceInput").on("change", function (e) {
+		var name = readFile(this.files[0], function (e) {
 			// Get the text of the current file
 			var currentFile = e.target.result;
-			
-			$("#txta-source-"+activeTab).val("");
-			console.log("text="+currentFile);
-			$("#txta-source-"+activeTab).val(currentFile);
+
+			$("#txta-source-" + activeTab).val("");
+			console.log("text=" + currentFile);
+			$("#txta-source-" + activeTab).val(currentFile);
 
 			// Update the value of the data object to include the text uploaded
-			var currentTab = (activeTab-1);
+			var currentTab = (activeTab - 1);
 			data.tabs[currentTab].text = currentFile;
 		});
 
 		// Set the name of the tab to the name of the uploaded file
-		$("#txta-tab-"+activeTab).val(name);
+		$("#txta-tab-" + activeTab).val(name);
 	});
 }
 
 function readFile(file, callback) {
-    var reader = new FileReader();
-    reader.onload = callback;
-    reader.readAsText(file);
+	var reader = new FileReader();
+	reader.onload = callback;
+	reader.readAsText(file);
 	console.log(file.name);
 	// Return the file name
 	return file.name;
@@ -285,33 +277,34 @@ function readFile(file, callback) {
 // Save the current tab content as a .txt
 function saveTextAsFile(type) {
 	try {
-		switch(Number(type)) {
+		switch (Number(type)) {
 			case 1:
 				// TODO - Update this to check for a title
-				var textToWrite = $("#txta-source-"+activeTab).val();
-				var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/plain' });
-				var fileNameToSaveAs = "MonkeyPuzzleTab"+activeTab;
+				var textToWrite = $("#txta-source-" + activeTab).val();
+				var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
+				var fileNameToSaveAs = $("#txta-tab-" + activeTab).val();
+				// If the file name is empty - set to the default "MonkeyPuzzle"
+				if (fileNameToSaveAs == "") {
+					fileNameToSaveAs = "MonkeyPuzzle";
+				}
 				break;
 			case 2:
 				var textToWrite = JSON.stringify(data);
-				var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/plain' });
+				var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
 				var fileNameToSaveAs = $("#input-download-JSON").val();
-				// If the file name is empty - set to the default "data"
-				if(fileNameToSaveAs == "") {
-					fileNameToSaveAs = "data";
+				// If the file name is empty - set to the default "MonkeyPuzzle"
+				if (fileNameToSaveAs == "") {
+					fileNameToSaveAs = "MonkeyPuzzle";
 				}
 				break
 			default:
 				console.log("saveTextAsFile switch error!");
 		}
-		//var textToWrite = $("#txta-source-"+activeTab).val();
-		//var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/plain' });
-		//var fileNameToSaveAs = "MonkeyPuzzleTab"+activeTab;
 
 		var downloadLink = document.createElement("a");
 		downloadLink.download = fileNameToSaveAs;
 		downloadLink.innerHTML = "Download File";
-		if(window.URL != null) {
+		if (window.URL != null) {
 			// Chrome allows the link to be clicked without actually adding it to the DOM.
 			downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
 		} else {
@@ -330,9 +323,9 @@ function saveTextAsFile(type) {
 
 function addTab() {
 	// If the current number of tabs is less than the maximum allowed
-	if(numberTabs < maxTabs) {
+	if (numberTabs < maxTabs) {
 		// Insert the new tab after the last tab
-		$(".source-tab:last").after("<div id='div-source-tab-"+(numberTabs+1)+"' class='source-tab no-padding-lr col-md-1'><button class='btn btn-source btn-block' onclick='showTab("+(numberTabs+1)+")'></span>"+(numberTabs+1)+"</button></div>");
+		$(".source-tab:last").after("<div id='div-source-tab-" + (numberTabs + 1) + "' class='source-tab no-padding-lr col-md-1'><button class='btn btn-source btn-block btn-tab' onclick='showTab(" + (numberTabs + 1) + ")'></span>" + (numberTabs + 1) + "</button></div>");
 		// Set the number of tabs
 		numberTabs = $(".source-tab").length;
 		showTab(numberTabs);
@@ -347,30 +340,30 @@ function removeTab() {
 	var sourceTitleArray = [];
 
 	// If there is only one tab - you can not remove it - else remove tab
-	if(numberTabs == 1)  {
-		console.log("removeTab activeTab="+activeTab);
+	if (numberTabs == 1) {
+		console.log("removeTab activeTab=" + activeTab);
 		showModal(8);
 	} else {
 		// Log the active tab
-		console.log("activeTab="+activeTab);
+		console.log("activeTab=" + activeTab);
 
 		// Log the contents of each tab text and tab title
-		$(".txta-source").each(function(index) {
-			console.log("txta-source-"+(index+1)+$("#txta-source-"+(index+1)).val());
-			console.log("txta-tab-"+(index+1)+$("#txta-tab-"+(index+1)).val());
+		$(".txta-source").each(function (index) {
+			console.log("txta-source-" + (index + 1) + $("#txta-source-" + (index + 1)).val());
+			console.log("txta-tab-" + (index + 1) + $("#txta-tab-" + (index + 1)).val());
 		});
 
 		// Remove the tab header
-		$("#div-source-tab-"+activeTab).remove();
+		$("#div-source-tab-" + activeTab).remove();
 
 		// Loop through each source
-		$(".txta-source").each(function(index) {
-			if((index+1) <= numberTabs) {
+		$(".txta-source").each(function (index) {
+			if ((index + 1) <= numberTabs) {
 				// If the source id is not the active tab - this is required because we don't want the title of current tab (it is being deleted!)
-				if($(".txta-source").eq(index).attr("id") != ("txta-source-"+activeTab)) {
+				if ($(".txta-source").eq(index).attr("id") != ("txta-source-" + activeTab)) {
 					// Log the contents of each tab text and title
-					console.log("txta-source-"+(index+1)+"="+$(".txta-source").eq(index).val());
-					console.log("txta-tab-"+(index+1)+"="+$(".txta-tab").eq(index).val());
+					console.log("txta-source-" + (index + 1) + "=" + $(".txta-source").eq(index).val());
+					console.log("txta-tab-" + (index + 1) + "=" + $(".txta-tab").eq(index).val());
 					// Add the value in both the tab text and title to arrays
 					sourceTextArray.push($(".txta-source").eq(index).val());
 					sourceTitleArray.push($(".txta-tab").eq(index).val());
@@ -380,26 +373,26 @@ function removeTab() {
 
 		// Correct the number of tabs
 		numberTabs = $(".source-tab").length;
-		console.log("numberTabs="+Number(numberTabs));
+		console.log("numberTabs=" + Number(numberTabs));
 
 		// Log the arrays
-		console.log("sourceTextArray="+JSON.stringify(sourceTextArray));
-		console.log("sourceTitleArray="+JSON.stringify(sourceTitleArray));
+		console.log("sourceTextArray=" + JSON.stringify(sourceTextArray));
+		console.log("sourceTitleArray=" + JSON.stringify(sourceTitleArray));
 
 		// When removing tabs - set the current tab view to the first
 		showTab(1);
 		// Reorder tabs - orders tabs by number and updates button attributes - pass the array of source textarea values to get tabs moved
-		reorderTabs(sourceTextArray,sourceTitleArray);
+		reorderTabs(sourceTextArray, sourceTitleArray);
 	}
 }
 
-function reorderTabs(sourceTextArray,sourceTitleArray) {
+function reorderTabs(sourceTextArray, sourceTitleArray) {
 	// For each tab - set the id of the containing div - the button onclick parameter - the button text (note index starts at 0)
-	$(".source-tab").each(function(index) {
+	$(".source-tab").each(function (index) {
 		// Update the tab title container properties - id - the parameter passed in the onclick - the text - the tab titles 
-		$(this).attr("id","div-source-tab-"+(index+1));
-		$(this).children().attr("onclick","showTab("+(index+1)+")");
-		$(this).children().text((index+1));
+		$(this).attr("id", "div-source-tab-" + (index + 1));
+		$(this).children().attr("onclick", "showTab(" + (index + 1) + ")");
+		$(this).children().text((index + 1));
 	});
 
 	// Empty the source textareas - replace content with values from array
@@ -407,18 +400,18 @@ function reorderTabs(sourceTextArray,sourceTitleArray) {
 	$(".txta-tab").val("");
 
 	// Set the value of the textarea to the correct text - based on tabs being removed
-	$(".source-tab").each(function(index) {
+	$(".source-tab").each(function (index) {
 		// If the loop index plus 1 is less than or equal to the sourceTextArrayLength
-		if((index+1) <= sourceTextArray.length) {
-			$("#txta-source-"+(index+1)).val(sourceTextArray[index]);
-			$("#txta-tab-"+(index+1)).val(sourceTitleArray[index]);
+		if ((index + 1) <= sourceTextArray.length) {
+			$("#txta-source-" + (index + 1)).val(sourceTextArray[index]);
+			$("#txta-tab-" + (index + 1)).val(sourceTitleArray[index]);
 		}
 	});
 
 	// Loop and update the tab titles after being reordered
-	$(".txta-tab").each(function(index) {
-		if($("#txta-tab-"+(index+1)).val() == "") {
-			$("#txta-tab-"+(index+1)).val("Tab "+(index+1));
+	$(".txta-tab").each(function (index) {
+		if ($("#txta-tab-" + (index + 1)).val() == "") {
+			$("#txta-tab-" + (index + 1)).val("Tab " + (index + 1));
 		}
 	});
 }
@@ -427,11 +420,11 @@ function showTab(num) {
 	// Based on parameter - hide all the textereas and then show only the current tab textarea
 	$(".txta-source").hide();
 	$(".txta-tab").hide();
-	$("#txta-source-"+num).show();
-	$("#txta-tab-"+num).show();
+	$("#txta-source-" + num).show();
+	$("#txta-tab-" + num).show();
 
 	// If the tab is locked when you show it - set the lock icon else set the unlock icon
-	if($("#txta-tab-"+num).prop("readonly") && $("#txta-source-"+num).prop("readonly")) {
+	if ($("#txta-tab-" + num).prop("readonly") && $("#txta-source-" + num).prop("readonly")) {
 		$("#i-lock-tab").removeClass("fa-lock");
 		$("#i-lock-tab").addClass("fa-unlock");
 	} else {
@@ -441,15 +434,15 @@ function showTab(num) {
 
 	// Remove the active tab css and add it to the new activeTab
 	$(".source-tab").children().removeClass("active-tab");
-	$("#div-source-tab-"+num).children().addClass("active-tab");
+	$("#div-source-tab-" + num).children().addClass("active-tab");
 
 	activeTab = num;
-	console.log("activeTab="+activeTab);
+	console.log("activeTab=" + activeTab);
 }
 
 function copyNodeText() {
 	console.log("copyNodeText!");
-	if($("#txta-node-text").val() != "") {
+	if ($("#txta-node-text").val() != "") {
 		window.prompt("Copy to clipboard: Ctrl+C -> Enter", $("#txta-node-text").val());
 	}
 }
@@ -458,8 +451,15 @@ function saveSVGAsPNG() {
 	// Remove active element from the visualisation when saving
 	removeActive();
 
+	var fileNameToSaveAs = $("#input-SVG-file-name").val();
+
+	// Check if the chosen filename is blank - if so set file name to "MonkeyPuzzle"
+	if (fileNameToSaveAs == "") {
+		fileNameToSaveAs = "MonkeyPuzzle";
+	}
+
 	// Use the library to get a PNG of the SVG
-	saveSvgAsPng(document.getElementById("svg-vis"), $("#input-SVG-file-name").val());
+	saveSvgAsPng(document.getElementById("svg-vis"), fileNameToSaveAs);
 }
 
 function saveSVGAsSVG() {
@@ -467,13 +467,18 @@ function saveSVGAsSVG() {
 	removeActive();
 
 	var SVGToWrite = $("#svg-vis")[0].outerHTML;
-	var SVGFileAsBlob = new Blob([ SVGToWrite ], { type: "image/svg+xml;charset=utf-8" });
+	var SVGFileAsBlob = new Blob([SVGToWrite], { type: "image/svg+xml;charset=utf-8" });
 	var fileNameToSaveAs = $("#input-SVG-file-name").val();
 	var fileExtension = ".svg";
 
+	// Check if the chosen filename is blank - if so set file name to "MonkeyPuzzle"
+	if (fileNameToSaveAs == "") {
+		fileNameToSaveAs = "MonkeyPuzzle";
+	}
+
 	var downloadLink = document.createElement("a");
-	downloadLink.download = fileNameToSaveAs+fileExtension;
-	if(window.URL != null) {
+	downloadLink.download = fileNameToSaveAs + fileExtension;
+	if (window.URL != null) {
 		// Chrome allows the link to be clicked without actually adding it to the DOM.
 		downloadLink.href = window.URL.createObjectURL(SVGFileAsBlob);
 	} else {
@@ -491,13 +496,18 @@ function saveDataAsJSON() {
 	console.log("saveDataAsJSON()");
 	try {
 		var JSONToWrite = JSON.stringify(data);
-		var JSONFileAsBlob = new Blob([JSONToWrite], {type: "octet/stream"});
+		var JSONFileAsBlob = new Blob([JSONToWrite], { type: "octet/stream" });
 		var fileNameToSaveAs = $("#input-download-JSON").val();
 		var fileExtension = ".json";
 
+		// Check if the chosen filename is blank - if so set file name to "MonkeyPuzzle"
+		if (fileNameToSaveAs == "") {
+			fileNameToSaveAs = "MonkeyPuzzle";
+		}
+
 		var downloadLink = document.createElement("a");
-		downloadLink.download = fileNameToSaveAs+fileExtension;
-		if(window.URL != null) {
+		downloadLink.download = fileNameToSaveAs + fileExtension;
+		if (window.URL != null) {
 			// Chrome allows the link to be clicked without actually adding it to the DOM.
 			downloadLink.href = window.URL.createObjectURL(JSONFileAsBlob);
 		} else {
@@ -516,5 +526,168 @@ function saveDataAsJSON() {
 
 //TODO: check uploaded JSON for correct format
 function uploadJSON() {
+	var schema = {
+		"$schema": "http://json-schema.org/draft-04/schema#",
+		"title": "VisualisationFormat",
+		"description": "Visualisation format for AIF Arguments",
+		"nodes": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"minimum": 0,
+						"exclusiveMinimum": false,
+						"maximum": 99,
+						"exclusiveMaximum": false
+					},
+					"x": {
+						"type": "number",
+						"minimum": 0,
+						"exclusiveMinimum": false
+					},
+					"y": {
+						"type": "number",
+						"minimum": 0,
+						"exclusiveMinimum": false
+					},
+					"text": {
+						"type": "string"
+					},
+					"displayText": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string",
+						"enum": ["text", "scheme"]
+					}
+				},
+				"required": ["id", "x", "y", "text", "displayText", "type"]
+			},
+			"links": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"source": {
+							"type": "integer",
+							"minimum": 0,
+							"exclusiveMinimum": false,
+							"maximum": 99,
+							"exclusiveMaximum": false
+						},
+						"target": {
+							"type": "integer",
+							"minimum": 0,
+							"exclusiveMinimum": false,
+							"maximum": 99,
+							"exclusiveMaximum": false
+						}
+					},
+					"required": ["source", "target"],
+					"uniqueItems": true
+				}
+			},
+			"tabs": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"tab": {
+							"type": "integer",
+							"minimum": 1,
+							"exclusiveMinimum": false,
+							"maximum": 10,
+							"exclusiveMaximum": false
+						},
+						"text": {
+							"type": "string",
+							"minLength": 0
+						}
+					}
+				},
+				"minItems": 10,
+				"maxItems": 10,
+				"required": ["tab", "text"],
+				"uniqueItems": true
+			},
+			"currentNodeID": {
+				"type": "integer",
+				"minimum": 0,
+				"exclusiveMinimum": false,
+				"maximum": 100,
+				"exclusiveMaximum": true
+			}
+		}
+	};
 
+	var JSONData = null;
+
+	console.log("uploadJSON()");
+	// This function allows the upload button to read and upload the text back to back
+	$("#fileJSONInput").on("click", function (e) {
+		$(this).prop("value", "");
+	});
+
+	$("#fileJSONInput").on("change", function (e) {
+		readFile(this.files[0], function (e) {
+			// Get the text of the current file
+			var currentFile = e.target.result;
+
+			JSONData = currentFile;
+
+			var valid = tv4.validate(data, schema);
+
+			console.log("valid="+valid);
+			console.log("errors="+JSON.stringify(tv4.error));
+			
+			if(tv4.error == null) {
+				console.log("YES!");
+				// Pass the parsed data to the checkJSONInput function to validate the data 
+				var valid = checkJSONInput(JSON.parse(JSONData));	
+
+				// If the data is checked and confirmed as valid
+				if(valid == true) {	
+					data = JSON.parse(JSONData);
+					update();
+				} else {
+					showModal(5);
+					return;
+				}
+			}
+		});
+	});
+}
+
+function checkJSONInput(json) {
+	// Node ids must be sequential
+	// Links cannot have a source or target higher than the number of nodes
+	// Links cannot have the same source and target
+	// Tab ids must be sequential
+
+	console.log("json="+JSON.stringify(json));
+	console.log("json.nodes="+JSON.stringify(json.nodes));
+	console.log("json.links="+JSON.stringify(json.links));
+
+	//var numberOfNodes = json.nodes.length;
+	//var numberOfLinks = json.links.length;
+	//var numberOfTabs = maxTabs;
+
+	// Update the ids of the nodes to start at zero and increment upwards
+	$.each(json.nodes, function(index, value) {
+		//console.log("value["+index+"]="+JSON.stringify(value));
+		json.nodes[index].id = index;
+	});
+
+	$.each(json.links, function(index, value) {
+		//console.log("value["+index+"]="+JSON.stringify(value));
+	});
+
+	// Update the id of the tabs to start at zero and increment upwards
+	$.each(json.tabs, function(index, value) {
+		//console.log("value["+index+"]="+JSON.stringify(value));
+		json.tabs[index].tab = index;	
+	});
+	return true;
 }

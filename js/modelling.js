@@ -76,7 +76,7 @@ function createSVG() {
 		.attr("version","1.1")
 		.attr("width", w)
 		.attr("height", h)
-		.style("background","#FFF")
+		.style("background", "#FFFFFF")
 		.append("defs");
 
 	var defs = d3.select("defs");
@@ -124,6 +124,7 @@ function createSVG() {
 }
 	
 function update() {
+	console.log("data="+JSON.stringify(data));
 	var svg = d3.select("svg");
 	
 	deleteSVGElements();
@@ -136,68 +137,52 @@ function update() {
 		// This class is added to allow the active state to be applied
 		.classed("svg-link", true)
 		// CSS Styles are applied here because saving visualisations as images rely on inline styles
-		.style("stroke","#000")
+		.style("stroke", "#000")
 		.style("stroke-width","2")
 		.style("cursor","pointer")
-		//.attr("id", function(d) { return "l"+d.source.id })
-		/*
-		.attr("x1", function(d) { return d.source.x; })
-		.attr("y1", function(d) { return d.source.y; })
-		.attr("x2", function(d) { return d.target.x; })
-		.attr("y2", function(d) { return d.target.y; })
-		*/
-		// TODO : WORK ON THIS TO ALLOW YOU TO SPECIFY ONLY A NUMBER FOR THE ID
-		///*
-		.attr("x1", function(d) {  
-			var x1;
-			//console.log("x1 : d.source="+d.source);
-			data.nodes.filter(function(n) {
+		.attr("x1", function(d) {
+			// Find the node which has the id of the link source and return the x co-ordinate
+			var x1 = data.nodes.filter(function(n) {
 				if(n.id == d.source) {
-					console.log("x1 : n.x="+n.x);
-					x1 = n.x;
+					return (x1 = n.x);
 				}
 			});
-			return x1;
+			console.log("x1="+x1[0]);
+			return x1[0].x;
 		})
 		.attr("y1", function(d) {
-			var y1;
-			//console.log("y1 : d.source="+d.source);
-			data.nodes.filter(function(n) {
+			// Find the node which has the id of the link source and return the y co-ordinate
+			var y1 = data.nodes.filter(function(n) {
 				if(n.id == d.source) {
-					console.log("y1 : n.y="+n.y);
-					y1 = n.y;
+					return (y1 = n.y);
 				}
 			});
-			return y1;
+			return y1[0].y;
 		})
 		.attr("x2", function(d) {
-			var x2;
-			//console.log("x2 : d.target="+d.target);
-			data.nodes.filter(function(n) {
+			// Find the node which has the id of the link target and return the x co-ordinate
+			var x2 =data.nodes.filter(function(n) {
 				if(n.id == d.target) {
-					console.log("x2 : n.x="+n.x);
-					x2 = n.x;
+					return (x2 = n.x);
 				}
 			});
-			return x2;
+			return x2[0].x;
 		})
 		.attr("y2", function(d) {
-			var y2;
-			//console.log("y2 : d.target="+d.target);
-			data.nodes.filter(function(n) {
+			// Find the node which has the id of the link target and return the y co-ordinate
+			var y2 = data.nodes.filter(function(n) {
 				if(n.id == d.target) {
-					console.log("x2 : n.y="+n.y);
-					y2 = n.y;
+					return (y2 = n.y);
 				}
 			});
-			return y2;
+			return y2[0].y;
 		})
-		//*/
 		.attr("marker-end","url(#arrow)");
 
 	// Hidden line which shows when creating a link
 	dragLink = svg.append("line")
 		.classed("svg-link-drag", true)
+		.style("stroke-width", 2)
 		.classed("hidden", true);
 
 	// Circles representing nodes
@@ -597,13 +582,21 @@ function removeLinksFromNode() {
 }
 
 function setTextRow(id) {
-	console.log("id="+id);
 	//console.log("setTextRow!");
+	
 	// Set the bottom row text display
 	var node = data.nodes.filter(function(n) {
 		return (n.id == Number(id));
 	});
-	$("#txta-node-text").val(node[0].displayText);
+
+	maxCharacters = 150;
+
+	if(node[0].displayText.length >= maxCharacters) {
+		var str = node[0].displayText.substr(1,maxCharacters);
+		$("#txta-node-text").val(str);
+	} else {
+		$("#txta-node-text").val(node[0].displayText);
+	}
 }
 
 // Clear the text row
@@ -612,8 +605,6 @@ function clearTextRow() {
 }
 
 function showNodeTextOverlay(id, showAll) {
-	console.log("id="+id);
-
 	var svg = d3.select("svg");
 	// Number of characters per line
 	var overlayLengthPerLine = 40;
@@ -631,10 +622,8 @@ function showNodeTextOverlay(id, showAll) {
 
 		//if(data.nodes[id].displayText.length > overlayLengthPerLine) {
 		if(node[0].displayText.length > overlayLengthPerLine) {
-			console.log("node text too long!");
 			var re = new RegExp('.{1,' + overlayLengthPerLine + '}', 'g');
 			var array = node[0].displayText.match(re);
-			console.log("array="+array);
 
 			// Trim leading whitespace from array
 			$.each(array, function(index, value) {
@@ -725,7 +714,6 @@ function mouseOverTextOverlay() {
 		// Add mouseover event handler
 		$(".svg-node").on("mouseover", function(e) {
 			var id = $(this).attr("id");
-			console.log("id="+id);
 			// Show node text overlay passing id of the current node with mouseover and
 			showNodeTextOverlay(id, false);
 		});
@@ -884,6 +872,7 @@ function addNode(type,schemeName,nodePosition) {
 	update();
 }
 
+// Function which locates a new position for a node if one already exists in the centre of the visualisation
 function findNewNodePosition(nodeX, nodeY) {
 	console.log("nodeX="+nodeX);
 	console.log("nodeY="+nodeY);
@@ -899,7 +888,8 @@ function findNewNodePosition(nodeX, nodeY) {
 	});
 
 	addNodeOffset = 0;
-	var newX = 0, newY = 0;
+	var newX = 0;
+	var newY = 0;
 
 	// If the original position passed to this function has been taken - run the loop and find a new position - else add the node at the original position
 	if(originalPositionTaken == true) {
@@ -1211,23 +1201,6 @@ function moveElementsToFit(width, height) {
 				data.nodes[index].y = nodeOffset;
 			}
 		}	
-	});
-	updateLinks();
-}
-
-function updateLinks() {
-	console.log("updateLinks()");
-	$.each(data.nodes, function(index, value) {	
-		links = $.map(data.links, function(obj, index) {
-			//if(obj.source.id == value.id) {
-			if(obj.source == value.id) {
-				obj.source = value;
-			}
-			//if(obj.target.id == value.id) {
-			if(obj.target == value.id) {
-				obj.target = value;
-			}
-		})
 	});
 	update();
 }
