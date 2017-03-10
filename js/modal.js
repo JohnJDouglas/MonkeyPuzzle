@@ -1,4 +1,4 @@
-function showModal(name) {
+function showModal(name,id) {
 	switch(name) {
 		case 1:
 			// Empty the textarea of the new node text
@@ -35,9 +35,24 @@ function showModal(name) {
 		case 11:
 			// Empty the textarea of the new node text
 			$("#txta-edit-text").val("");
+
+			// Get the current node
+			var node = data.nodes.filter(function(n) {
+				if(n.id == id) {
+					return n;
+				}
+			});
+			// Based on node type set the displayText of the node into the displayed textarea
+			if(node[0].type == "text") {
+				$("#txta-current-node-text").val(node[0].displayText);
+			} else {
+				$("#txta-current-node-scheme").val(node[0].displayText);
+			}
+
 			// Hide both modal-body divs and buttons
 			$(".modal-edit-text-node").hide();
 			$(".modal-edit-scheme-node").hide();
+
 			// Reset the dropdown to the top option
 			$("#select-schemes").val("1");
 

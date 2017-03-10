@@ -124,7 +124,6 @@ function createSVG() {
 }
 	
 function update() {
-	console.log("data="+JSON.stringify(data));
 	var svg = d3.select("svg");
 	
 	deleteSVGElements();
@@ -147,7 +146,6 @@ function update() {
 					return (x1 = n.x);
 				}
 			});
-			console.log("x1="+x1[0]);
 			return x1[0].x;
 		})
 		.attr("y1", function(d) {
@@ -281,7 +279,7 @@ function doubleClick(d) {
 
 	removeTextOverlay();
 	removeActive();
-	showModal(11);
+	showModal(11,id);
 
 	if(type[0].type == "text") {
 		// Text node

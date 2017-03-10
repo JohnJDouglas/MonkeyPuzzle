@@ -29,6 +29,10 @@ $(window).load(function () {
 	toggleSource(1);
 	textareaRemoveActive();
 
+	window.addEventListener("resize", function(){
+		elementSizeCheck();
+	});
+
 	new Clipboard("#btn-clipboard");
 
 	var w = $("svg").width();
@@ -123,15 +127,19 @@ function panelResize(type) {
 		var w = $("#svg-vis").width();
 		var h = $("#svg-vis").height();
 
-		var buttonWidth = $("#div-col-left-button").width();
-
-		if (buttonWidth < 120) {
-			$(".span-col-left-button").hide();
-		} else {
-			$(".span-col-left-button").show();
-		}
+		elementSizeCheck();
 
 		moveElementsToFit(w, h);
+	}
+}
+
+function elementSizeCheck() {
+	var sourceButtonWidth = $("#div-col-left-button").width();
+
+	if(sourceButtonWidth < 120) {
+		$(".span-col-left-button").hide();
+	} else {
+		$(".span-col-left-button").show();
 	}
 }
 
@@ -526,105 +534,114 @@ function saveDataAsJSON() {
 
 //TODO: check uploaded JSON for correct format
 function uploadJSON() {
+	console.log("uploadJSON()");
+	
 	var schema = {
-		"$schema": "http://json-schema.org/draft-04/schema#",
-		"title": "VisualisationFormat",
-		"description": "Visualisation format for AIF Arguments",
-		"nodes": {
-			"type": "array",
-			"items": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "integer",
-						"minimum": 0,
-						"exclusiveMinimum": false,
-						"maximum": 99,
-						"exclusiveMaximum": false
-					},
-					"x": {
-						"type": "number",
-						"minimum": 0,
-						"exclusiveMinimum": false
-					},
-					"y": {
-						"type": "number",
-						"minimum": 0,
-						"exclusiveMinimum": false
-					},
-					"text": {
-						"type": "string"
-					},
-					"displayText": {
-						"type": "string"
-					},
-					"type": {
-						"type": "string",
-						"enum": ["text", "scheme"]
-					}
-				},
-				"required": ["id", "x", "y", "text", "displayText", "type"]
-			},
-			"links": {
+		"type": "object",
+		"properties": {
+			"nodes": {
 				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"source": {
+					"items": {
+						"type": "object",
+						"properties": {
+						"id": {
 							"type": "integer",
 							"minimum": 0,
 							"exclusiveMinimum": false,
 							"maximum": 99,
 							"exclusiveMaximum": false
 						},
-						"target": {
-							"type": "integer",
+						"x": {
+							"type": "number",
 							"minimum": 0,
-							"exclusiveMinimum": false,
-							"maximum": 99,
-							"exclusiveMaximum": false
-						}
-					},
-					"required": ["source", "target"],
-					"uniqueItems": true
-				}
-			},
-			"tabs": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"tab": {
-							"type": "integer",
-							"minimum": 1,
-							"exclusiveMinimum": false,
-							"maximum": 10,
-							"exclusiveMaximum": false
+							"exclusiveMinimum": false
+						},
+						"y": {
+							"type": "number",
+							"minimum": 0,
+							"exclusiveMinimum": false
 						},
 						"text": {
+							"type": "string"
+						},
+						"displayText": {
+							"type": "string"
+						},
+						"type": {
 							"type": "string",
-							"minLength": 0
+							"enum": [
+							"text",
+							"scheme"
+							]
 						}
+						},
+						"required": [
+						"id",
+						"x",
+						"y",
+						"text",
+						"displayText",
+						"type"
+						],
+						"additionalProperties": false
 					}
 				},
-				"minItems": 10,
-				"maxItems": 10,
-				"required": ["tab", "text"],
-				"uniqueItems": true
+				"links": {
+					"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"source": {
+									"type": "integer",
+									"minimum": 0,
+									"exclusiveMinimum": false,
+									"maximum": 99,
+									"exclusiveMaximum": false
+								},	
+								"target": {
+									"type": "integer",
+									"minimum": 0,
+									"exclusiveMinimum": false,
+									"maximum": 99,
+									"exclusiveMaximum": false
+								}
+							},
+							"required": ["source", "target"],
+							"additionalProperties": false
+						}
+				},		
+				"tabs": {
+					"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"tab": {
+									"type": "integer",
+									"minimum": 1,
+									"exclusiveMinimum": false,
+									"maximum": 10,
+									"exclusiveMaximum": false
+								},	
+								"text": {
+									"type": "string",
+									"minLength": 0						
+								}
+							},
+							"required": ["tab","text"],
+							"additionalProperties": false
+						}
+				},
+				"currentNodeID": {
+					"type": "number",
+					"minimum": 0,
+					"exclusiveMinimum": false,
+					"maximum": 100,
+					"exclusiveMaximum": true
+				}
 			},
-			"currentNodeID": {
-				"type": "integer",
-				"minimum": 0,
-				"exclusiveMinimum": false,
-				"maximum": 100,
-				"exclusiveMaximum": true
-			}
-		}
-	};
+			"required": ["nodes","links","tabs","currentNodeID"]
+		};
 
-	var JSONData = null;
-
-	console.log("uploadJSON()");
 	// This function allows the upload button to read and upload the text back to back
 	$("#fileJSONInput").on("click", function (e) {
 		$(this).prop("value", "");
@@ -632,24 +649,25 @@ function uploadJSON() {
 
 	$("#fileJSONInput").on("change", function (e) {
 		readFile(this.files[0], function (e) {
-			// Get the text of the current file
-			var currentFile = e.target.result;
+			// Parse the file as JSON
+			JSONData = JSON.parse(e.target.result);
 
-			JSONData = currentFile;
+			console.log("schema="+JSON.stringify(schema));
+			console.log("JSONData="+JSON.stringify(JSONData));
 
-			var valid = tv4.validate(data, schema);
+			var valid = tv4.validate(JSONData, schema);
 
-			console.log("valid="+valid);
+			console.log("valid="+JSON.stringify(valid));
 			console.log("errors="+JSON.stringify(tv4.error));
 			
 			if(tv4.error == null) {
-				console.log("YES!");
+				console.log("VALIDATED!");
 				// Pass the parsed data to the checkJSONInput function to validate the data 
-				var valid = checkJSONInput(JSON.parse(JSONData));	
+				var JSONDataProcessed = checkJSONInput(JSON.parse(JSONData));	
 
 				// If the data is checked and confirmed as valid
 				if(valid == true) {	
-					data = JSON.parse(JSONData);
+					data = JSON.parse(JSONDataProcessed);
 					update();
 				} else {
 					showModal(5);
@@ -668,9 +686,10 @@ function checkJSONInput(json) {
 
 	console.log("json="+JSON.stringify(json));
 	console.log("json.nodes="+JSON.stringify(json.nodes));
+	console.log("json.nodes.length="+JSON.stringify(json.nodes.links));
 	console.log("json.links="+JSON.stringify(json.links));
 
-	//var numberOfNodes = json.nodes.length;
+	var numberOfNodes = json.nodes.length;
 	//var numberOfLinks = json.links.length;
 	//var numberOfTabs = maxTabs;
 
@@ -680,14 +699,38 @@ function checkJSONInput(json) {
 		json.nodes[index].id = index;
 	});
 
-	$.each(json.links, function(index, value) {
-		//console.log("value["+index+"]="+JSON.stringify(value));
-	});
-
 	// Update the id of the tabs to start at zero and increment upwards
 	$.each(json.tabs, function(index, value) {
 		//console.log("value["+index+"]="+JSON.stringify(value));
 		json.tabs[index].tab = index;	
 	});
+	
+	// If a link has an id which is higher than the number of nodes - remove it
+	var removal = data.links.filter(function(l) {
+		return (l.source > numberOfNodes || l.target > numberOfNodes);
+	});
+	
+	$.each(removal, function(index, value) {
+		data.links.splice(data.links.indexOf(removal[index]), 1);
+	});
+
 	return true;
+}
+
+function test() {
+	var numberOfNodes = 2;
+	console.log("numberOfNodes="+numberOfNodes);
+	var array = [{"id":1},{"id":2},{"id":3},{"id":1},{"id":2},{"id":3}];
+
+	var removal = array.filter(function(l) {
+		return (l.id > numberOfNodes);
+	});	
+
+	console.log("removal="+JSON.stringify(removal));
+	
+	$.each(removal, function(index, value) {
+		array.splice(array.indexOf(removal[index]), 1);
+	});
+
+	console.log("array="+JSON.stringify(array));
 }

@@ -287,14 +287,14 @@
 			</div>
 			<!--col-bottom-->
 			<div id="row-2" class="row">
-				<div id="col-bottom" class="col-md-12 col-lg-12 col-text-display no-padding-lr">
-					<div class="col-md-10 col-lg-10 no-padding-lr">
+				<div id="col-bottom" class="col-xs-12 col-md-12 col-lg-12 col-text-display no-padding-lr">
+					<div class="col-xs-10 col-md-10 col-lg-10 no-padding-lr">
 						<textarea id="txta-node-text" readonly></textarea>
 					</div>
-					<div class="col-md-1 col-lg-1 no-padding-lr">
+					<div class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
 						<button id="btn-edit-text" class="btn btn-menu btn-block" onclick="editNodeText()"><i id="i-edit" class="fa fa-edit"></i> Text</button>
 					</div>
-					<div class="col-md-1 col-lg-1 no-padding-lr">
+					<div class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
 						<button id="btn-clipboard" class="btn btn-menu btn-block" data-clipboard-action="copy" data-clipboard-target="#txta-node-text"><i class="fa fa-copy"></i> Text</button>
 					</div>
 				</div>
@@ -525,11 +525,16 @@
 						</div>
 						<div class="modal-body">
 							<div id="div-modal-edit-text-node" class="modal-edit-text-node">
-								<p class="modal-text">Enter the text you want to update the node with</p>
-								<textarea id="txta-edit-text"></textarea>
+								<p class="modal-text">Current node text</p>
+								<textarea id="txta-current-node-text" class="txta-modal-edit-node" readonly></textarea>
+								<p class="modal-text">New node text</p>
+								<textarea id="txta-edit-text" class="txta-modal-edit-node"></textarea>
 							</div>
 							<div id="div-modal-edit-scheme-node" class="modal-edit-scheme-node">
-								<p class="modal-text">Choose the scheme option you want to update the node to</p>
+								<p class="modal-text">Current node scheme</p>
+								<textarea id="txta-current-node-scheme" class="txta-modal-edit-node" readonly></textarea>
+								<p id="p-current-node-scheme" class="modal-text"></p>
+								<p class="modal-text">New node scheme</p>
 								<select id="select-schemes" class="form-control">
 								</select>
 							</div>
