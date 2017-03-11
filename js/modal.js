@@ -1,4 +1,4 @@
-function showModal(name,id) {
+function showModal(name,id,error) {
 	switch(name) {
 		case 1:
 			// Empty the textarea of the new node text
@@ -15,7 +15,13 @@ function showModal(name,id) {
 			$("#modal-controls").modal("show");
 			break;
 		case 5:
+			// Hide the settings modal
+			$("#modal-settings").modal("hide");
+			// Show the invalid JSON modal
 			$("#modal-upload-JSON-invalid").modal("show");
+			// Display the error message and location
+			$("#p-upload-JSON-invalid-message").text("Error: "+error.message);
+			$("#p-upload-JSON-invalid-location").text("Location: "+error.dataPath);
 			break;
 		case 6:
 			$("#modal-clear-source").modal("show");

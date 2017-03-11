@@ -662,9 +662,7 @@ function uploadJSON() {
 			// Parse the file as JSON
 			JSONData = JSON.parse(e.target.result);
 
-			//console.log("schema="+JSON.stringify(schema));
-			//console.log("JSONData="+JSON.stringify(JSONData));
-
+			// Check the uploaded JSON against the JSON Schema
 			var valid = tv4.validate(JSONData, schema);
 
 			console.log("valid="+JSON.stringify(valid));
@@ -681,7 +679,8 @@ function uploadJSON() {
 				update();
 				moveElementsToFit();
 			} else {
-				showModal(5);
+				$("#modal-settings").modal("hide");
+				showModal(5,null,tv4.error);
 				return;
 			}
 		});
