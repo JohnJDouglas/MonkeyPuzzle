@@ -10,6 +10,8 @@ var highlightRange = [];
 var highlightColor = "yellow";
 var wasUnlocked = null;
 var schemesArray = [];
+var findNodeQuandrantOffset = 20;
+
 /*
 $(window).bind("beforeunload",function(){
 	// TODO - update this to account for all 10 tabs
@@ -38,8 +40,8 @@ $(window).load(function () {
 	var w = $("svg").width();
 	var h = $("svg").height();
 
-	console.log("svg w=" + w);
-	console.log("svg h=" + h);
+	console.log("svg w=" + getSVGDimensions().width);
+	console.log("svg h=" + getSVGDimensions().height);
 
 	//moveElementsToFit(w, h);
 
@@ -51,6 +53,14 @@ $(window).load(function () {
 
 	mouseOverTextOverlay();
 });
+
+function getSVGDimensions() {
+	var element = {};
+	element.width = $("svg").width();
+	element.height = $("svg").height();
+	return  element;
+}
+
 
 function setupSchemes() {
 	/*
@@ -652,8 +662,8 @@ function uploadJSON() {
 			// Parse the file as JSON
 			JSONData = JSON.parse(e.target.result);
 
-			console.log("schema="+JSON.stringify(schema));
-			console.log("JSONData="+JSON.stringify(JSONData));
+			//console.log("schema="+JSON.stringify(schema));
+			//console.log("JSONData="+JSON.stringify(JSONData));
 
 			var valid = tv4.validate(JSONData, schema);
 
@@ -663,36 +673,46 @@ function uploadJSON() {
 			if(tv4.error == null) {
 				console.log("VALIDATED!");
 				// Pass the parsed data to the checkJSONInput function to validate the data 
-				var JSONDataProcessed = checkJSONInput(JSON.parse(JSONData));	
+				JSONDataProcessed = checkJSONInput(JSONData);	
 
-				// If the data is checked and confirmed as valid
-				if(valid == true) {	
-					data = JSON.parse(JSONDataProcessed);
-					update();
-				} else {
-					showModal(5);
-					return;
-				}
+				console.log("Corrected JSON="+JSON.stringify(JSONDataProcessed));
+
+				data = JSONDataProcessed;
+				update();
+				moveElementsToFit();
+			} else {
+				showModal(5);
+				return;
 			}
 		});
 	});
 }
 
 function checkJSONInput(json) {
-	// Node ids must be sequential
-	// Links cannot have a source or target higher than the number of nodes
-	// Links cannot have the same source and target
-	// Tab ids must be sequential
+	// Reset all ids to be incremental from 0 (for nodes) and 1 (for tabs)
+	json = resetIDs(json);
 
+	//json.nodes = checkNodePositions(json);
+	var test = checkNodePositions(json);
+
+	console.log("test="+JSON.stringify(test));
+
+	// Remove links which have a source or target which is higher than any node id
+	json.links = removeInvalidLinks(json);
+
+	// Remove links which are duplicates of another link
+	json.links = removeDuplicateLinks(json);
+
+	// Remove links which are the opposite of another link
+	json.links = removeOppositeLinks(json);
+
+	// Display the resulting json object
 	console.log("json="+JSON.stringify(json));
-	console.log("json.nodes="+JSON.stringify(json.nodes));
-	console.log("json.nodes.length="+JSON.stringify(json.nodes.links));
-	console.log("json.links="+JSON.stringify(json.links));
 
-	var numberOfNodes = json.nodes.length;
-	//var numberOfLinks = json.links.length;
-	//var numberOfTabs = maxTabs;
+	return json;
+}
 
+function resetIDs(json) {
 	// Update the ids of the nodes to start at zero and increment upwards
 	$.each(json.nodes, function(index, value) {
 		//console.log("value["+index+"]="+JSON.stringify(value));
@@ -704,33 +724,78 @@ function checkJSONInput(json) {
 		//console.log("value["+index+"]="+JSON.stringify(value));
 		json.tabs[index].tab = index;	
 	});
-	
-	// If a link has an id which is higher than the number of nodes - remove it
-	var removal = data.links.filter(function(l) {
-		return (l.source > numberOfNodes || l.target > numberOfNodes);
-	});
-	
-	$.each(removal, function(index, value) {
-		data.links.splice(data.links.indexOf(removal[index]), 1);
-	});
-
-	return true;
+	return json;
 }
 
-function test() {
-	var numberOfNodes = 2;
-	console.log("numberOfNodes="+numberOfNodes);
-	var array = [{"id":1},{"id":2},{"id":3},{"id":1},{"id":2},{"id":3}];
+function checkNodePositions(json) {
+	// Remove duplicate link elements
+	var r = [];
+	o: for(var i = 0; i < json.nodes.length; i++) {
+		for(var j = 0; j < r.length; j++) {
+			if(((Number(r[j].x) == Number(json.nodes[i].x)) && (Number(r[j].y) == Number(json.nodes[i].y)))) {
+				// Update the node position since it is equal to a previous node
+				updateNodePosition(json.nodes[i]);
+				continue o;
+			}
+		}
+		r.push(json.nodes[i]);
+	}
+	return r;
+}
 
-	var removal = array.filter(function(l) {
-		return (l.id > numberOfNodes);
-	});	
+function updateNodePosition(node) {
+	// Offset the node based on which quadrant of the screen it is located in
+	if(node.x < (getSVGDimensions().width / 2)) {
+		node.x = (node.x - findNodeQuandrantOffset);
+	} else {
+		node.x = (node.x + findNodeQuandrantOffset);
+	}
+	if(node.y < (getSVGDimensions().height / 2)) {
+		node.y = (node.y - findNodeQuandrantOffset);
+	} else {
+		node.y = (node.y + findNodeQuandrantOffset);
+	}
+}
 
-	console.log("removal="+JSON.stringify(removal));
-	
-	$.each(removal, function(index, value) {
-		array.splice(array.indexOf(removal[index]), 1);
+function removeInvalidLinks(json) { 
+	var removal = json.links.filter(function(l) {
+		// If a link has an id which is higher than the number of nodes return it - If a link has the same source and target return it
+		if((l.source > (json.nodes.length - 1) || l.target > (json.nodes.length - 1)) || (l.source == l.target)) {
+			return l;
+		};
 	});
+	console.log("removal="+JSON.stringify(removal));
 
-	console.log("array="+JSON.stringify(array));
+	$.each(removal, function(index, value) {
+		json.links.splice(json.links.indexOf(removal[index]), 1);
+	});
+	return json.links;
+}
+
+function removeDuplicateLinks(json) {
+	// Remove duplicate link elements
+	var r = [];
+	o: for(var i = 0; i < json.links.length; i++) {
+		for(var j = 0; j < r.length; j++) {
+			if(r[j].source == json.links[i].source && r[j].target == json.links[i].target) {
+				continue o;
+			}
+		}
+		r.push(json.links[i]);
+	}
+	return r;
+}
+
+function removeOppositeLinks(json) {
+	// Remove duplicate link elements
+	var r = [];
+	o: for(var i = 0; i < json.links.length; i++) {
+		for(var j = 0; j < r.length; j++) {
+			if(r[j].source == json.links[i].target && r[j].target == json.links[i].source) {
+				continue o;
+			}
+		}
+		r.push(json.links[i]);
+	}
+	return r;
 }

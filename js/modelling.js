@@ -237,7 +237,8 @@ function update() {
 		// If the id of the node (+1 because the nodes start from 0 but are display from 1 - double the offset of the node to accomodate the 2 digits)
 		.attr("x", function(d) { if(d.id >= 9) { return d.x - (nodeIdOffset*2); } else { return d.x - nodeIdOffset; }})
 		.attr("y", function(d) { return d.y + nodeIdOffset; })
-		.text(function(d) { return  d.id + 1; })
+		//.text(function(d) { return  d.id + 1; })
+		.text(function(d) { return  d.id; })
 		.attr("pointer-events", "none");
 	
 	// Link on click to allow selection and deletion

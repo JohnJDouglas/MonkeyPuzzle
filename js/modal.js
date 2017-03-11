@@ -15,7 +15,7 @@ function showModal(name,id) {
 			$("#modal-controls").modal("show");
 			break;
 		case 5:
-			$("#modal-upload-JSON-Invalid").modal("show");
+			$("#modal-upload-JSON-invalid").modal("show");
 			break;
 		case 6:
 			$("#modal-clear-source").modal("show");
