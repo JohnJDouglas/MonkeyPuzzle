@@ -233,12 +233,11 @@ function update() {
 		.enter()
 		.append("text")
 		.classed("svg-text", true)
-		.classed("noselect", true)
-		// If the id of the node (+1 because the nodes start from 0 but are display from 1 - double the offset of the node to accomodate the 2 digits)
+		.classed("no-select", true)
+		// If the id of the node is greater than or equal to 9 (since node ids are +1 so they start at 1) - apply the offset twice since there are two digits - else apply offset once
 		.attr("x", function(d) { if(d.id >= 9) { return d.x - (nodeIdOffset*2); } else { return d.x - nodeIdOffset; }})
 		.attr("y", function(d) { return d.y + nodeIdOffset; })
-		//.text(function(d) { return  d.id + 1; })
-		.text(function(d) { return  d.id; })
+		.text(function(d) { return  d.id + 1; })
 		.attr("pointer-events", "none");
 	
 	// Link on click to allow selection and deletion
@@ -453,7 +452,7 @@ function addActive(element) {
 	if(selectedElement.node() instanceof SVGLineElement) {
 		d3.select(element).attr("marker-end","url(#arrow-active)");
 	} else {
-		setTextRow(element.id);
+		//setTextRow(element.id);
 	}
 	
 	d3.select(element).classed("active", true);
@@ -580,6 +579,7 @@ function removeLinksFromNode() {
 	update();
 }
 
+/*
 function setTextRow(id) {
 	//console.log("setTextRow!");
 	
@@ -597,6 +597,7 @@ function setTextRow(id) {
 		$("#txta-node-text").val(node[0].displayText);
 	}
 }
+*/
 
 // Clear the text row
 function clearTextRow() {
@@ -610,7 +611,7 @@ function showNodeTextOverlay(id, showAll) {
 	var nodeTextOverLengthPerLine = false;
 
 	// Set the bottom row text display
-	setTextRow(id);
+	//setTextRow(id);
 	
 	// Get the node which is to have an overlay opened over it
 	var node = data.nodes.filter(function(n) {
@@ -708,8 +709,8 @@ function mouseOverTextOverlay() {
 	if(nodeMouseOverEnabled == false) {
 		console.log("Enabled nodeMouseover() Text Overlay");
 		// Update button icon to represent action state
-		$("#i-mouseover-toggle").removeClass("fa-eye");
-		$("#i-mouseover-toggle").addClass("fa-eye-slash");
+		$("#i-mouseover-toggle").removeClass("fa-mouse-pointer");
+		$("#i-mouseover-toggle").addClass("fa-keyboard-o");
 		// Add mouseover event handler
 		$(".svg-node").on("mouseover", function(e) {
 			var id = $(this).attr("id");
@@ -726,8 +727,8 @@ function mouseOverTextOverlay() {
 	if(nodeMouseOverEnabled == true) {
 		console.log("Disabled nodeMouseover() Text Overlay");
 		// Revert button icon to represent action state
-		$("#i-mouseover-toggle").removeClass("fa-eye-slash");
-		$("#i-mouseover-toggle").addClass("fa-eye");
+		$("#i-mouseover-toggle").removeClass("fa-keyboard-o");
+		$("#i-mouseover-toggle").addClass("fa-mouse-pointer");
 		// Remove mouseover and mouseout event handler
 		$(".svg-node").off("mouseover");
 		$(".svg-node").off("mouseout");
@@ -949,32 +950,15 @@ function addLink(idStart,idEnd) {
 
 	id1Type = id1Filter[0].type;
 	console.log("id1Type="+id1Type);
-
-	// Nodes can only connect to one other node - whilst being able to receive any number of links to it
-	var alreadySource = false;
 	
 	// Loop through data.links and check for a link with the source of the current node - if one is found with type scheme - prevent the link being added
 	for(var i = 0; i < data.links.length; i++) {
-	//$.each(data.links, function(index, value) {
-		//if(data.links[index].source.id == id1 && id1Type == "scheme") {
 		if(data.links[i].source == id1 && id1Type == "scheme") {
-			//alreadySource = true;
 			showModal(2);
 			removeActive();
 			return;
 		}
 	}
-	//});
-
-	/*
-	// If the node already has a link from it - show error modal and return
-	if(alreadySource == true) {
-		// show modal 2
-		showModal(2);
-		removeActive();
-		return;
-	}
-	*/
 
 	// Function which displays the drag line
 	dragLine(id1);
@@ -1205,6 +1189,7 @@ function moveElementsToFit(width, height) {
 }
 
 // Make the text row at the bottom of the ui allow editing and apply that editing to the text value of the selected node
+/*
 function editNodeText() {
 	console.log("editNodeText!");
 
@@ -1231,7 +1216,7 @@ function editNodeText() {
 		console.log("new node["+id+"] displayText="+data.nodes[id].displayText);
 
 		// Update the text row text
-		setTextRow(id);
+		//setTextRow(id);
 
 		$("#txta-node-text").css("background","lightblue");
 		$("#txta-node-text").prop("readonly", true);
@@ -1242,6 +1227,7 @@ function editNodeText() {
 		return;
 	}
 }
+*/
 
 // Log the data object to console
 function logDataToConsole(type) {

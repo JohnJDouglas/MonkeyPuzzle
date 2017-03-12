@@ -30,6 +30,7 @@ $(window).load(function () {
 	showTab(1);
 	toggleSource(1);
 	textareaRemoveActive();
+	elementSizeCheck();
 
 	window.addEventListener("resize", function(){
 		elementSizeCheck();
@@ -50,6 +51,16 @@ $(window).load(function () {
 		var currentTab = (activeTab - 1);
 		data.tabs[currentTab].text = this.value;
 	});
+
+	//$("li.drop-accordian a:first").bind("click", function (e) {
+	$("li.drop-accordian a").bind("click", function (e) {
+		$(this).next('ul').slideToggle();
+		e.stopPropagation();
+	});
+
+	$('#firstLevelNav_small').on('hidden.bs.dropdown', function () {
+		$(this).find('ul.drop-accordian-menu').hide();
+	})
 
 	mouseOverTextOverlay();
 });
@@ -144,12 +155,37 @@ function panelResize(type) {
 }
 
 function elementSizeCheck() {
-	var sourceButtonWidth = $("#div-col-left-button").width();
-
-	if(sourceButtonWidth < 120) {
-		$(".span-col-left-button").hide();
+	// LEFT PANEL
+	if($("#div-col-left-button-top").width() < 120) {
+		$(".span-col-left-button-top").hide();
 	} else {
-		$(".span-col-left-button").show();
+		$(".span-col-left-button-top").show();
+	}
+	if($("#div-col-left-button-bottom").width() < 120) {
+		$(".span-col-left-button-bottom").hide();
+	} else {
+		$(".span-col-left-button-bottom").show();
+	}
+	// RIGHT PANEL
+	// Not current used - col-md-1 button is only a chevron for source panel toggle
+	if($("#div-col-right-button.col-md-1").width() < 120) {
+		$(".span-col-right-button-1").hide();
+	} else {
+		$(".span-col-right-button-1").show();
+	}
+	// Text, Scheme, Content, and Mouseover Overlay button
+	if($("#div-col-right-button.col-md-2").width() < 105) {
+		$(".span-col-right-button-2").hide();
+	} else {
+		$(".span-col-right-button-2").show();
+	}
+	// Monkeypuzzle button - this hides MONKEYPUZZLE text and shows MP instead of only hiding the text
+	if($("#div-col-right-button.col-md-3").width() < 130) {
+		$(".span-col-right-button-3").hide();
+		$(".span-col-right-button-3-small").show();
+	} else {
+		$(".span-col-right-button-3").show();
+		$(".span-col-right-button-3-small").hide();
 	}
 }
 
@@ -297,10 +333,12 @@ function saveTextAsFile(type) {
 	try {
 		switch (Number(type)) {
 			case 1:
-				// TODO - Update this to check for a title
-				var textToWrite = $("#txta-source-" + activeTab).val();
+				var textToWrite = $("#txta-source-"+activeTab).val();
+				if(textToWrite == "") {
+					break;
+				}
 				var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
-				var fileNameToSaveAs = $("#txta-tab-" + activeTab).val();
+				var fileNameToSaveAs = $("#txta-tab-"+activeTab).val();
 				// If the file name is empty - set to the default "MonkeyPuzzle"
 				if (fileNameToSaveAs == "") {
 					fileNameToSaveAs = "MonkeyPuzzle";
@@ -542,7 +580,6 @@ function saveDataAsJSON() {
 	}
 }
 
-//TODO: check uploaded JSON for correct format
 function uploadJSON() {
 	console.log("uploadJSON()");
 	
@@ -679,7 +716,6 @@ function uploadJSON() {
 				update();
 				moveElementsToFit();
 			} else {
-				$("#modal-settings").modal("hide");
 				showModal(5,null,tv4.error);
 				return;
 			}

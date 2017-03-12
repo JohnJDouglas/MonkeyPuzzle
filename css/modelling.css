@@ -23,6 +23,9 @@
 	fill: #000;
 	font-weight: bold;
 	font-size: 14px;
+	font-family: "Open Sans";
+  	font-style: normal;
+	font-variant: normal;
 }
 .svg-link-drag {
 	stroke: #000;
@@ -50,17 +53,16 @@
 .svg-overlay-text-text {
 	fill: #000;
 	stroke-width: 0.1;
+	font-family: "Open Sans";
+  	font-style: normal;
+	font-variant: normal;
 }
 .svg-overlay-text-scheme {
 	fill: #000;
 	stroke-width: 0.1;
-}
-.noselect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+	font-family: "Open Sans";
+  	font-style: normal;
+	font-variant: normal;
 }
 .svg-scheme-text {
 	fill: #000;

@@ -6,6 +6,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" type="image/ico" href="res/favicon.ico">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans"/>
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300">
 		<script src="https://d3js.org/d3.v4.js"></script>
 		<script src="js/tv4.js"></script>
 		<script src="js/index.js"></script>
@@ -33,28 +35,28 @@
 					<!--col-left-->
 					<div id="col-left" class="panel-left">
 						<div class="row">
-							<div id="div-col-left-button" class="col-md-4 no-padding-lr">
-								<button class="btn btn-source btn-block" onclick="showModal(6)"><i class="fa fa-trash"></i><span class="span-col-left-button"> Clear Source</span></button>
+							<div id="div-col-left-button-top" class="col-xs-4 col-md-4 no-padding-lr">
+								<button class="btn btn-source btn-block" onclick="showModal(6)"><i class="fa fa-trash fa-lg"></i><span class="span-col-left-button-top"> Clear Source</span></button>
 							</div>
-							<div class="col-md-4 no-padding-lr">
+							<div class="col-xs-4 col-md-4 no-padding-lr">
 								<form style="display:inline;">
-									<span class="btn btn-source btn-file btn-block"><i class="fa fa-upload"></i><span class="span-col-left-button"> Upload .txt</span><input id="fileSourceInput" class="fileSourceInput" type="file" accept=".txt"></span>
+									<span class="btn btn-source btn-file btn-block"><i class="fa fa-upload fa-lg"></i><span class="span-col-left-button-top"> Upload .txt</span><input id="fileSourceInput" class="fileSourceInput" type="file" accept=".txt"></span>
 								</form>
 							</div>
-							<div class="col-md-4 no-padding-lr">
-								<button class="btn btn-source btn-block" onclick="saveTextAsFile(1)"><i class="fa fa-save"></i><span class="span-col-left-button"> Save .txt</span></button>
+							<div class="col-xs-4 col-md-4 no-padding-lr">
+								<button class="btn btn-source btn-block" onclick="saveTextAsFile(1)"><i class="fa fa-save fa-lg"></i><span class="span-col-left-button-top"> Save .txt</span></button>
 							</div>
 						</div>
 						<div class="row">
-							<div id="div-add-tab" class="no-padding-lr col-md-2">
-								<button class="btn btn-source btn-block" onclick="addTab()"><i class="fa fa-plus"></i></button>
+							<div id="div-add-tab" class="no-padding-lr col-xs-2 col-md-2">
+								<button class="btn btn-source btn-block" onclick="addTab()"><i class="fa fa-plus fa-lg"></i></button>
 							</div>
-							<div id="div-source-tab-1" class="source-tab no-padding-lr col-md-1">
+							<div id="div-source-tab-1" class="source-tab no-padding-lr col-xs-1 col-md-1">
 								<button class="btn btn-source btn-block btn-tab" onclick="showTab(1)"></span>1</button>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-12 no-padding-lr">
+							<div class="col-xs-12 col-md-12 no-padding-lr">
 								<textarea id="txta-tab-1" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 1</textarea>
 								<textarea id="txta-tab-2" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 2</textarea>
 								<textarea id="txta-tab-3" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 3</textarea>
@@ -69,7 +71,7 @@
 						</div>
 						<div id="div-col-left-source">
 							<div class="row height-100-percent">
-								<div class="col-md-12 no-padding-lr height-100-percent">
+								<div class="col-xs-12 col-md-12 no-padding-lr height-100-percent">
 									<textarea id="txta-source-1" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
 									<textarea id="txta-source-2" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
 									<textarea id="txta-source-3" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
@@ -84,12 +86,12 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-12 no-padding-lr">
-								<div class="col-md-6 no-padding-lr">
-									<button id="btn-lock-tab" class="btn btn-lock btn-block" onclick="lockTab()"><i id="i-lock-tab" class="fa fa-lock"></i></span><span id="span-lock"> Unlock Tab</span></button>
+							<div class="col-xs-12 col-md-12 no-padding-lr">
+								<div id="div-col-left-button-bottom" class="col-xs-6 col-md-6 no-padding-lr">
+									<button id="btn-lock-tab" class="btn btn-lock btn-block" onclick="lockTab()"><i id="i-lock-tab" class="fa fa-lock fa-lg"></i></span><span id="span-lock"><span class="span-col-left-button-bottom"> Unlock Tab</span></span></button>
 								</div>
-								<div class="col-md-6 no-padding-lr">
-									<button id="btn-remove-tab" class="btn btn-delete btn-block" onclick="showModal(7)"><i class="fa fa-trash"></i></span> Delete Tab</button>
+								<div class="col-xs-6 col-md-6 no-padding-lr">
+									<button id="btn-remove-tab" class="btn btn-delete btn-block" onclick="showModal(7)"><i class="fa fa-trash fa-lg"></i></span><span class="span-col-left-button-bottom"> Delete Tab</span></button>
 								</div>
 							</div>
 						</div>
@@ -101,181 +103,77 @@
 					<div id="col-right" class="panel-right">
 						<div id="div-col-right-buttons">
 							<div class="row">
-								<div class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
-									<button class="btn btn-menu btn-block" onclick="toggleSource()"><i id="i-source" class="fa fa-chevron-left"></i></button>
+								<div id="div-col-right-button" class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
+									<button class="btn btn-menu btn-block" onclick="toggleSource()"><i id="i-source" class="fa fa-chevron-left fa-lg"></i></button>
 								</div>
-								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-									<button class="btn btn-menu btn-block" onclick="addNode(1)"><i class="fa fa-plus"></i> Text</button>
+								<div id="div-col-right-button" class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
+									<button id="btn-add-text-node" class="btn btn-menu btn-block" onclick="addNode(1)"><i class="fa fa-plus fa-lg"></i><span class="span-col-right-button-2"> Text</span></button>
 								</div>
 								<div class="col-xs-2 col-md-2 col-lg-2 dropdown no-padding-lr">
-									<div class="dropdown">
-										<a role="button" data-toggle="dropdown" class="btn btn-menu btn-block" data-target="#">
-											<i class="fa fa-plus"></i> Scheme <span class="caret"></span>
-										</a>
-										<ul id="ul-schemes" class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-											<li><a class="a-scheme-option">Default</a></li>
-											<li class="divider"></li>
-											<li class="dropdown-submenu">
-												<a tabindex="-1">Source-based Schemes</a>
-												<ul class="dropdown-menu">
-													<li class="dropdown-submenu">
-														<a>Practical Reasoning</a>
-														<ul class="dropdown-menu">
-															<li class="dropdown-submenu">
-																<a>Instrumental Argument from Practical Reasoning</a>
-																<ul class="dropdown-menu">
-																	<li><a class="a-scheme-option">Argument from Action to Motive</a></li>
-																</ul>
-															</li>
-															<li class="dropdown-submenu">
-																<a>Value-based Argument from Practical Reasoning</a>
-																<ul class="dropdown-menu">
-																	<li class="dropdown-submenu">
-																		<a>Arguments from Positive or Negative Consequences</a>
-																		<ul class="dropdown-menu">
-																			<li><a class="a-scheme-option">Argument from Waste</a></li>
-																			<li><a class="a-scheme-option">Argument from Threat</a></li>
-																			<li><a class="a-scheme-option">Sunk Costs Arguments</a></li>
-																			<li><a class="a-scheme-option">Precedent Slippery Slope Argument</a></li>
-																			<li><a class="a-scheme-option">Sorites Slippery Slope Argument</a></li>
-																		</ul>
-																	</li>
-																	<li class="dropdown-submenu">
-																		<a>Argument from Values</a>
-																		<ul class="dropdown-menu">
-																			<li><a class="a-scheme-option">Argument from Fairness</a></li>
-																		</ul>
-																	</li>
-																</ul>
-															</li>
-														</ul>
-													</li>
-													<li class="dropdown-submenu">
-														<a>Epistemic Reasoning</a>
-														<ul class="dropdown-menu">
-															<li class="dropdown-submenu">
-																<a>Discovery Arguments</a>
-																<ul class="dropdown-menu">
-																	<li class="dropdown-submenu">
-																		<a>Arguments Establishing Rules</a>
-																		<ul class="dropdown-menu">
-																			<li><a class="a-scheme-option">Argument from a Random Sample to a Population</a></li>
-																			<li><a class="a-scheme-option">Argument from Best Explanation</a></li>
-																		</ul>
-																	</li>
-																	<li class="dropdown-submenu">
-																		<a>Arguments Finding Entities</a>
-																		<ul class="dropdown-menu">
-																			<li><a class="a-scheme-option">Argument from Ignorance</a></li>
-																			<li><a class="a-scheme-option">Argument from Sign</a></li>
-																		</ul>
-																	</li>
-																</ul>
-															</li>
-															<li class="dropdown-submenu">
-																<a>Applying Rules to Cases</a>
-																<ul class="dropdown-menu">
-																	<li class="dropdown-submenu">
-																		<a>Chained Arguments Connecting Rules and Cases</a>
-																		<ul class="dropdown-menu">
-																			<li><a class="a-scheme-option">Argument from Gradualism</a></li>
-																			<li><a class="a-scheme-option">Precedent Slippery Slope Argument</a></li>
-																			<li><a class="a-scheme-option">Sorites Slippery Slope Argument</a></li>
-																		</ul>
-																	</li>
-																	<li class="dropdown-submenu">
-																		<a>Arguments Based on Cases</a>
-																		<ul class="dropdown-menu">
-																			<li><a class="a-scheme-option">Argument from Verbal Classification</a></li>
-																			<li><a class="a-scheme-option">Argument from Cause to Effect</a></li>
-																			<li><a class="a-scheme-option">Argument from an Established Rule</a></li>
-																		</ul>
-																	</li>
-																	<li class="dropdown-submenu">
-																		<a>Defeasible Rule Based Argument</a>
-																		<ul class="dropdown-menu">
-																			<li><a class="a-scheme-option">Argument from Precedent</a></li>
-																			<li><a class="a-scheme-option">Argument from Example</a></li>
-																			<li><a class="a-scheme-option">Argument from Analogy</a></li>
-																		</ul>
-																	</li>
-																	<li><a class="a-scheme-option">Argument from Evidence to a Hypothesis</a></li>
-																</ul>
-															</li>
-														</ul>
-													</li>
-												</ul>
-											</li>
-											<li class="divider"></li>
-											<li class="dropdown-submenu">
-												<a tabindex="-1">Non Source-based Schemes</a>
-												<ul class="dropdown-menu">
-													<li class="dropdown-submenu">
-														<a>Argument from Popular Acceptance</a>
-														<ul class="dropdown-menu">
-															<li><a class="a-scheme-option">Argument from Popular Opinion</a></li>
-															<li><a class="a-scheme-option">Argument from Popular Practice</a></li>
-														</ul>
-													</li>
-													<li class="dropdown-submenu">
-														<a>Ad Hominem Arguments</a>
-														<ul class="dropdown-menu">
-															<li class="dropdown-submenu">
-																<a>Direct Ad Hominem</a>
-																<ul class="dropdown-menu">
-																	<li><a class="a-scheme-option">Circumstantial Ad Hominem</a></li>
-																</ul>
-															</li>													
-															<li class="dropdown-submenu">
-																<a>Argument from Inconsistent Commitment</a>
-																<ul class="dropdown-menu">
-																	<li><a class="a-scheme-option">Circumstantial Ad Hominem</a></li>
-																</ul>
-															</li>													
-															<li class="dropdown-submenu">
-																<a>Poisoning the Well Ad Hominem</a>
-																<ul class="dropdown-menu">
-																	<li><a class="a-scheme-option">Poisoning the Well by Alleging Group Bias</a></li>
-																</ul>
-															</li>
-														</ul>
-													</li>
-													<li class="dropdown-submenu">
-														<a>Arguments from Bias</a>
-														<ul class="dropdown-menu">
-															<li class="dropdown-submenu">
-																<a>Poisoning the Well Ad Hominem</a>
-																<ul class="dropdown-menu">
-																	<li><a class="a-scheme-option">Poisoning the Well by Alleging Group Bias</a></li>
-																</ul>
-															</li>
-														</ul>
-													</li>
-													<li class="dropdown-submenu">
-														<a>Arguments from Position to Know</a>
-														<ul class="dropdown-menu">
-															<li><a class="a-scheme-option">Argument from Expert Opinion</a></li>
-															<li class="dropdown-submenu">
-																<a>Argument from Position to Know</a>
-																<ul class="dropdown-menu">
-																	<li><a class="a-scheme-option">Argument from Witness Testimony</a></li>
-																</ul>
-															</li>
-														</ul>
-													</li>
-												</ul>
-											</li>
-										</ul>
+									<div class="pull-right">
+										<div class="btn-block" id="firstLevelNav_small">
+											<button id="a-add-scheme-node" type="button" class="btn btn-menu btn-block dropdown-toggle" data-toggle="dropdown">
+												<i class="fa fa-plus fa-lg"></i><span> Scheme <span class="caret"></span></span>
+											</button>
+											<ul class="dropdown-menu pull-right dropdown-wide">
+												<li><a class="a-scheme-option">Default</a></li>
+												<li class="divider"></li>
+												<li><a>Source-based Schemes</a></li>
+												<li class="drop-accordian"><a href="#">Practical Reasoning <span class="caret"><!-- --></span></a>
+													<ul class="drop-accordian-menu">
+														<li><a class="a-scheme-option">Argument from Action to Motive</a></li>
+														<li><a class="a-scheme-option">Argument from Waste</a></li>
+														<li><a class="a-scheme-option">Argument from Threat</a></li>
+														<li><a class="a-scheme-option">Sunk Costs Arguments</a></li>
+														<li><a class="a-scheme-option">Precedent Slippery Slope Argument</a></li>
+														<li><a class="a-scheme-option">Sorites Slippery Slope Argument</a></li>
+														<li><a class="a-scheme-option">Argument from Fairness</a></li>
+													</ul>
+												</li>
+												<li class="drop-accordian"><a href="#">Epistemic Reasoning <span class="caret"><!-- --></span></a>
+													<ul class="drop-accordian-menu">
+														<li><a class="a-scheme-option">Argument from a Random Sample to a Population</a></li>
+														<li><a class="a-scheme-option">Argument from Best Explanation</a></li>
+														<li><a class="a-scheme-option">Argument from Ignorance</a></li>
+														<li><a class="a-scheme-option">Argument from Sign</a></li>
+														<li><a class="a-scheme-option">Argument from Gradualism</a></li>
+														<li><a class="a-scheme-option">Precedent Slippery Slope Argument</a></li>
+														<li><a class="a-scheme-option">Sorites Slippery Slope Argument</a></li>
+														<li><a class="a-scheme-option">Argument from Verbal Classification</a></li>
+														<li><a class="a-scheme-option">Argument from Cause to Effect</a></li>
+														<li><a class="a-scheme-option">Argument from an Established Rule</a></li>
+														<li><a class="a-scheme-option">Argument from Precedent</a></li>
+														<li><a class="a-scheme-option">Argument from Example</a></li>
+														<li><a class="a-scheme-option">Argument from Analogy</a></li>
+														<li><a class="a-scheme-option">Argument from Evidence to a Hypothesis</a></li>
+													</ul>
+												</li>
+												<li class="divider"></li>
+												<li><a>Non Source-based Schemes</a></li>
+												<li class="drop-accordian"><a href="#">Argument from Popular Acceptance <span class="caret"><!-- --></span></a>
+													<ul class="drop-accordian-menu">
+														<li><a class="a-scheme-option">Argument from Popular Opinion</a></li>
+														<li><a class="a-scheme-option">Argument from Popular Practice</a></li>
+														<li><a class="a-scheme-option">Circumstantial Ad Hominem</a></li>
+														<li><a class="a-scheme-option">Circumstantial Ad Hominem</a></li>
+														<li><a class="a-scheme-option">Poisoning the Well by Alleging Group Bias</a></li>
+														<li><a class="a-scheme-option">Poisoning the Well by Alleging Group Bias</a></li>
+														<li><a class="a-scheme-option">Argument from Expert Opinion</a></li>
+														<li><a class="a-scheme-option">Argument from Witness Testimony</a></li>
+													</ul>
+												</li>
+											</ul>
+										</div>
 									</div>
 								</div>
 								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-									<button class="btn btn-menu btn-block" onclick="showAllTextOverlay()"><i class="fa fa-eye"></i> Content</button>
+									<button class="btn btn-menu btn-block" onclick="showAllTextOverlay()"><i class="fa fa-eye fa-lg"></i><span class="span-col-right-button-2"> Content</span></button>
 								</div>
 								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-									<button id="btn-mouse-overlay" class="btn btn-menu btn-block" onclick="mouseOverTextOverlay()"><i id="i-mouseover-toggle" class="fa fa-eye"></i> Mouseover</button>
+									<button id="btn-mouse-overlay" class="btn btn-menu btn-block" onclick="mouseOverTextOverlay()"><i id="i-mouseover-toggle" class="fa fa-mouse-pointer fa-lg"></i><span class="span-col-right-button-2"> Mouseover</span></button>
 								</div>
-								<div class="col-xs-3 col-md-3 col-lg-3 no-padding-lr">
-									<button class="btn btn-menu btn-block" onclick="showModal(9)">MONKEYPUZZLE</button>
+								<div id="div-col-right-button" class="col-xs-3 col-md-3 col-lg-3 no-padding-lr">
+									<button class="btn btn-menu btn-block" onclick="showModal(9)"><span class="span-col-right-button-3">MONKEYPUZZLE</span><span class="span-col-right-button-3-small">MP</span></button>
 								</div>
 							</div>
 						</div>
@@ -286,6 +184,7 @@
 				</div>
 			</div>
 			<!--col-bottom-->
+			<!--
 			<div id="row-2" class="row">
 				<div id="col-bottom" class="col-xs-12 col-md-12 col-lg-12 col-text-display no-padding-lr">
 					<div class="col-xs-10 col-md-10 col-lg-10 no-padding-lr">
@@ -298,7 +197,7 @@
 						<button id="btn-clipboard" class="btn btn-menu btn-block" data-clipboard-action="copy" data-clipboard-target="#txta-node-text"><i class="fa fa-copy"></i> Text</button>
 					</div>
 				</div>
-			</div>
+			</div>-->
 			<!--end-col-bottom-->	
 			</div>		
 		</div>
@@ -540,8 +439,8 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button id="btn-modal-edit-text-node" type="button" class="btn btn-default modal-edit-text-node" data-dismiss="modal"><i class="fa fa-edit"></i> Update Text</button>
-							<button id="btn-modal-edit-scheme-node" type="button" class="btn btn-default modal-edit-scheme-node" data-dismiss="modal"><i class="fa fa-edit"></i> Update Scheme</button>
+							<button id="btn-modal-edit-text-node" type="button" class="btn btn-default modal-edit-text-node" data-dismiss="modal"><i class="fa fa-edit fa-lg"></i> Update Text</button>
+							<button id="btn-modal-edit-scheme-node" type="button" class="btn btn-default modal-edit-scheme-node" data-dismiss="modal"><i class="fa fa-edit fa-lg"></i> Update Scheme</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
 					</div>
