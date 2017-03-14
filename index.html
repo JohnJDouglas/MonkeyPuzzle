@@ -6,15 +6,16 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" type="image/ico" href="res/favicon.ico">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans"/>
-		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300">
 		<script src="https://d3js.org/d3.v4.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<script src="js/tv4.js"></script>
 		<script src="js/index.js"></script>
 		<script src="js/modelling.js"></script>
 		<script src="js/modal.js"></script>
 		<script src="js/clipboard.js"></script>
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script src="js/saveSvgAsPng.js"></script>
+		<script type="text/javascript" src="js/jquery.layout-latest.js"></script>
+		<link rel="stylesheet" href="css/layout-default-latest.css">
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 		<link rel="stylesheet" href="css/index.css">
@@ -22,184 +23,179 @@
 		<link rel="stylesheet" href="css/modelling.css">
 		<link rel="stylesheet" href="css/buttons.css">
 		<link rel="stylesheet" href="css/variables.css">
-		<script src="js/saveSvgAsPng.js"></script>
-		<script type="text/javascript" src="js/jquery-resizable.js"></script>
-		<script type="text/javascript" src="js/jquery.highlight-within-textarea.js"></script>
-		<link rel="stylesheet" href="css/jquery.highlight-within-textarea.css">
 	</head>
 	<body>
 		<!--container-fluid-->
 		<div class="container-fluid">
-			<div id="row-1" class="row">
+			<div id="row-main" class="row">
 				<div class="panel-container">
 					<!--col-left-->
-					<div id="col-left" class="panel-left">
-						<div class="row">
-							<div id="div-col-left-button-top" class="col-xs-4 col-md-4 no-padding-lr">
-								<button class="btn btn-source btn-block" onclick="showModal(6)"><i class="fa fa-trash fa-lg"></i><span class="span-col-left-button-top"> Clear Source</span></button>
-							</div>
-							<div class="col-xs-4 col-md-4 no-padding-lr">
-								<form style="display:inline;">
-									<span class="btn btn-source btn-file btn-block"><i class="fa fa-upload fa-lg"></i><span class="span-col-left-button-top"> Upload .txt</span><input id="fileSourceInput" class="fileSourceInput" type="file" accept=".txt"></span>
-								</form>
-							</div>
-							<div class="col-xs-4 col-md-4 no-padding-lr">
-								<button class="btn btn-source btn-block" onclick="saveTextAsFile(1)"><i class="fa fa-save fa-lg"></i><span class="span-col-left-button-top"> Save .txt</span></button>
-							</div>
-						</div>
-						<div class="row">
-							<div id="div-add-tab" class="no-padding-lr col-xs-2 col-md-2">
-								<button class="btn btn-source btn-block" onclick="addTab()"><i class="fa fa-plus fa-lg"></i></button>
-							</div>
-							<div id="div-source-tab-1" class="source-tab no-padding-lr col-xs-1 col-md-1">
-								<button class="btn btn-source btn-block btn-tab" onclick="showTab(1)"></span>1</button>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 col-md-12 no-padding-lr">
-								<textarea id="txta-tab-1" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 1</textarea>
-								<textarea id="txta-tab-2" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 2</textarea>
-								<textarea id="txta-tab-3" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 3</textarea>
-								<textarea id="txta-tab-4" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 4</textarea>
-								<textarea id="txta-tab-5" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 5</textarea>
-								<textarea id="txta-tab-6" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 6</textarea>
-								<textarea id="txta-tab-7" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 7</textarea>
-								<textarea id="txta-tab-8" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 8</textarea>
-								<textarea id="txta-tab-9" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 9</textarea>
-								<textarea id="txta-tab-10" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 10</textarea>
-							</div>
-						</div>
-						<div id="div-col-left-source">
-							<div class="row height-100-percent">
-								<div class="col-xs-12 col-md-12 no-padding-lr height-100-percent">
-									<textarea id="txta-source-1" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
-									<textarea id="txta-source-2" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
-									<textarea id="txta-source-3" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
-									<textarea id="txta-source-4" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
-									<textarea id="txta-source-5" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
-									<textarea id="txta-source-6" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
-									<textarea id="txta-source-7" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
-									<textarea id="txta-source-8" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
-									<textarea id="txta-source-9" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
-									<textarea id="txta-source-10" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+					<div class="ui-layout-west ui-layout-pane ui-layout-pane-west">
+							<div class="row">
+								<div id="div-col-left-button-top" class="col-xs-4 col-md-4 no-padding-lr">
+									<button class="btn btn-source btn-block" onclick="showModal(6)"><i class="fa fa-trash"></i><span class="span-col-left-button-top"> Clear Source</span></button>
+								</div>
+								<div class="col-xs-4 col-md-4 no-padding-lr">
+									<form style="display:inline;">
+										<span class="btn btn-source btn-file btn-block"><i class="fa fa-upload"></i><span class="span-col-left-button-top"> Upload .txt</span><input id="fileSourceInput" class="fileSourceInput" type="file" accept=".txt"></span>
+									</form>
+								</div>
+								<div class="col-xs-4 col-md-4 no-padding-lr">
+									<button class="btn btn-source btn-block" onclick="saveTextAsFile(1)"><i class="fa fa-save"></i><span class="span-col-left-button-top"> Save .txt</span></button>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 col-md-12 no-padding-lr">
-								<div id="div-col-left-button-bottom" class="col-xs-6 col-md-6 no-padding-lr">
-									<button id="btn-lock-tab" class="btn btn-lock btn-block" onclick="lockTab()"><i id="i-lock-tab" class="fa fa-lock fa-lg"></i></span><span id="span-lock"><span class="span-col-left-button-bottom"> Unlock Tab</span></span></button>
+							<div class="row">
+								<div id="div-add-tab" class="no-padding-lr col-xs-2 col-md-2">
+									<button class="btn btn-source btn-block" onclick="addTab()"><i class="fa fa-plus"></i></button>
 								</div>
-								<div class="col-xs-6 col-md-6 no-padding-lr">
-									<button id="btn-remove-tab" class="btn btn-delete btn-block" onclick="showModal(7)"><i class="fa fa-trash fa-lg"></i></span><span class="span-col-left-button-bottom"> Delete Tab</span></button>
+								<div id="div-source-tab-1" class="source-tab no-padding-lr col-xs-1 col-md-1">
+									<button class="btn btn-source btn-block btn-tab" onclick="showTab(1)"></span>1</button>
 								</div>
 							</div>
-						</div>
+							<div class="row">
+								<div class="col-xs-12 col-md-12 no-padding-lr">
+									<textarea id="txta-tab-1" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 1</textarea>
+									<textarea id="txta-tab-2" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 2</textarea>
+									<textarea id="txta-tab-3" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 3</textarea>
+									<textarea id="txta-tab-4" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 4</textarea>
+									<textarea id="txta-tab-5" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 5</textarea>
+									<textarea id="txta-tab-6" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 6</textarea>
+									<textarea id="txta-tab-7" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 7</textarea>
+									<textarea id="txta-tab-8" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 8</textarea>
+									<textarea id="txta-tab-9" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 9</textarea>
+									<textarea id="txta-tab-10" class="txta-tab" spellcheck="false" readonly maxlength="40">Tab 10</textarea>
+								</div>
+							</div>
+							<div id="div-col-left-source">
+								<div class="row height-100-percent">
+									<div id="div-txta-source" class="col-xs-12 col-md-12 no-padding-lr height-100-percent">
+										<textarea id="txta-source-1" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+										<textarea id="txta-source-2" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+										<textarea id="txta-source-3" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+										<textarea id="txta-source-4" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+										<textarea id="txta-source-5" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+										<textarea id="txta-source-6" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+										<textarea id="txta-source-7" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+										<textarea id="txta-source-8" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+										<textarea id="txta-source-9" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+										<textarea id="txta-source-10" class="txta-source" spellcheck="false" placeholder="Enter your text here..." readonly></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-md-12 no-padding-lr">
+									<div id="div-col-left-button-bottom" class="col-xs-6 col-md-6 no-padding-lr">
+										<button id="btn-lock-tab" class="btn btn-lock btn-block" onclick="lockTab()"><i id="i-lock-tab" class="fa fa-lock"></i></span><span id="span-lock"><span class="span-col-left-button-bottom"> Unlock Tab</span></span></button>
+									</div>
+									<div class="col-xs-6 col-md-6 no-padding-lr">
+										<button id="btn-remove-tab" class="btn btn-delete btn-block" onclick="showModal(7)"><i class="fa fa-trash"></i></span><span class="span-col-left-button-bottom"> Delete Tab</span></button>
+									</div>
+								</div>
+							</div>
 					</div>
 					<!--end-col-left-->
 					<div class="splitter">
 					</div>
 					<!--col-right-->
-					<div id="col-right" class="panel-right">
-						<div id="div-col-right-buttons">
-							<div class="row">
-								<div id="div-col-right-button" class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
-									<button class="btn btn-menu btn-block" onclick="toggleSource()"><i id="i-source" class="fa fa-chevron-left fa-lg"></i></button>
-								</div>
-								<div id="div-col-right-button" class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-									<button id="btn-add-text-node" class="btn btn-menu btn-block" onclick="addNode(1)"><i class="fa fa-plus fa-lg"></i><span class="span-col-right-button-2"> Text</span></button>
-								</div>
-								<div class="col-xs-2 col-md-2 col-lg-2 dropdown no-padding-lr">
-									<div class="pull-right">
-										<div class="btn-block" id="firstLevelNav_small">
-											<button id="a-add-scheme-node" type="button" class="btn btn-menu btn-block dropdown-toggle" data-toggle="dropdown">
-												<i class="fa fa-plus fa-lg"></i><span> Scheme <span class="caret"></span></span>
-											</button>
-											<ul class="dropdown-menu pull-right dropdown-wide">
-												<li><a class="a-scheme-option">Default</a></li>
-												<li class="divider"></li>
-												<li><a>Source-based Schemes</a></li>
-												<li class="drop-accordian"><a href="#">Practical Reasoning <span class="caret"><!-- --></span></a>
-													<ul class="drop-accordian-menu">
-														<li><a class="a-scheme-option">Argument from Action to Motive</a></li>
-														<li><a class="a-scheme-option">Argument from Waste</a></li>
-														<li><a class="a-scheme-option">Argument from Threat</a></li>
-														<li><a class="a-scheme-option">Sunk Costs Arguments</a></li>
-														<li><a class="a-scheme-option">Precedent Slippery Slope Argument</a></li>
-														<li><a class="a-scheme-option">Sorites Slippery Slope Argument</a></li>
-														<li><a class="a-scheme-option">Argument from Fairness</a></li>
-													</ul>
-												</li>
-												<li class="drop-accordian"><a href="#">Epistemic Reasoning <span class="caret"><!-- --></span></a>
-													<ul class="drop-accordian-menu">
-														<li><a class="a-scheme-option">Argument from a Random Sample to a Population</a></li>
-														<li><a class="a-scheme-option">Argument from Best Explanation</a></li>
-														<li><a class="a-scheme-option">Argument from Ignorance</a></li>
-														<li><a class="a-scheme-option">Argument from Sign</a></li>
-														<li><a class="a-scheme-option">Argument from Gradualism</a></li>
-														<li><a class="a-scheme-option">Precedent Slippery Slope Argument</a></li>
-														<li><a class="a-scheme-option">Sorites Slippery Slope Argument</a></li>
-														<li><a class="a-scheme-option">Argument from Verbal Classification</a></li>
-														<li><a class="a-scheme-option">Argument from Cause to Effect</a></li>
-														<li><a class="a-scheme-option">Argument from an Established Rule</a></li>
-														<li><a class="a-scheme-option">Argument from Precedent</a></li>
-														<li><a class="a-scheme-option">Argument from Example</a></li>
-														<li><a class="a-scheme-option">Argument from Analogy</a></li>
-														<li><a class="a-scheme-option">Argument from Evidence to a Hypothesis</a></li>
-													</ul>
-												</li>
-												<li class="divider"></li>
-												<li><a>Non Source-based Schemes</a></li>
-												<li class="drop-accordian"><a href="#">Argument from Popular Acceptance <span class="caret"><!-- --></span></a>
-													<ul class="drop-accordian-menu">
-														<li><a class="a-scheme-option">Argument from Popular Opinion</a></li>
-														<li><a class="a-scheme-option">Argument from Popular Practice</a></li>
-														<li><a class="a-scheme-option">Circumstantial Ad Hominem</a></li>
-														<li><a class="a-scheme-option">Circumstantial Ad Hominem</a></li>
-														<li><a class="a-scheme-option">Poisoning the Well by Alleging Group Bias</a></li>
-														<li><a class="a-scheme-option">Poisoning the Well by Alleging Group Bias</a></li>
-														<li><a class="a-scheme-option">Argument from Expert Opinion</a></li>
-														<li><a class="a-scheme-option">Argument from Witness Testimony</a></li>
-													</ul>
-												</li>
-											</ul>
+					<div class="ui-layout-center ui-layout-pane ui-layout-pane-center">
+							<div id="div-col-right-buttons">
+								<div class="row">
+									<div id="div-col-right-button" class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
+										<button class="btn btn-menu btn-block" onclick="layout.toggle('west')"><i id="i-source" class="fa fa-chevron-left"></i></button>
+									</div>
+									<div id="div-col-right-button" class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
+										<button id="btn-add-text-node" class="btn btn-menu btn-block" onclick="addNode(1)"><i class="fa fa-plus"></i><span class="span-col-right-button-2"> Text</span></button>
+									</div>
+									<div class="col-xs-2 col-md-2 col-lg-2 dropdown no-padding-lr">
+										<div class="pull-right">
+											<div class="btn-block" id="firstLevelNav_small">
+												<button id="a-add-scheme-node" type="button" class="btn btn-menu btn-block dropdown-toggle" data-toggle="dropdown">
+													<i class="fa fa-plus"></i><span><span class="span-col-right-button-2"> Scheme <span class="caret"></span></span></span>
+												</button>
+												<ul class="dropdown-menu pull-right dropdown-wide">
+													<li><a class="a-scheme-option">Default</a></li>
+													<li class="divider"></li>
+													<li><a>Source-based Schemes</a></li>
+													<li class="drop-accordian"><a href="#">Practical Reasoning <span class="caret"><!-- --></span></a>
+														<ul class="drop-accordian-menu">
+															<li><a class="a-scheme-option">Argument from Action to Motive</a></li>
+															<li><a class="a-scheme-option">Argument from Waste</a></li>
+															<li><a class="a-scheme-option">Argument from Threat</a></li>
+															<li><a class="a-scheme-option">Sunk Costs Arguments</a></li>
+															<li><a class="a-scheme-option">Precedent Slippery Slope Argument</a></li>
+															<li><a class="a-scheme-option">Sorites Slippery Slope Argument</a></li>
+															<li><a class="a-scheme-option">Argument from Fairness</a></li>
+														</ul>
+													</li>
+													<li class="drop-accordian"><a href="#">Epistemic Reasoning <span class="caret"><!-- --></span></a>
+														<ul class="drop-accordian-menu">
+															<li><a class="a-scheme-option">Argument from a Random Sample to a Population</a></li>
+															<li><a class="a-scheme-option">Argument from Best Explanation</a></li>
+															<li><a class="a-scheme-option">Argument from Ignorance</a></li>
+															<li><a class="a-scheme-option">Argument from Sign</a></li>
+															<li><a class="a-scheme-option">Argument from Gradualism</a></li>
+															<li><a class="a-scheme-option">Precedent Slippery Slope Argument</a></li>
+															<li><a class="a-scheme-option">Sorites Slippery Slope Argument</a></li>
+															<li><a class="a-scheme-option">Argument from Verbal Classification</a></li>
+															<li><a class="a-scheme-option">Argument from Cause to Effect</a></li>
+															<li><a class="a-scheme-option">Argument from an Established Rule</a></li>
+															<li><a class="a-scheme-option">Argument from Precedent</a></li>
+															<li><a class="a-scheme-option">Argument from Example</a></li>
+															<li><a class="a-scheme-option">Argument from Analogy</a></li>
+															<li><a class="a-scheme-option">Argument from Evidence to a Hypothesis</a></li>
+														</ul>
+													</li>
+													<li class="divider"></li>
+													<li><a>Non Source-based Schemes</a></li>
+													<li class="drop-accordian"><a href="#">Argument from Popular Acceptance <span class="caret"><!-- --></span></a>
+														<ul class="drop-accordian-menu">
+															<li><a class="a-scheme-option">Argument from Popular Opinion</a></li>
+															<li><a class="a-scheme-option">Argument from Popular Practice</a></li>
+														</ul>
+													</li>
+													<li class="drop-accordian"><a href="#">Ad Hominem Arguments <span class="caret"><!-- --></span></a>
+														<ul class="drop-accordian-menu">
+															<li><a class="a-scheme-option">Direct Ad Hominem</a></li>
+															<li><a class="a-scheme-option">Argument from Inconsistent Commitment</a></li>
+															<li><a class="a-scheme-option">Circumstantial Ad Hominem</a></li>
+															<li><a class="a-scheme-option">Poisoning the Well Ad Hominem</a></li>
+														</ul>
+													</li>
+													<li class="drop-accordian"><a href="#">Arguments from Bias <span class="caret"><!-- --></span></a>
+														<ul class="drop-accordian-menu">
+															<li><a class="a-scheme-option">Poisoning the Well by Alleging Group Bias</a></li>
+														</ul>
+													</li>
+													<li class="drop-accordian"><a href="#">Arguments from Position to Know <span class="caret"><!-- --></span></a>
+														<ul class="drop-accordian-menu">
+															<li><a class="a-scheme-option">Argument from Expert Opinion</a></li>
+															<li><a class="a-scheme-option">Argument from Position to Know</a></li>
+															<li><a class="a-scheme-option">Argument from Witness Testimony</a></li>
+														</ul>
+													</li>
+												</ul>
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-									<button class="btn btn-menu btn-block" onclick="showAllTextOverlay()"><i class="fa fa-eye fa-lg"></i><span class="span-col-right-button-2"> Content</span></button>
-								</div>
-								<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-									<button id="btn-mouse-overlay" class="btn btn-menu btn-block" onclick="mouseOverTextOverlay()"><i id="i-mouseover-toggle" class="fa fa-mouse-pointer fa-lg"></i><span class="span-col-right-button-2"> Mouseover</span></button>
-								</div>
-								<div id="div-col-right-button" class="col-xs-3 col-md-3 col-lg-3 no-padding-lr">
-									<button class="btn btn-menu btn-block" onclick="showModal(9)"><span class="span-col-right-button-3">MONKEYPUZZLE</span><span class="span-col-right-button-3-small">MP</span></button>
+									<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
+										<button class="btn btn-menu btn-block" onclick="showAllTextOverlay()"><i class="fa fa-eye"></i><span class="span-col-right-button-2"> Content</span></button>
+									</div>
+									<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
+										<button id="btn-mouse-overlay" class="btn btn-menu btn-block" onclick="mouseOverTextOverlay()"><i id="i-mouseover-toggle" class="fa fa-mouse-pointer"></i><span class="span-col-right-button-2"> Mouseover</span></button>
+									</div>
+									<div id="div-col-right-button" class="col-xs-3 col-md-3 col-lg-3 no-padding-lr">
+										<button class="btn btn-menu btn-block" onclick="showModal(9)"><span class="span-col-right-button-3">MONKEYPUZZLE</span><span class="span-col-right-button-3-small">MP</span></button>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div id="div-vis">
-						</div>
+							<div id="row-vis" class="row">
+								<div id="div-vis">
+								</div>
+							</div>
 					</div>
 					<!--end-col-right-->
 				</div>
-			</div>
-			<!--col-bottom-->
-			<!--
-			<div id="row-2" class="row">
-				<div id="col-bottom" class="col-xs-12 col-md-12 col-lg-12 col-text-display no-padding-lr">
-					<div class="col-xs-10 col-md-10 col-lg-10 no-padding-lr">
-						<textarea id="txta-node-text" readonly></textarea>
-					</div>
-					<div class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
-						<button id="btn-edit-text" class="btn btn-menu btn-block" onclick="editNodeText()"><i id="i-edit" class="fa fa-edit"></i> Text</button>
-					</div>
-					<div class="col-xs-1 col-md-1 col-lg-1 no-padding-lr">
-						<button id="btn-clipboard" class="btn btn-menu btn-block" data-clipboard-action="copy" data-clipboard-target="#txta-node-text"><i class="fa fa-copy"></i> Text</button>
-					</div>
-				</div>
-			</div>-->
-			<!--end-col-bottom-->	
-			</div>		
+			</div>	
 		</div>
 		<!--end-container-fluid-->
 		<!--modals-->
@@ -360,22 +356,22 @@
 						</div>
 						<div class="modal-body">
 							<p class="modal-text p-settings">Controls</p>
-							<button class="btn btn-settings btn-block btn-settings-margin" data-dismiss="modal" onclick="showModal(4)"><i class="fa fa-keyboard-o"></i> Controls</button>
+							<button class="btn btn-settings btn-block settings-margin" data-dismiss="modal" onclick="showModal(4)"><i class="fa fa-keyboard-o"></i> Controls</button>
 							<p class="modal-text p-settings">Save Visualisation As</p>
 							<input id="input-SVG-file-name" type="text" class="form-control input-settings" placeholder="model">
 							<div class="col-md-6 col-lg-6 no-padding-l">
-								<button class="btn btn-settings btn-block btn-settings-margin" onclick="saveSVGAsPNG()"><i class="fa fa-save"></i> Visualisation (.PNG)</button>
+								<button class="btn btn-settings btn-block settings-margin" onclick="saveSVGAsPNG()"><i class="fa fa-save"></i> Visualisation (.PNG)</button>
 							</div>
 							<div class="col-md-6 col-lg-6 no-padding-r">
-								<button class="btn btn-settings btn-block btn-settings-margin" onclick="saveSVGAsSVG()"><i class="fa fa-save"></i> Visualisation (.SVG)</button>
+								<button class="btn btn-settings btn-block settings-margin" onclick="saveSVGAsSVG()"><i class="fa fa-save"></i> Visualisation (.SVG)</button>
 							</div>
 							<p class="modal-text p-settings">Upload JSON</p>
 							<form style="display:inline;">
-								<span class="btn btn-settings btn-file btn-block btn-settings-margin"><i class="fa fa-upload"></i> Upload JSON<input id="fileJSONInput" class="fileJSONInput" type="file" accept=".json"></span>
+								<span class="btn btn-settings btn-file btn-block settings-margin"><i class="fa fa-upload"></i> Upload JSON<input id="fileJSONInput" class="fileJSONInput" type="file" accept=".json"></span>
 							</form>
 							<p class="modal-text p-settings">Download JSON</p>
 							<input id="input-download-JSON" type="text" class="form-control input-settings" placeholder="data">
-							<button id="btn-download-JSON" class="btn btn-settings btn-block btn-settings-margin" onclick="saveDataAsJSON()"><i class="fa fa-download"></i> Download JSON</button>
+							<button id="btn-download-JSON" class="btn btn-settings btn-block settings-margin" onclick="saveDataAsJSON()"><i class="fa fa-download"></i> Download JSON</button>
 							<div class="row">
 								<button id="btn-testing" class="btn btn-settings dropdown-toggle btn-settings btn-block" type="button" data-toggle="dropdown">Testing <span class="caret"></span></button>
 									<ul class="dropdown-menu">
@@ -420,18 +416,20 @@
 					<!-- Modal content-->
 					<div class="modal-content">
 						<div class="modal-header color-warning">
-							<h4 class="modal-title">Edit text node</h4>
+							<h4 class="modal-title">Edit node</h4>
 						</div>
 						<div class="modal-body">
 							<div id="div-modal-edit-text-node" class="modal-edit-text-node">
 								<p class="modal-text">Current node text</p>
 								<textarea id="txta-current-node-text" class="txta-modal-edit-node" readonly></textarea>
+								<button class="btn btn-settings modal-margin-top modal-margin-bottom btn-block btn-clipboard" data-clipboard-action="copy" data-clipboard-target="#txta-current-node-text"><i class="fa fa-copy"></i> Text</button>
 								<p class="modal-text">New node text</p>
 								<textarea id="txta-edit-text" class="txta-modal-edit-node"></textarea>
 							</div>
 							<div id="div-modal-edit-scheme-node" class="modal-edit-scheme-node">
 								<p class="modal-text">Current node scheme</p>
 								<textarea id="txta-current-node-scheme" class="txta-modal-edit-node" readonly></textarea>
+								<button class="btn btn-settings modal-margin-top modal-margin-bottom btn-block btn-clipboard" data-clipboard-action="copy" data-clipboard-target="#txta-current-node-scheme"><i class="fa fa-copy"></i> Text</button>
 								<p id="p-current-node-scheme" class="modal-text"></p>
 								<p class="modal-text">New node scheme</p>
 								<select id="select-schemes" class="form-control">
@@ -439,8 +437,8 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button id="btn-modal-edit-text-node" type="button" class="btn btn-default modal-edit-text-node" data-dismiss="modal"><i class="fa fa-edit fa-lg"></i> Update Text</button>
-							<button id="btn-modal-edit-scheme-node" type="button" class="btn btn-default modal-edit-scheme-node" data-dismiss="modal"><i class="fa fa-edit fa-lg"></i> Update Scheme</button>
+							<button id="btn-modal-edit-text-node" type="button" class="btn btn-default modal-edit-text-node" data-dismiss="modal"><i class="fa fa-edit"></i> Update Text</button>
+							<button id="btn-modal-edit-scheme-node" type="button" class="btn btn-default modal-edit-scheme-node" data-dismiss="modal"><i class="fa fa-edit"></i> Update Scheme</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
 					</div>
@@ -467,17 +465,5 @@
 			</div>
 		</div>
 		<!--end-of-modals-->
-		<script>
-			$(".panel-left").resizable({
-				handleSelector: ".splitter",
-				resizeHeight: false,
-				onDragStart: function(e, $el, opt) {
-					panelResize('0');
-				},
-				onDragEnd: function(e, $el, opt) {
-					panelResize('1');
-				}
-			});
-		</script>
 	</body>
 </html>

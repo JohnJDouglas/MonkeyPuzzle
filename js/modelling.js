@@ -28,16 +28,6 @@ var addNodeIncrement = 20;
 var nodeMouseOverEnabled = false;
 
 // The object holding the existing visualisation data
-
-/*
-var data = {
-	"nodes": [{"id": 0, "x": 200, "y": 400, "text": "lorem", "displayText": "lorem", "type":"text"},{"id": 1, "x": 400, "y": 400, "text": "ipsum", "displayText": "ipsum", "type":"scheme"},{"id": 2, "x": 400, "y": 200, "text": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "displayText": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "type":"text"},{"id": 3, "x": 600, "y": 400, "text": "sit", "displayText": "sit", "type":"scheme"},{"id": 4, "x": 400, "y": 600, "text": "amet", "displayText": "amet", "type":"text"}],
-	"links": [{"source":{"id": 2, "x": 400, "y": 200, "text": "dolor", "type":"text"},"target":{"id": 3, "x": 600, "y": 400, "text": "sit", "type":"scheme"}}],
-	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
-	"currentNodeID": 0
-};
-*/
-///*
 var data = {
 	"nodes": [{"id": 0, "x": 200, "y": 400, "text": "lorem", "displayText": "lorem", "type":"text"},{"id": 1, "x": 400, "y": 400, "text": "ipsum", "displayText": "ipsum", "type":"scheme"},{"id": 2, "x": 400, "y": 200, "text": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "displayText": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "type":"text"},{"id": 3, "x": 600, "y": 400, "text": "sit", "displayText": "sit", "type":"scheme"},{"id": 4, "x": 400, "y": 600, "text": "amet", "displayText": "amet", "type":"text"}],
 	//"links": [{"source":2,"target":3},{"source":1,"target":2}],
@@ -45,8 +35,7 @@ var data = {
 	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
 	"currentNodeID": 0
 };
-//*/
-/*
+/* An empty data object - use if needed
 var data = {
 	"nodes": [],
 	"links": [],
@@ -55,6 +44,13 @@ var data = {
 };
 */
 
+// The object holding highlighting state
+var highlight = {
+	//rangeData: [{"tab": 1, range: [[0,10,20],[1,24,35],[2,33,40],[3,12,19],[4,50,60]]}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
+	rangeData: [{"tab": 1, range: []}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
+	color: "#FFFF00"
+};
+
 function createSVG() {
 	d3.select(window)
 		.on("keydown", keyDown);
@@ -62,7 +58,7 @@ function createSVG() {
 	// Set the id value for the next node added
 	data.currentNodeID = data.nodes.length;
 	console.log("new node id="+data.nodes.length);
-		
+	
 	// SVG height and width;
 	var w = $("#div-vis").width();
 	var h = $("#div-vis").height();
@@ -250,7 +246,6 @@ function update() {
 		removeActive();
 		removeDragLine();
 		removeTextOverlay();
-		clearTextRow();
 	});
 }
 
@@ -282,8 +277,6 @@ function doubleClick(d) {
 	showModal(11,id);
 
 	if(type[0].type == "text") {
-		// Text node
-
 		// Show text node div and button
 		$(".modal-edit-text-node").show();
 	
@@ -301,8 +294,6 @@ function doubleClick(d) {
 			$("#modal-edit-node").off("hide.bs.modal");
 		});	
 	} else {
-		// Scheme node
-
 		// Show scheme node div and button
 		$(".modal-edit-scheme-node").show();
 
@@ -381,20 +372,6 @@ function dragNode(d) {
 			d3.select(this).attr("x2", d.x).attr("y2", d.y);
 		}
 	});
-	/*
-	// if the id of the current source of the link is equal to the currently dragged items id - update position of link x1,y1 and update link position in data.links
-	if(l.source.id == d.id) {
-		l.source.x = d.x;
-		l.source.y = d.y;
-		d3.select(this).attr("x1", d.x).attr("y1", d.y);
-	}
-	// if the id of the current target of the link is equal to the currently dragged items id - update position of link x2,y2 and update link position in data.links
-	if(l.target.id == d.id) {
-		l.target.x = d.x;
-		l.target.y = d.y;
-		d3.select(this).attr("x2", d.x).attr("y2", d.y);
-	}
-	*/
 	
 	// if the node id is equal to the currently dragged node - update the position of the element accounting for the text offset
 	nodeId.each(function(l) {
@@ -407,8 +384,7 @@ function dragNode(d) {
 			}
 		}
 	});
-	
-	
+		
 	// if the type of node is scheme the node is a square rotated 45deg so apply different transform - else the node is a circle so apply circle specific action
 	if(d.type == "scheme") {
 		d3.select(this).attr("transform","rotate(45 "+d.x+" "+d.y+")");
@@ -521,13 +497,6 @@ function removeLinkFromArray() {
 	var removal = data.links.filter(function(l) {
 		return (l.source == source[0] && l.target == target[0]);
 	});
-
-	/*
-	// Find the exact link
-	var removal = data.links.filter(function(l) {
-		return (l.source.x == coords.x1 && l.source.y == coords.y1 && l.target.x == coords.x2 && l.target.y == coords.y2);
-	});
-	*/
 	
 	data.links.splice(data.links.indexOf(removal[0]), 1);
 		
@@ -541,15 +510,10 @@ function removeNodeFromArray() {
 	// Find the exact node
 	var removal = data.nodes.filter(function(n) {
 		return (n.id == removeId);
-	});	
+	});
 	
 	data.nodes.splice(data.nodes.indexOf(removal[0]), 1);
-	/*
-	$.each(removal, function(index, value) {
-		data.nodes.splice(data.nodes.indexOf(value), 1);
-	});
-	*/
-	
+
 	update();
 }
 
@@ -557,51 +521,16 @@ function removeNodeFromArray() {
 function removeLinksFromNode() {
 	var removeId = Number(d3.select(selectedElement).node().attr("id"));
 	
-	/*
-	// Find link with source or target equal to the id
-	var removal = data.links.filter(function(l) {
-		return (l.source.id == removeId || l.target.id == removeId);
-	});
-	*/
-
 	// Find link with source or target equal to the id
 	var removal = data.links.filter(function(l) {
 		return (l.source == removeId || l.target == removeId);
 	});
 	
-	console.log("removal="+JSON.stringify(removal));
-	
 	$.each(removal, function(index, value) {
-		console.log(index + ':' + JSON.stringify(value));
 		data.links.splice(data.links.indexOf(value), 1);
 	});
 		
 	update();
-}
-
-/*
-function setTextRow(id) {
-	//console.log("setTextRow!");
-	
-	// Set the bottom row text display
-	var node = data.nodes.filter(function(n) {
-		return (n.id == Number(id));
-	});
-
-	maxCharacters = 150;
-
-	if(node[0].displayText.length >= maxCharacters) {
-		var str = node[0].displayText.substr(1,maxCharacters);
-		$("#txta-node-text").val(str);
-	} else {
-		$("#txta-node-text").val(node[0].displayText);
-	}
-}
-*/
-
-// Clear the text row
-function clearTextRow() {
-	$("#txta-node-text").val("");
 }
 
 function showNodeTextOverlay(id, showAll) {
@@ -750,14 +679,10 @@ function showAllTextOverlay() {
 		});
 		allActiveTextOverlay = true;
 	}
-	// Clear the bottom row text display
-	clearTextRow();
 	selectedElement = null;
 }
 
 function addNode(type,schemeName,nodePosition) {
-	console.log("nodePosition="+nodePosition);
-
 	var svg = d3.select("svg");
 
 	var newNode = {};
@@ -780,18 +705,6 @@ function addNode(type,schemeName,nodePosition) {
 			var start = textaSource.selectionStart;
 			var end = textaSource.selectionEnd;
 			var selectedText = textaSource.value.substring(start,end);
-
-			// Store the start end end value of the text
-			newNode.start = start;
-			newNode.end = end;
-
-			/* HIGHLIGHTING
-			var range = [start, end];
-			console.log("range="+JSON.stringify(range));
-			highlightRange.push(range);
-			console.log("highlightRange="+JSON.stringify(highlightRange));
-			$("#txta-source-1").highlightWithinTextarea(onInputArray);
-			*/
 
 			if(selectedText != "") {
 				newNode.text = selectedText;
@@ -857,9 +770,6 @@ function addNode(type,schemeName,nodePosition) {
 
 	var newPos = findNewNodePosition(nodeX,nodeY);
 
-	console.log("newPos.x="+newPos.x);
-	console.log("newPos.y="+newPos.y);
-
 	newNode.x = Number(newPos.x);
 	newNode.y = Number(newPos.y);
 
@@ -874,9 +784,6 @@ function addNode(type,schemeName,nodePosition) {
 
 // Function which locates a new position for a node if one already exists in the centre of the visualisation
 function findNewNodePosition(nodeX, nodeY) {
-	console.log("nodeX="+nodeX);
-	console.log("nodeY="+nodeY);
-
 	// Variable to hold if a node is already in the centre of the svg
 	var originalPositionTaken = false;
 
@@ -898,9 +805,6 @@ function findNewNodePosition(nodeX, nodeY) {
 			newX = nodeX + addNodeOffset;
 			newY = nodeY + addNodeOffset;
 
-			console.log("newX="+newX);
-			console.log("newY="+newY);
-
 			var newPositionTaken = false;
 
 			data.nodes.filter(function(n) {
@@ -913,8 +817,6 @@ function findNewNodePosition(nodeX, nodeY) {
 				var newPos = {};
 				newPos.x = newX;
 				newPos.y = newY;
-				console.log("newPos.x="+newPos.x);
-				console.log("newPos.y="+newPos.y);
 				return newPos;
 			}
 		}
@@ -922,16 +824,11 @@ function findNewNodePosition(nodeX, nodeY) {
 		var newPos = {};
 		newPos.x = nodeX;
 		newPos.y = nodeY;
-		console.log("newPos.x="+newPos.x);
-		console.log("newPos.y="+newPos.y);
 		return newPos;
 	}
 }
 
 function addLink(idStart,idEnd) {
-	console.log("idStart="+idStart);
-	console.log("idEnd="+idEnd);
-
 	var node = d3.selectAll(".svg-node");
 	// Remove text overlay before creating link
 	removeTextOverlay();
@@ -1030,33 +927,9 @@ function addLink(idStart,idEnd) {
 }
 
 function addLinkToData(id1,id2) {
-	console.log("id1="+id1);
-	console.log("id2="+id2);
-
 	var link = {};
-
 	link.source = id1;
 	link.target = id2;
-
-	/*
-	var source = data.nodes.filter(function(n) {
-		return (n.id == Number(id1));
-	});
-	
-	// Set the source of the link to the first element of the filter (it should only ever return one result)
-	link.source = source[0];
-
-	console.log("source="+JSON.stringify(source[0]));
-	
-	var target = data.nodes.filter(function(n) {
-		return (n.id == Number(id2));
-	});
-	
-	// Set the target of the link to the first element of the filter (it should only ever return one result)
-	link.target = target[0];
-
-	console.log("target="+JSON.stringify(target[0]));
-	*/
 
 	// Push the link to the data object
 	data.links.push(link);
@@ -1148,10 +1021,10 @@ function removeDragLine() {
 	node.on("mouseup", null);
 }
 
-function moveElementsToFit(width, height) {
+function moveElementsToFit() {
 	console.log("moveElementsToFit()");
-	var svg = d3.select("svg");
-	var nodes = d3.select(".svg-node");
+	var width = $("#svg-vis").width();
+	var height = $("#svg-vis").height();
 
 	$.each(data.nodes, function(index, value) {
 		if(value.type == "scheme") {
@@ -1187,47 +1060,6 @@ function moveElementsToFit(width, height) {
 	});
 	update();
 }
-
-// Make the text row at the bottom of the ui allow editing and apply that editing to the text value of the selected node
-/*
-function editNodeText() {
-	console.log("editNodeText!");
-
-	if(selectedElement != null && editText == false) {
-		var id = selectedElement.attr("id");
-		console.log("id="+id);
-
-		$("#txta-node-text").css("background","orange");
-		$("#txta-node-text").prop("readonly", false);
-		$("#i-edit").removeClass("fa-edit");
-		$("#i-edit").addClass("fa-save");
-
-		editText = true;
-		return;
-	}
-	
-	if(selectedElement != null && editText == true) {
-		var id = selectedElement.attr("id");
-
-		// If the new value is not empty - update value
-		if($("#txta-node-text").val() != "") {
-			data.nodes[id].displayText = $("#txta-node-text").val();
-		}
-		console.log("new node["+id+"] displayText="+data.nodes[id].displayText);
-
-		// Update the text row text
-		//setTextRow(id);
-
-		$("#txta-node-text").css("background","lightblue");
-		$("#txta-node-text").prop("readonly", true);
-		$("#i-edit").removeClass("fa-save");
-		$("#i-edit").addClass("fa-edit");
-
-		editText = false;
-		return;
-	}
-}
-*/
 
 // Log the data object to console
 function logDataToConsole(type) {

@@ -1,6 +1,26 @@
 html,body {
 	height: 100%;
 }
+.ui-layout-center {
+    padding: 0px;
+	border: none;
+}
+.ui-layout-west {
+	padding: 0px;
+    background: var(--source-color);
+	border: none;
+}
+.ui-layout-resizer-west {
+	border: none;
+	background: #737373;
+}
+.ui-wrapper {
+	height: 100% !important;
+	width: 100% !important;
+}
+#row-vis {
+	height: calc(100% - 34px);
+}
 ::-webkit-scrollbar-track
 {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -109,8 +129,7 @@ html,body {
 .height-100-percent {
 	height: 100%;
 }
-#row-1 {
-	/*height: calc(100% - 34px);*/
+#row-main {
 	height: 100%;
 }
 .no-padding-lr {
@@ -131,9 +150,6 @@ html,body {
 	border: none;
 	outline: none;
 	resize: none;
-	font-family: "Open Sans";
-  	font-style: normal;
-	font-variant: normal;
 }
 .txta-tab {
 	width: 100%;
@@ -147,25 +163,7 @@ html,body {
 	border: none;
 	outline: none;
 	resize: none;
-	font-family: "Open Sans";
-  	font-style: normal;
-	font-variant: normal;
 }
-/*
-#txta-node-text {
-	height: 34px;
-	width: 100%;
-    background: var(--secondary-color);
-	vertical-align: top;
-	border: none;
-	outline: none;
-	resize: none;
-	padding-top: 6px;
-	font-family: "Open Sans";
-  	font-style: normal;
-	font-variant: normal;
-}
-*/
 #txta-missing {
 	width: 100%;
 	height: 100px;
@@ -183,13 +181,10 @@ html,body {
 	vertical-align: top;
 	outline: none;
 	resize: vertical;
-	font-family: "Open Sans";
-  	font-style: normal;
-	font-variant: normal;
 }
 #div-vis {
 	width: 100%;
-	height: calc(100% - 34px);
+	height: 100%;
 	background: yellow;
 }
 .contol-table-padding {
@@ -201,7 +196,13 @@ html,body {
 .p-settings {
 	margin-bottom: 0px !important;
 }
-.btn-settings-margin {
+.settings-margin {
+	margin-bottom: 15px;
+}
+.modal-margin-top {
+	margin-top: 15px;
+}
+.modal-margin-bottom {
 	margin-bottom: 15px;
 }
 .form-control {
@@ -232,10 +233,7 @@ html,body {
 	width: 100%;
 }
 ul.dropdown-wide {
- 	width: 280px !important;
-	font-family: "Open Sans";
-  	font-style: normal;
-	font-variant: normal;
+ 	width: 300px !important;
 }
 ul.drop-accordian-menu {
     display:none;
@@ -260,9 +258,6 @@ ul.drop-accordian-menu li a {
     text-decoration: none;
   	font-size: 8pt;
     width: auto;
-	font-family: "Open Sans";
-  	font-style: normal;
-	font-variant: normal;
 }
 ul.drop-accordian-menu a:hover {
     background-color: #f1f1f1;

@@ -1,24 +1,13 @@
 body {
   background: var(--background-color);
 }
-h4 {
-  font-family: "Open Sans" !important;
-  font-style: normal !important;
-  font-variant: normal !important;
-}
 p {
 	font-size: 18px !important;
-  font-family: "Open Sans" !important;
-  font-style: normal !important;
-  font-variant: normal !important;
 }
 .btn {
   border-radius: 0px;
   outline: 0 !important;
   font-weight: bold;
-  font-family: "Open Sans" !important;
-  font-style: normal !important;
-  font-variant: normal !important;
 }
 .btn:focus {
 	outline: 0;

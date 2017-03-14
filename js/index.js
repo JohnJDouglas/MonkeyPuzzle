@@ -1,16 +1,15 @@
-var selectedText = "";
-var selectedTextMaxLength = 20;
-var sourceToggle = false;
+// The current number of tabs
 var numberTabs = 1;
+// The current tab
 var activeTab = 1;
+// The maximum number of tabs
 var maxTabs = 10;
-//var highlightRange = [[100, 200], [350, 400]];
-var highlightRange = [];
-//var highlightRange = [[0,80],[656,716]];
-var highlightColor = "yellow";
-var wasUnlocked = null;
+//var wasUnlocked = null;
 var schemesArray = [];
+// The distance a node which is in the same position as another is offset when the upload JSON validation runs
 var findNodeQuandrantOffset = 20;
+// The variable for jquery.layout - global to allow toggle source button functionality (set in setupLayout)
+var layout;
 
 /*
 $(window).bind("beforeunload",function(){
@@ -21,39 +20,71 @@ $(window).bind("beforeunload",function(){
 });
 */
 //ONLOAD FUNCTION
-$(window).load(function () {
+$(window).load(function() {
+	setupLayout();
 	uploadText();
 	uploadJSON();
 	sampleText();
 	createSVG();
 	setupSchemes();
 	showTab(1);
-	toggleSource(1);
 	textareaRemoveActive();
+	clipboardSetup();
 	elementSizeCheck();
+	moveElementsToFit();
+	mouseOverTextOverlay();
 
 	window.addEventListener("resize", function(){
 		elementSizeCheck();
 	});
 
-	new Clipboard("#btn-clipboard");
-
-	var w = $("svg").width();
-	var h = $("svg").height();
-
-	console.log("svg w=" + getSVGDimensions().width);
-	console.log("svg h=" + getSVGDimensions().height);
-
-	//moveElementsToFit(w, h);
-
 	// Set the text currently in the tab to the data object tabs sub-array
-	$(".txta-source").on("keyup paste", function () {
-		var currentTab = (activeTab - 1);
-		data.tabs[currentTab].text = this.value;
+	$(".txta-source").on("keyup onpaste oncut", function () {
+		data.tabs[(activeTab-1)].text = this.value;
 	});
+});
 
-	//$("li.drop-accordian a:first").bind("click", function (e) {
-	$("li.drop-accordian a").bind("click", function (e) {
+function setupLayout() {
+	layout = $(".panel-container").layout({
+		center: {
+		},
+		west: {
+			minSize: ($(window).width() * 0.2),
+			maxSize: ($(window).width() * 0.4)					
+		},
+		onresize_end: function() {
+			elementSizeCheck();
+			moveElementsToFit();	
+		},
+		onclose_end: function() {
+				$("#i-source").removeClass("fa-chevron-left");
+				$("#i-source").addClass("fa-chevron-right");
+		},
+		onopen_end: function() {
+				$("#i-source").removeClass("fa-chevron-right");
+				$("#i-source").addClass("fa-chevron-left");
+				// The source panel is being opened - moveElementsToFit to keep all nodes on screen
+				moveElementsToFit();
+		},
+	});
+}
+
+function clipboardSetup() {
+	if(Clipboard.isSupported() == true) {
+		var clipboard = new Clipboard(".btn-clipboard");
+		clipboard.on("success", function(e) {
+			console.log(e);
+						var start = textaSource.selectionStart;
+			var end = textaSource.selectionEnd;
+			var selectedText = textaSource.value.substring(start,end);
+		});
+	} else {
+		$(".btn-clipboard").hide();
+	}
+}
+
+function setupSchemes() {
+	$("li.drop-accordian a").on("click", function (e) {
 		$(this).next('ul').slideToggle();
 		e.stopPropagation();
 	});
@@ -62,96 +93,14 @@ $(window).load(function () {
 		$(this).find('ul.drop-accordian-menu').hide();
 	})
 
-	mouseOverTextOverlay();
-});
-
-function getSVGDimensions() {
-	var element = {};
-	element.width = $("svg").width();
-	element.height = $("svg").height();
-	return  element;
-}
-
-
-function setupSchemes() {
-	/*
-	console.log("createSchemeDropdown()");
-	var schemeTypeArray = ["Perception","Memory","Statistical Syllogism","Induction","Temporal persistence","General Knowledge","Witness Testimony","Argument From Sign","Argument from Example","Argument from Verbal Classification","Argument from Commitment","Circumstantial Argument Against the Person","Argument from Position to Know","Argument from Expert Opinion","Argument from Evidence to a Hypothesis","Argument from Falsification of a Hypothesis","Argument from Correlation to Cause","Argument from Cause to Effect","Argument from Consequences","Argument from Analogy","Argument from Waste","Argument from Popular Opinion","Argument from Popular Practice","Ethotic Argument","Argument from Bias","Argument from an Established Rule","Argument from an Exceptional Case","Argument from Precedent","Argument from Gradualism","Causal Slippery Slope Argument","Precedent Slippery Slope Argument","Argument from Vagueness of a Verbal Classification","Argument from Arbitrariness of a Verbal Classification","Verbal Slippery Slope Argument","Full Slippery Slope Argument","Deductive Argument from Ignorance","Plausible Argument from Ignorance","Probabilifying Conveyance Argument","Argument from the Sameness of Meaning","Argument from Singular Cause","Argument to Common Cause","Class-Membership Argument","Argument from Species to Genus","Argument to Singular Cause","Argument from Numerical Identity","Argument from Causal Law","Argument from the Constitution of Concrete Facts.","Argument from the Constitution of Properties","Argument from the Constitution of Positive Normative Facts","Argument from the Constitution of Causal Laws","Argument from Implication","Argument from the Constitution of Negative Normative Facts","Argument from the Constitution of Constitution Facts","Argument from the Constitution of Necessary Conditions","Argument from the Constitution of Possibilities","Argument from the Constitution of Singular Causal Conditionals","Argument from the Constitution of Singular Causal Facts","Argument from the Constitution of Kind Instance","Argument from Whole to Part","Argument from Non-Causal Law","Argument from the Constitution of Impossibilities","Argument from Part to Whole"];
-
-	// Number of types of scheme that have been input
-	var schemeTypeArrayLength = schemeTypeArray.length;
-	console.log("schemeTypeArrayLength="+schemeTypeArray.length);
-	// Number of scheme types per dropdown
-	var schemeNumberPerDropdown = 20;
-	// Get the number of dropdowns required
-	var schemeTypeDropdowns = Math.ceil(schemeTypeArrayLength / schemeNumberPerDropdown);
-	console.log("schemeTypeDropdowns="+schemeTypeDropdowns);
-
-	if(schemeTypeArrayLength > 0) {
-		for(i = 0; i < schemeTypeDropdowns; i++){
-			// Add a default scheme option to the beginning of the list
-			if(i == 0) {
-				$("#ul-scheme").append("<li id='li-default'></li>");
-				$("#li-default").attr("onclick","addNode(2,'Default')");
-				$("#li-default").append("<a>Default</a>");
-			}
-			$("#ul-scheme").append("<li id='li-submenu-"+(i+1)+"' class='dropdown-submenu'></li>");
-			$("#li-submenu-"+(i+1)).append("<a id='a-menu-"+(i+1)+"' class='test' tabindex='-1' href='#'>Argument Menu "+(i+1)+" <span class='caret'></span></a>");
-			$("#li-submenu-"+(i+1)).append("<ul id='li-menu-"+(i+1)+"' class='dropdown-menu li-menu'>");
-		}
-
-		// For each scheme type - (the element index / number of schemes per dropdown) floored is the list which the element should be added
-		$.each(schemeTypeArray, function(index, value) {
-			var listNumber = Math.floor(index/schemeNumberPerDropdown);
-			listNumber = listNumber + 1;
-			var onclick = "addNode(2,"+schemeTypeArray[index]+")";
-			$("#li-menu-"+listNumber).append("<li id='li-scheme-"+index+"' class='li-scheme li-scheme-"+listNumber+"'><a>"+schemeTypeArray[index]+"</a></li>");
-		});
-
-		$(".li-scheme").each(function(index) {
-			$(this).attr("onclick","addNode(2,'"+schemeTypeArray[index]+"')");
-		});
-	}
-	*/
 	// Set the onclick to addNode - with scheme type parameter and the value parameter as the text of the link - Fill the schemesArray with all schemes
 	$(".a-scheme-option").each(function (index) {
 		//$(".a-scheme-option").eq(index).attr("onclick","addNode(2,'"+$(".a-scheme-option").eq(index).text()+"')");
-		$(this).attr("onclick", "addNode(2,'" + $(this).text() + "')");
+		$(this).attr("onclick", "addNode(2,'"+$(this).text()+"')");
 		// Add the value of the text to the array of scheme types
 		schemesArray.push($(this).text());
 	});
-
-	console.log("schemesArray=" + schemesArray);
-}
-
-
-function panelResize(type) {
-	// If the parameter is 0 - start dragging - else end
-	if (Number(type) == 0) {
-		console.log("Resizing Start");
-		$("#txta-source-" + activeTab).addClass("noSelect");
-		// Start - if the tab is not readonly (aka you could edit this)
-		if (!$("#txta-source-" + activeTab).prop("readonly")) {
-			console.log("you could edit this tab");
-			// Prevent editing
-			$("#txta-source-" + activeTab).prop("readonly", true);
-			wasUnlocked = true;
-		}
-	} else {
-		console.log("Resizing End");
-		$("#txta-source-" + activeTab).removeClass("noSelect");
-		if (wasUnlocked == true) {
-			console.log("wasUnlocked == true!");
-			$("#txta-source-" + activeTab).prop("readonly", false);
-		}
-		// Update the node positions when a drag is finished
-		var w = $("#svg-vis").width();
-		var h = $("#svg-vis").height();
-
-		elementSizeCheck();
-
-		moveElementsToFit(w, h);
-	}
+	console.log("schemesArray="+schemesArray);
 }
 
 function elementSizeCheck() {
@@ -189,47 +138,8 @@ function elementSizeCheck() {
 	}
 }
 
-function removeHighlight() {
-	$("#txta-source-" + activeTab).data('hwt').destroy();
-}
-
-function onInputArray(input) {
-	return highlightRange;
-}
-
-function toggleSource(toggle) {
-	console.log("toggleSource()");
-	if (toggle == 1) {
-		sourceToggle = true;
-	} else if (toggle == 0) {
-		sourceToggle = false;
-	}
-	if (sourceToggle == false) {
-		$("#col-left").hide();
-		$(".splitter").hide();
-
-		$("#i-source").removeClass("fa-chevron-left");
-		$("#i-source").addClass("fa-chevron-right");
-
-		sourceToggle = true;
-	} else {
-		$("#col-left").show();
-		$(".splitter").show();
-
-		$("#i-source").removeClass("fa-chevron-right");
-		$("#i-source").addClass("fa-chevron-left");
-
-		var w = $("#svg-vis").width();
-		var h = $("#svg-vis").height();
-
-		moveElementsToFit(w, h);
-
-		sourceToggle = false;
-	}
-}
-
 function sampleText() {
-	$("#txta-source" + activeTab).val("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex."
+	$("#txta-source-"+activeTab).val("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex."
 		+ "Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis. Phasellus a congue purus. Vestibulum fringilla lectus ac massa volutpat cursus. Donec ac eleifend"
 		+ "tortor, et blandit erat. Quisque a consequat ligula, non tincidunt mauris. Quisque tincidunt ultrices tortor, a venenatis sapien facilisis sed. Aliquam nisl elit, tempor at"
 		+ "feugiat non, tempus quis enim. Donec cursus tempus augue, vitae dapibus sem volutpat eu. Vivamus dolor sapien, porttitor fermentum tortor at, placerat malesuada sem. Sed vitae enim scelerisque,"
@@ -259,7 +169,6 @@ function textareaRemoveActive() {
 		removeActive();
 		removeDragLine();
 		removeTextOverlay();
-		clearTextRow();
 	});
 }
 
@@ -289,8 +198,10 @@ function lockTab() {
 }
 
 function clearSource() {
-	// Clear the textarea of the current textarea
+	// Clear the textarea of the current tab source
 	$("#txta-source-" + activeTab).val("");
+	// Clear the textarea of the current tab title
+	$("#txta-tab-" + activeTab).val("");
 }
 
 function uploadText() {
@@ -305,9 +216,9 @@ function uploadText() {
 			// Get the text of the current file
 			var currentFile = e.target.result;
 
-			$("#txta-source-" + activeTab).val("");
-			console.log("text=" + currentFile);
-			$("#txta-source-" + activeTab).val(currentFile);
+			$("#txta-source-"+activeTab).val("");
+			console.log("text="+currentFile);
+			$("#txta-source-"+activeTab).val(currentFile);
 
 			// Update the value of the data object to include the text uploaded
 			var currentTab = (activeTab - 1);
@@ -315,7 +226,7 @@ function uploadText() {
 		});
 
 		// Set the name of the tab to the name of the uploaded file
-		$("#txta-tab-" + activeTab).val(name);
+		$("#txta-tab-"+activeTab).val(name);
 	});
 }
 
@@ -476,11 +387,11 @@ function showTab(num) {
 	// Based on parameter - hide all the textereas and then show only the current tab textarea
 	$(".txta-source").hide();
 	$(".txta-tab").hide();
-	$("#txta-source-" + num).show();
-	$("#txta-tab-" + num).show();
+	$("#txta-source-"+num).show();
+	$("#txta-tab-"+num).show();
 
 	// If the tab is locked when you show it - set the lock icon else set the unlock icon
-	if ($("#txta-tab-" + num).prop("readonly") && $("#txta-source-" + num).prop("readonly")) {
+	if ($("#txta-tab-"+num).prop("readonly") && $("#txta-source-"+num).prop("readonly")) {
 		$("#i-lock-tab").removeClass("fa-lock");
 		$("#i-lock-tab").addClass("fa-unlock");
 	} else {
@@ -490,8 +401,12 @@ function showTab(num) {
 
 	// Remove the active tab css and add it to the new activeTab
 	$(".source-tab").children().removeClass("active-tab");
-	$("#div-source-tab-" + num).children().addClass("active-tab");
+	$("#div-source-tab-"+num).children().addClass("active-tab");
 
+	// Remove highlighting when switching tabs - if is used to check if the highlighting has been initialised
+	if($(".hwt-container").length) {
+		removeHighlighting();
+	}
 	activeTab = num;
 	console.log("activeTab=" + activeTab);
 }
@@ -780,12 +695,12 @@ function checkNodePositions(json) {
 
 function updateNodePosition(node) {
 	// Offset the node based on which quadrant of the screen it is located in
-	if(node.x < (getSVGDimensions().width / 2)) {
+	if(node.x < ($("#svg-vis").width() / 2)) {
 		node.x = (node.x - findNodeQuandrantOffset);
 	} else {
 		node.x = (node.x + findNodeQuandrantOffset);
 	}
-	if(node.y < (getSVGDimensions().height / 2)) {
+	if(node.y < ($("#svg-vis").height() / 2)) {
 		node.y = (node.y - findNodeQuandrantOffset);
 	} else {
 		node.y = (node.y + findNodeQuandrantOffset);
