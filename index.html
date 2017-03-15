@@ -6,7 +6,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" type="image/ico" href="res/favicon.ico">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
-		<script src="https://d3js.org/d3.v4.js"></script>
+		<script src="js/jquery-ui.min.js"></script>
+		<!--<script src="https://d3js.org/d3.v4.js"></script>-->
+		<script src="js/d3.min.js"></script>
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<script src="js/tv4.js"></script>
 		<script src="js/index.js"></script>
@@ -23,6 +25,8 @@
 		<link rel="stylesheet" href="css/modelling.css">
 		<link rel="stylesheet" href="css/buttons.css">
 		<link rel="stylesheet" href="css/variables.css">
+		<script src="js/jquery.highlight-within-textarea.js"></script>
+		<link rel="stylesheet" href="css/jquery.highlight-within-textarea.css">
 	</head>
 	<body>
 		<!--container-fluid-->
@@ -94,8 +98,6 @@
 							</div>
 					</div>
 					<!--end-col-left-->
-					<div class="splitter">
-					</div>
 					<!--col-right-->
 					<div class="ui-layout-center ui-layout-pane ui-layout-pane-center">
 							<div id="div-col-right-buttons">
@@ -185,6 +187,7 @@
 									</div>
 									<div id="div-col-right-button" class="col-xs-3 col-md-3 col-lg-3 no-padding-lr">
 										<button class="btn btn-menu btn-block" onclick="showModal(9)"><span class="span-col-right-button-3">MONKEYPUZZLE</span><span class="span-col-right-button-3-small">MP</span></button>
+										<!--<button class="btn btn-menu btn-block" onclick="setupLayoutHighlighting()"><span class="span-col-right-button-3">Highlight</span><span class="span-col-right-button-3-small">MP</span></button>-->
 									</div>
 								</div>
 							</div>

@@ -43,12 +43,11 @@ var data = {
 	"currentNodeID": 0
 };
 */
-
 // The object holding highlighting state
 var highlight = {
-	//rangeData: [{"tab": 1, range: [[0,10,20],[1,24,35],[2,33,40],[3,12,19],[4,50,60]]}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
-	rangeData: [{"tab": 1, range: []}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
-	color: "#FFFF00"
+	//highlightRanges: [{"tab": 1, range: [[0,10,20],[1,24,35],[2,33,40],[3,12,19],[4,50,60]]}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
+	ranges: [{"tab": 1, range: []}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
+	highlightColor: "#FFFF00"
 };
 
 function createSVG() {
@@ -408,6 +407,8 @@ function dragEnd() {
 }
 
 function removeActive() {
+	removeNodeMark();
+
 	// Return all lines to the default marker
 	d3.selectAll("line").attr("marker-end","url(#arrow)");
 	selectedElement = null;
@@ -427,11 +428,10 @@ function addActive(element) {
 	// If the selected element is a SVG line - change the marker to the active one - else its a node so get its text
 	if(selectedElement.node() instanceof SVGLineElement) {
 		d3.select(element).attr("marker-end","url(#arrow-active)");
-	} else {
-		//setTextRow(element.id);
 	}
 	
 	d3.select(element).classed("active", true);
+	addNodeMark(d3.select(element).attr("id"));
 }
 
 function deleteSVGElements() {
@@ -709,6 +709,11 @@ function addNode(type,schemeName,nodePosition) {
 			if(selectedText != "") {
 				newNode.text = selectedText;
 				newNode.displayText = selectedText;
+
+				// Highlighting
+				var range = [start, end];
+				highlight.ranges[(activeTab-1)].range.push(range);
+				addHighlighting();
 			} else {
 				// Show modal 1
 				showModal(1);

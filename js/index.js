@@ -42,31 +42,110 @@ $(window).load(function() {
 	$(".txta-source").on("keyup onpaste oncut", function () {
 		data.tabs[(activeTab-1)].text = this.value;
 	});
+
+	var result = merge([[20,30],[28,33],[0,5],[4,10],[35,40]]);
+	console.log("result="+JSON.stringify(result));
 });
 
+
+// Function creates the layout which allows resizing
 function setupLayout() {
+	console.log("setupLayout()");
+
+	if(layout != undefined) {
+		layout.destroy();
+	}
+
+	if($("#txta-source-"+activeTab).data("hwt") != undefined) {
+		$("#txta-source-"+activeTab).data("hwt").destroy();
+	}
+
+	var minS = ($(window).width() * 0.2);
+	var maxS = ($(window).width() * 0.4);
+
 	layout = $(".panel-container").layout({
 		center: {
 		},
+		west__size: minS,
 		west: {
-			minSize: ($(window).width() * 0.2),
-			maxSize: ($(window).width() * 0.4)					
+			minSize: minS,
+			maxSize: maxS				
 		},
 		onresize_end: function() {
 			elementSizeCheck();
 			moveElementsToFit();	
 		},
 		onclose_end: function() {
-				$("#i-source").removeClass("fa-chevron-left");
-				$("#i-source").addClass("fa-chevron-right");
+			$("#i-source").removeClass("fa-chevron-left");
+			$("#i-source").addClass("fa-chevron-right");
 		},
 		onopen_end: function() {
-				$("#i-source").removeClass("fa-chevron-right");
-				$("#i-source").addClass("fa-chevron-left");
-				// The source panel is being opened - moveElementsToFit to keep all nodes on screen
-				moveElementsToFit();
-		},
+			$("#i-source").removeClass("fa-chevron-right");
+			$("#i-source").addClass("fa-chevron-left");
+			elementSizeCheck();
+			moveElementsToFit();
+		}
 	});
+	elementSizeCheck();
+}
+
+function addHighlighting() {
+	if($("#txta-source-"+activeTab).data("hwt") != undefined) {
+		$("#txta-source-"+activeTab).data("hwt").destroy();
+	}
+	$("#txta-source-"+activeTab).highlightWithinTextarea(onInput);
+	mark();
+}
+
+function removeHighlighting() {
+	if($("#txta-source-"+activeTab).data("hwt") != undefined) {
+		$("#txta-source-"+activeTab).data("hwt").destroy();
+	}
+}
+
+function mark() {
+	$("mark").each(function(index) {
+		$(this).attr("id","mark-"+index);
+		$(this).attr("class","mark-highlight");
+	});
+	console.log("closest="+JSON.stringify($(".hwt-container").closest("mark").attr("id")));
+	
+	$(".mark-highlight").on("mouseover", function() {
+		console.log("mouseover mark id="+$(this).attr("id"));
+	});
+}
+
+function addNodeMark(id) {
+	console.log("addNodeMark()");
+	$("#mark-"+id).css("background","orange");
+}
+
+function removeNodeMark() {
+	console.log("removeNodeMark()");
+	$(".mark-highlight").css("background","#FFFF00");
+}
+
+function merge(ranges) {
+    var result = [];
+
+	// Sort ranges by the start value
+	ranges.sort(function(a,b){ return a[0] - b[0] });
+
+    ranges.forEach(function(r) {
+        if(!result.length || r[0] > result[result.length-1][1])
+            result.push(r);
+        else
+            result[result.length-1][1] = r[1];
+    });
+    return result;
+}
+
+function onInput() {
+	console.log("range="+JSON.stringify(highlight.ranges[(activeTab-1)].range));
+	var merged = merge(highlight.ranges[(activeTab-1)].range);
+	console.log("merged="+JSON.stringify(merged));
+	return merged;
+	
 }
 
 function clipboardSetup() {
@@ -84,17 +163,17 @@ function clipboardSetup() {
 }
 
 function setupSchemes() {
-	$("li.drop-accordian a").on("click", function (e) {
+	$("li.drop-accordian a").on("click", function(e) {
 		$(this).next('ul').slideToggle();
 		e.stopPropagation();
 	});
 
-	$('#firstLevelNav_small').on('hidden.bs.dropdown', function () {
+	$('#firstLevelNav_small').on('hidden.bs.dropdown', function() {
 		$(this).find('ul.drop-accordian-menu').hide();
 	})
 
 	// Set the onclick to addNode - with scheme type parameter and the value parameter as the text of the link - Fill the schemesArray with all schemes
-	$(".a-scheme-option").each(function (index) {
+	$(".a-scheme-option").each(function(index) {
 		//$(".a-scheme-option").eq(index).attr("onclick","addNode(2,'"+$(".a-scheme-option").eq(index).text()+"')");
 		$(this).attr("onclick", "addNode(2,'"+$(this).text()+"')");
 		// Add the value of the text to the array of scheme types
@@ -139,7 +218,7 @@ function elementSizeCheck() {
 }
 
 function sampleText() {
-	$("#txta-source-"+activeTab).val("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex."
+	$("#txta-source-"+activeTab).val("Bears area Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex."
 		+ "Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis. Phasellus a congue purus. Vestibulum fringilla lectus ac massa volutpat cursus. Donec ac eleifend"
 		+ "tortor, et blandit erat. Quisque a consequat ligula, non tincidunt mauris. Quisque tincidunt ultrices tortor, a venenatis sapien facilisis sed. Aliquam nisl elit, tempor at"
 		+ "feugiat non, tempus quis enim. Donec cursus tempus augue, vitae dapibus sem volutpat eu. Vivamus dolor sapien, porttitor fermentum tortor at, placerat malesuada sem. Sed vitae enim scelerisque,"
@@ -315,7 +394,7 @@ function removeTab() {
 		console.log("activeTab=" + activeTab);
 
 		// Log the contents of each tab text and tab title
-		$(".txta-source").each(function (index) {
+		$(".txta-source").each(function(index) {
 			console.log("txta-source-" + (index + 1) + $("#txta-source-" + (index + 1)).val());
 			console.log("txta-tab-" + (index + 1) + $("#txta-tab-" + (index + 1)).val());
 		});
@@ -324,7 +403,7 @@ function removeTab() {
 		$("#div-source-tab-" + activeTab).remove();
 
 		// Loop through each source
-		$(".txta-source").each(function (index) {
+		$(".txta-source").each(function(index) {
 			if ((index + 1) <= numberTabs) {
 				// If the source id is not the active tab - this is required because we don't want the title of current tab (it is being deleted!)
 				if ($(".txta-source").eq(index).attr("id") != ("txta-source-" + activeTab)) {
@@ -355,11 +434,11 @@ function removeTab() {
 
 function reorderTabs(sourceTextArray, sourceTitleArray) {
 	// For each tab - set the id of the containing div - the button onclick parameter - the button text (note index starts at 0)
-	$(".source-tab").each(function (index) {
+	$(".source-tab").each(function(index) {
 		// Update the tab title container properties - id - the parameter passed in the onclick - the text - the tab titles 
-		$(this).attr("id", "div-source-tab-" + (index + 1));
-		$(this).children().attr("onclick", "showTab(" + (index + 1) + ")");
-		$(this).children().text((index + 1));
+		$(this).attr("id", "div-source-tab-"+(index+1));
+		$(this).children().attr("onclick", "showTab("+(index+1)+")");
+		$(this).children().text((index+1));
 	});
 
 	// Empty the source textareas - replace content with values from array
@@ -367,18 +446,18 @@ function reorderTabs(sourceTextArray, sourceTitleArray) {
 	$(".txta-tab").val("");
 
 	// Set the value of the textarea to the correct text - based on tabs being removed
-	$(".source-tab").each(function (index) {
+	$(".source-tab").each(function(index) {
 		// If the loop index plus 1 is less than or equal to the sourceTextArrayLength
-		if ((index + 1) <= sourceTextArray.length) {
-			$("#txta-source-" + (index + 1)).val(sourceTextArray[index]);
-			$("#txta-tab-" + (index + 1)).val(sourceTitleArray[index]);
+		if ((index+1) <= sourceTextArray.length) {
+			$("#txta-source-"+(index+1)).val(sourceTextArray[index]);
+			$("#txta-tab-"+(index+1)).val(sourceTitleArray[index]);
 		}
 	});
 
 	// Loop and update the tab titles after being reordered
-	$(".txta-tab").each(function (index) {
-		if ($("#txta-tab-" + (index + 1)).val() == "") {
-			$("#txta-tab-" + (index + 1)).val("Tab " + (index + 1));
+	$(".txta-tab").each(function(index) {
+		if ($("#txta-tab-"+(index+1)).val() == "") {
+			$("#txta-tab-"+(index+1)).val("Tab "+(index+1));
 		}
 	});
 }
@@ -409,6 +488,8 @@ function showTab(num) {
 	}
 	activeTab = num;
 	console.log("activeTab=" + activeTab);
+
+	addHighlighting();
 }
 
 function copyNodeText() {

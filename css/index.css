@@ -1,6 +1,10 @@
 html,body {
 	height: 100%;
 }
+.panel-container {
+	height: 100%;
+	width: 100%;
+}
 .ui-layout-center {
     padding: 0px;
 	border: none;
@@ -36,56 +40,9 @@ html,body {
 {
 	background-color: #909090;
 }
-.hwt-container {
-	height: 100%;
-	width: 100%;
-}
-.hwt-content {
-	border: none !important;
-}
 .row {
 	margin-left: 0px;
 	margin-right: 0px;
-}
-.panel-container {
-	display: flex;
-	flex-direction: row;
-	border: 0px;
-	overflow: hidden;
-	height: 100%;
-
-	/* avoid browser level touch actions */
-	xtouch-action: none;
-}
-.panel-left {
-	background: var(--source-color);
-	flex: 0 0 auto;
-	/* only manually resize */
-	height: 100%;
-	width: 30%;
-	min-width: 20%;
-	max-width: 40%;
-	padding-left: 0px;
-	padding-right: 0px;
-	white-space: nowrap;
-}
-.splitter {
-	flex: 0 0 auto;
-	width: 4px;
-	/* The background color of the splitter is set without variable for compatibility */
-    /*background: #757575 url(../res/vsizegrip.png) center center no-repeat;*/
-    background: #757575;
-	min-height: 200px;
-	cursor: col-resize;
-}
-.panel-right {
-	flex: 1 1 auto;
-	/* resizable */
-	height: 100%;
-	width: 100%;
-	padding-left: 0px;
-	padding-right: 0px;
-	background: #eee;
 }
 .btn-file {
     position: relative;
@@ -142,6 +99,23 @@ html,body {
 .no-padding-r {
 	padding-right: 0px;
 }
+.hwt-container {
+	height: 100%;
+	width: 100%;
+}
+.hwt-content {
+	border: none !important;
+	padding: 4px !important;
+	font-size: 18px !important;
+}
+.hwt-content mark {
+	background: #FFFF00;
+	border-radius: 0px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
 .txta-source {
 	width: 100%;
 	height: 100%;
@@ -150,6 +124,8 @@ html,body {
 	border: none;
 	outline: none;
 	resize: none;
+	padding: 4px;
+	font-size: 18px !important;
 }
 .txta-tab {
 	width: 100%;
