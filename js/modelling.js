@@ -27,6 +27,7 @@ var addNodeIncrement = 20;
 // Node mouseover overlay status
 var nodeMouseOverEnabled = false;
 
+/*
 // The object holding the existing visualisation data
 var data = {
 	"nodes": [{"id": 0, "x": 200, "y": 400, "text": "lorem", "displayText": "lorem", "type":"text"},{"id": 1, "x": 400, "y": 400, "text": "ipsum", "displayText": "ipsum", "type":"scheme"},{"id": 2, "x": 400, "y": 200, "text": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "displayText": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "type":"text"},{"id": 3, "x": 600, "y": 400, "text": "sit", "displayText": "sit", "type":"scheme"},{"id": 4, "x": 400, "y": 600, "text": "amet", "displayText": "amet", "type":"text"}],
@@ -35,18 +36,20 @@ var data = {
 	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
 	"currentNodeID": 0
 };
-/* An empty data object - use if needed
+*/
+
 var data = {
 	"nodes": [],
 	"links": [],
 	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
 	"currentNodeID": 0
 };
-*/
+
 // The object holding highlighting state
 var highlight = {
 	//highlightRanges: [{"tab": 1, range: [[0,10,20],[1,24,35],[2,33,40],[3,12,19],[4,50,60]]}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
-	ranges: [{"tab": 1, range: []}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
+	//ranges: [{"tab": 1, range: []}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
+	ranges: [],
 	highlightColor: "#FFFF00"
 };
 
@@ -408,7 +411,6 @@ function dragEnd() {
 
 function removeActive() {
 	removeNodeMark();
-
 	// Return all lines to the default marker
 	d3.selectAll("line").attr("marker-end","url(#arrow)");
 	selectedElement = null;
@@ -453,6 +455,9 @@ function keyDown() {
 					console.log("active node!");
 					removeLinksFromNode();	
 					removeNodeFromArray();
+					// Remove the highlighting and add it back
+					removeHighlighting();
+					addHighlighting();
 				}
 				// Check if the selected element is a link
 				if(selectedElement.node() instanceof SVGLineElement) {
@@ -511,8 +516,13 @@ function removeNodeFromArray() {
 	var removal = data.nodes.filter(function(n) {
 		return (n.id == removeId);
 	});
+	console.log("removal="+JSON.stringify(removal[0]));
+	console.log("removal.id="+JSON.stringify(removal[0].id));
 	
 	data.nodes.splice(data.nodes.indexOf(removal[0]), 1);
+	
+	// TODO - Figure out how to spice the range from the highlight object
+	//highlight.ranges.splice(highlight.ranges.indexOf(removal[0].id), 1);
 
 	update();
 }
@@ -711,8 +721,13 @@ function addNode(type,schemeName,nodePosition) {
 				newNode.displayText = selectedText;
 
 				// Highlighting
-				var range = [start, end];
-				highlight.ranges[(activeTab-1)].range.push(range);
+				//var range = [start, end];
+				var range = {};
+				range.start = start;
+				range.end = end;
+				range.tab = activeTab;
+				range.id = Number(data.currentNodeID);
+				highlight.ranges.push(range);
 				addHighlighting();
 			} else {
 				// Show modal 1

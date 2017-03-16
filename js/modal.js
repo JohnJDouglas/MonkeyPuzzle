@@ -63,7 +63,7 @@ function showModal(name,id,error) {
 			$("#select-schemes").val("1");
 
 			$("#modal-edit-node").modal("show");
-			break;	
+			break;
 		default:
 			console.log("showModal Error!");
 	}

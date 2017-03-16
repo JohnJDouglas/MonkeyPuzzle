@@ -10,11 +10,10 @@ var schemesArray = [];
 var findNodeQuandrantOffset = 20;
 // The variable for jquery.layout - global to allow toggle source button functionality (set in setupLayout)
 var layout;
-
 /*
-$(window).bind("beforeunload",function(){
-	// TODO - update this to account for all 10 tabs
-	if(($("#txta-source-1").val() != "") || ($("#txta-source-2").val() != "") || ($("#txta-source-3").val() != "") || ($("#txta-source-4").val() != "") || ($("#txta-source-5").val() != "")) {
+$(window).bind("beforeunload",function() {
+	if( $("#txta-source-1").val() != "" || $("#txta-source-2").val() != "" || ($("#txta-source-3").val() != "" || $("#txta-source-4").val() != "" || ($("#txta-source-5").val() != "" ||
+	$("#txta-source-6").val() != "" || $("#txta-source-7").val() != "" || $("#txta-source-8").val() != "" || $("#txta-source-9").val() != "" || $("#txta-source-10").val() != "") )) {
 		return confirm("Confirm refresh");
 	}
 });
@@ -42,9 +41,6 @@ $(window).load(function() {
 	$(".txta-source").on("keyup onpaste oncut", function () {
 		data.tabs[(activeTab-1)].text = this.value;
 	});
-
-	var result = merge([[20,30],[28,33],[0,5],[4,10],[35,40]]);
-	console.log("result="+JSON.stringify(result));
 });
 
 
@@ -94,8 +90,13 @@ function addHighlighting() {
 		$("#txta-source-"+activeTab).data("hwt").destroy();
 	}
 	$("#txta-source-"+activeTab).highlightWithinTextarea(onInput);
-	mark();
+	// Function
+	setupMarks();
 }
+
+// Array of [start,end,tab]
+// situation - tab 1 ( node 0 / node 1) - tab 2 ( node 2 )
+// change tab from 1 to 2 - get all nodes from tab 2 - set the marks to have the id's from this selection 
 
 function removeHighlighting() {
 	if($("#txta-source-"+activeTab).data("hwt") != undefined) {
@@ -103,15 +104,19 @@ function removeHighlighting() {
 	}
 }
 
-function mark() {
-	$("mark").each(function(index) {
-		$(this).attr("id","mark-"+index);
-		$(this).attr("class","mark-highlight");
+function setupMarks() {
+	var current = highlight.ranges.filter(function(i) {
+		if(i.tab == activeTab) {
+			return i;
+		}
 	});
-	console.log("closest="+JSON.stringify($(".hwt-container").closest("mark").attr("id")));
+	console.log("current="+JSON.stringify(current));
 	
-	$(".mark-highlight").on("mouseover", function() {
-		console.log("mouseover mark id="+$(this).attr("id"));
+	$("mark").each(function(index) {
+		console.log("mark index="+index);
+		$(this).attr("id","mark-"+current[index].id);
+		console.log("id="+$(this).attr("id"));
+		$(this).attr("class","mark-highlight");
 	});
 }
 
@@ -130,22 +135,45 @@ function merge(ranges) {
 
 	// Sort ranges by the start value
 	ranges.sort(function(a,b){ return a[0] - b[0] });
-
+	
     ranges.forEach(function(r) {
-        if(!result.length || r[0] > result[result.length-1][1])
+        if(!result.length || r[0] > result[result.length-1][1]) {
             result.push(r);
-        else
+        } else {
             result[result.length-1][1] = r[1];
+		}
     });
-    return result;
+	return result;
 }
 
 function onInput() {
-	console.log("range="+JSON.stringify(highlight.ranges[(activeTab-1)].range));
-	var merged = merge(highlight.ranges[(activeTab-1)].range);
+	console.log("ranges="+JSON.stringify(highlight.ranges));
+	console.log("activeTab="+activeTab);
+
+	var tabRanges = [];
+
+	// Create a new array with only the start and end of the range
+	$.each(highlight.ranges, function(index, value) {
+		console.log("value="+JSON.stringify(value.start));
+		//if(highlight.ranges[index].tab == activeTab) {
+		if(value.tab == activeTab) {
+			var element = [];
+			//element[0] = highlight.ranges[index].start;
+			//element[1] = highlight.ranges[index].end;
+			element[0] = value.start;
+			element[1] = value.end;
+			tabRanges.push(element);
+		}
+	});
+
+	console.log("tabRanges="+JSON.stringify(tabRanges));
+
+	var merged = merge(tabRanges);
 	console.log("merged="+JSON.stringify(merged));
+
+
+
 	return merged;
-	
 }
 
 function clipboardSetup() {
@@ -218,7 +246,7 @@ function elementSizeCheck() {
 }
 
 function sampleText() {
-	$("#txta-source-"+activeTab).val("Bears area Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex."
+	$("#txta-source-"+activeTab).val("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex."
 		+ "Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis. Phasellus a congue purus. Vestibulum fringilla lectus ac massa volutpat cursus. Donec ac eleifend"
 		+ "tortor, et blandit erat. Quisque a consequat ligula, non tincidunt mauris. Quisque tincidunt ultrices tortor, a venenatis sapien facilisis sed. Aliquam nisl elit, tempor at"
 		+ "feugiat non, tempus quis enim. Donec cursus tempus augue, vitae dapibus sem volutpat eu. Vivamus dolor sapien, porttitor fermentum tortor at, placerat malesuada sem. Sed vitae enim scelerisque,"
@@ -470,12 +498,15 @@ function showTab(num) {
 	$("#txta-tab-"+num).show();
 
 	// If the tab is locked when you show it - set the lock icon else set the unlock icon
-	if ($("#txta-tab-"+num).prop("readonly") && $("#txta-source-"+num).prop("readonly")) {
+	//if($("#txta-tab-"+num).prop("readonly") && $("#txta-source-"+num).prop("readonly")) {
+	if($("#txta-source-"+num).prop("readonly")) {
 		$("#i-lock-tab").removeClass("fa-lock");
 		$("#i-lock-tab").addClass("fa-unlock");
+		$("#span-lock").text(" Unlock Tab");
 	} else {
 		$("#i-lock-tab").removeClass("fa-unlock");
 		$("#i-lock-tab").addClass("fa-lock");
+		$("#span-lock").text(" Lock Tab");
 	}
 
 	// Remove the active tab css and add it to the new activeTab
@@ -723,10 +754,16 @@ function checkJSONInput(json) {
 	// Reset all ids to be incremental from 0 (for nodes) and 1 (for tabs)
 	json = resetIDs(json);
 
-	//json.nodes = checkNodePositions(json);
-	var test = checkNodePositions(json);
+	console.log("JSON1="+JSON.stringify(json));
 
-	console.log("test="+JSON.stringify(test));
+	// Set the currentNodeID
+	json = setCurrentNodeID(json);
+
+	console.log("JSON2="+JSON.stringify(json));
+
+	json.nodes = checkNodePositions(json);
+
+	console.log("JSON3="+JSON.stringify(json));
 
 	// Remove links which have a source or target which is higher than any node id
 	json.links = removeInvalidLinks(json);
@@ -746,31 +783,32 @@ function checkJSONInput(json) {
 function resetIDs(json) {
 	// Update the ids of the nodes to start at zero and increment upwards
 	$.each(json.nodes, function(index, value) {
-		//console.log("value["+index+"]="+JSON.stringify(value));
 		json.nodes[index].id = index;
 	});
 
 	// Update the id of the tabs to start at zero and increment upwards
 	$.each(json.tabs, function(index, value) {
-		//console.log("value["+index+"]="+JSON.stringify(value));
 		json.tabs[index].tab = index;	
 	});
+
 	return json;
 }
 
 function checkNodePositions(json) {
-	// Remove duplicate link elements
+	// Check nodes positions and update if taken
 	var r = [];
 	o: for(var i = 0; i < json.nodes.length; i++) {
 		for(var j = 0; j < r.length; j++) {
 			if(((Number(r[j].x) == Number(json.nodes[i].x)) && (Number(r[j].y) == Number(json.nodes[i].y)))) {
 				// Update the node position since it is equal to a previous node
-				updateNodePosition(json.nodes[i]);
+				json.nodes[i] = updateNodePosition(json.nodes[i]);
+				r.push(json.nodes[i]);
 				continue o;
 			}
 		}
 		r.push(json.nodes[i]);
 	}
+	console.log("r="+JSON.stringify(r));
 	return r;
 }
 
@@ -786,6 +824,7 @@ function updateNodePosition(node) {
 	} else {
 		node.y = (node.y + findNodeQuandrantOffset);
 	}
+	return node;
 }
 
 function removeInvalidLinks(json) { 
@@ -795,7 +834,6 @@ function removeInvalidLinks(json) {
 			return l;
 		};
 	});
-	console.log("removal="+JSON.stringify(removal));
 
 	$.each(removal, function(index, value) {
 		json.links.splice(json.links.indexOf(removal[index]), 1);
@@ -829,4 +867,10 @@ function removeOppositeLinks(json) {
 		r.push(json.links[i]);
 	}
 	return r;
+}
+
+function setCurrentNodeID(json) {
+	console.log("setCNID="+JSON.stringify(json));
+	json.currentNodeID = json.nodes.length;
+	return json;
 }
