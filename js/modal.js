@@ -34,10 +34,10 @@ function showModal(name,id,error) {
 			break;
 		case 9:
 			$("#modal-settings").modal("show");
-			break;		
+			break;
 		case 10:
-			$("#modal-maximum-tabs").modal("show");
-			break;	
+			// Modal in this location was removed
+			break;
 		case 11:
 			// Empty the textarea of the new node text
 			$("#txta-edit-text").val("");

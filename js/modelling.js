@@ -18,8 +18,6 @@ var allActiveTextOverlay = false;
 var selectedElement = null;
 // Node drag event listener status
 var dragging = false;
-// Editing node text status
-var editText = false;
 // X and Y offset  for adding nodes
 var addNodeOffset = 0;
 // Increment for increasing the distance a node moves when added in the centre of the screen
@@ -56,14 +54,6 @@ var highlight = {
 function createSVG() {
 	d3.select(window)
 		.on("keydown", keyDown);
-	
-	// Set the id value for the next node added
-	data.currentNodeID = data.nodes.length;
-	console.log("new node id="+data.nodes.length);
-	
-	// SVG height and width;
-	var w = $("#div-vis").width();
-	var h = $("#div-vis").height();
 
 	// Get the SVG container and append the SVG element
 	var svg = d3.select("#div-vis")
@@ -72,13 +62,12 @@ function createSVG() {
 		.attr("xmlns","http://www.w3.org/2000/svg")
 		.attr("xmlns:xlink","http://www.w3.org/1999/xlink")
 		.attr("version","1.1")
-		.attr("width", w)
-		.attr("height", h)
-		.style("background", "#FFFFFF")
+		// CSS Style is applied here because saving visualisations as images rely on inline styles
+		.style("background","#FFFFFF")
 		.append("defs");
 
 	var defs = d3.select("defs");
-	
+
 	// Arrow marker for the end of a link (marker is back from end of link to sit on node perimeter)
 	defs.append("marker")
 		.attr("id","arrow")
@@ -117,13 +106,13 @@ function createSVG() {
 		.attr("markerUnits", "strokeWidth")
 		.append("path")
 		.attr("d","M0,0 L0,6 L6,3 z");
-		
-	update();
+
+		update();
 }
-	
+
 function update() {
 	var svg = d3.select("svg");
-	
+
 	deleteSVGElements();
 
 	// Lines between nodes called links
@@ -140,36 +129,28 @@ function update() {
 		.attr("x1", function(d) {
 			// Find the node which has the id of the link source and return the x co-ordinate
 			var x1 = data.nodes.filter(function(n) {
-				if(n.id == d.source) {
-					return (x1 = n.x);
-				}
+				if(n.id == d.source) { return (x1 = n.x); }
 			});
 			return x1[0].x;
 		})
 		.attr("y1", function(d) {
 			// Find the node which has the id of the link source and return the y co-ordinate
 			var y1 = data.nodes.filter(function(n) {
-				if(n.id == d.source) {
-					return (y1 = n.y);
-				}
+				if(n.id == d.source) { return (y1 = n.y); }
 			});
 			return y1[0].y;
 		})
 		.attr("x2", function(d) {
 			// Find the node which has the id of the link target and return the x co-ordinate
 			var x2 =data.nodes.filter(function(n) {
-				if(n.id == d.target) {
-					return (x2 = n.x);
-				}
+				if(n.id == d.target) { return (x2 = n.x); }
 			});
 			return x2[0].x;
 		})
 		.attr("y2", function(d) {
 			// Find the node which has the id of the link target and return the y co-ordinate
 			var y2 = data.nodes.filter(function(n) {
-				if(n.id == d.target) {
-					return (y2 = n.y);
-				}
+				if(n.id == d.target) { return (y2 = n.y); }
 			});
 			return y2[0].y;
 		})
@@ -189,7 +170,7 @@ function update() {
 			if(d.type == "scheme") {
 				d3.select(this)
 					.append("rect")
-					.classed("svg-node", true)		
+					.classed("svg-node", true)
 					// CSS Styles are applied here because saving visualisations as images rely on inline styles
 					.style("fill","lightgreen")
 					.style("stroke","lightgreen")
@@ -200,6 +181,8 @@ function update() {
 					.attr("width", nodeSchemeSize)
 					.attr("height", nodeSchemeSize)
 					.attr("transform", function(d) { return "rotate(45 " + d.x + " " + d.y + ")"; })
+					.on("mouseover", mouseOverNode)
+					.on("mouseout", mouseOutNode)
 					.on("click", click)
 					.on("dblclick", doubleClick)
 					.call(d3.drag()
@@ -212,20 +195,23 @@ function update() {
 					// CSS Styles are applied here because saving visualisations as images rely on inline styles
 					.style("fill","#7AA3FF")
 					.style("stroke","#7AA3FF")
-					.style("stroke-width","2")					
+					.style("stroke-width","2")
 					.attr("id", function(d) { return d.id; })
 					.attr("cx", function(d) { return d.x; })
 					.attr("cy", function(d) { return d.y; })
 					.attr("r", nodeRadius)
+					.on("mouseover", mouseOverNode)
+					.on("mouseout", mouseOutNode)
 					.on("click", click)
 					.on("dblclick", doubleClick)
 					.call(d3.drag()
+						.on("start", dragStart)
 						.on("drag", dragNode)
 						.on("end", dragEnd));
 			}
 		})
 
-	// Text displaying node identification 
+	// Text displaying node identification
 	nodeId = svg.selectAll("text")
 		.data(data.nodes)
 		.enter()
@@ -237,13 +223,12 @@ function update() {
 		.attr("y", function(d) { return d.y + nodeIdOffset; })
 		.text(function(d) { return  d.id + 1; })
 		.attr("pointer-events", "none");
-	
+
 	// Link on click to allow selection and deletion
 	links.on("click", click);
 
 	// Remove the active element
-	svg.on("click", function() {	
-		console.log("svg click!");
+	svg.on("click", function() {
 		d3.event.stopPropagation();
 		removeActive();
 		removeDragLine();
@@ -252,7 +237,6 @@ function update() {
 }
 
 function click(d) {
-	console.log("click!");
 	d3.event.stopPropagation();
 	removeTextOverlay();
 	removeActive();
@@ -261,18 +245,14 @@ function click(d) {
 
 // When double clicking a node - show modal to edit text
 function doubleClick(d) {
-	console.log("doubleClick!");
 	d3.event.stopPropagation();
 
 	var id = selectedElement.attr("id");
-	console.log("id="+id);
 
 	// Only open a modal if the node type is text
 	var type = data.nodes.filter(function(n) {
 		return (n.id == id);
 	});
-
-	console.log("type="+type[0].type);
 
 	removeTextOverlay();
 	removeActive();
@@ -281,20 +261,30 @@ function doubleClick(d) {
 	if(type[0].type == "text") {
 		// Show text node div and button
 		$(".modal-edit-text-node").show();
-	
+
 		// When the modal hide is called - before finishing
 		$("#modal-edit-node").on("hide.bs.modal", function(e) {
 			var val = $(document.activeElement).attr("id");
+			// If the activeElement is the edit text node button
 			if(val == "btn-modal-edit-text-node") {
 				var value = $("#txta-edit-text").val();
 				// If the new value is not empty - update node value
 				if(value != "") {
 					data.nodes[id].displayText = value;
+
+					// Since the text could be changed to something which is not inside any tab - remove the range which has the id of the selected element
+					var removalRange = highlight.ranges.filter(function(n) {
+						return (n.id == id);
+					});
+					highlight.ranges.splice(highlight.ranges.indexOf(removalRange[0]), 1);
+
+					removeHighlighting();
+					addHighlighting();
 				}
 			}
 			// Remove this event listener - prevent additional scheme node shorcuts being added
 			$("#modal-edit-node").off("hide.bs.modal");
-		});	
+		});
 	} else {
 		// Show scheme node div and button
 		$(".modal-edit-scheme-node").show();
@@ -307,8 +297,11 @@ function doubleClick(d) {
 		// When the modal hide is called - before finishing
 		$("#modal-edit-node").on("hide.bs.modal", function(e) {
 			var val = $(document.activeElement).attr("id");
+			// If the activeElement is the edit scheme node button
 			if(val == "btn-modal-edit-scheme-node") {
+				// Get the selected option from the dropdown
 				var value = $('#select-schemes').find(":selected").text();
+				// If the value is not empty
 				if(value != "") {
 					data.nodes[id].displayText = value;
 				}
@@ -319,27 +312,31 @@ function doubleClick(d) {
 	}
 }
 
+function dragStart() {
+	// Set dragging to true - done (in drag start) to prevent nodes from being dragged from underneath the addLink element rendered on-top
+	dragging = true;
+	// Remove an open text overlay
+	removeTextOverlay();
+	// Add this element as the selected one
+	removeActive();
+	addActive(this);
+}
+
 function dragNode(d) {
-	//console.log("dragNode!");
 	var svg = d3.select("svg");
 	var nodeId = svg.selectAll(".svg-text");
 	var links = svg.selectAll(".svg-link");
-
-	dragging = true;
-
-	var w = $("#svg-vis").width();
-	var h = $("#svg-vis").height();
 
 	d.x = d3.event.x;
 	d.y = d3.event.y;
 
 	// Containment function for nodes to prevent them being dragged off screen
 	if(d.type == "scheme") {
-		if(d3.event.x >= (w - schemeContainOffset)) {
-			d.x = (w - schemeContainOffset);
+		if(d3.event.x >= (getSVGDimensions().w - schemeContainOffset)) {
+			d.x = (getSVGDimensions().w - schemeContainOffset);
 		}
-		if(d3.event.y >= (h - schemeContainOffset)) {
-			d.y = (h - schemeContainOffset);
+		if(d3.event.y >= (getSVGDimensions().h - schemeContainOffset)) {
+			d.y = (getSVGDimensions().h - schemeContainOffset);
 		}
 		if(d3.event.x <= (0 + schemeContainOffset)) {
 			d.x = schemeContainOffset;
@@ -351,11 +348,11 @@ function dragNode(d) {
 	// Take the nodeRadius and increment it by 1 to account for the border
 	var nodeOffset = nodeRadius + 1;
 	if(d.type == "text") {
-		if(d3.event.x >= (w - nodeOffset)) {
-			d.x = (w - nodeOffset);
+		if(d3.event.x >= (getSVGDimensions().w - nodeOffset)) {
+			d.x = (getSVGDimensions().w - nodeOffset);
 		}
-		if(d3.event.y >= (h - nodeOffset)) {
-			d.y = (h - nodeOffset);
+		if(d3.event.y >= (getSVGDimensions().h - nodeOffset)) {
+			d.y = (getSVGDimensions().h - nodeOffset);
 		}
 		if(d3.event.x <= (0 + nodeOffset)) {
 			d.x = nodeOffset;
@@ -363,22 +360,22 @@ function dragNode(d) {
 		if(d3.event.y <= (0 + nodeOffset)) {
 			d.y = nodeOffset;
 		}
-	}	
+	}
 
+	// For each link - if the source or target of the link is the same as the current (dragged) element - update this position
 	links.each(function(l) {
 		if(l.source == d.id) {
 			d3.select(this).attr("x1", d.x).attr("y1", d.y);
 		}
-		// if the id of the current target of the link is equal to the currently dragged items id - update position of link x2,y2 and update link position in data.links
 		if(l.target == d.id) {
 			d3.select(this).attr("x2", d.x).attr("y2", d.y);
 		}
 	});
-	
-	// if the node id is equal to the currently dragged node - update the position of the element accounting for the text offset
+
+	// If the node id is equal to the currently dragged node - update the position of the element accounting for the text offset
 	nodeId.each(function(l) {
 		if (l == d) {
-			// If the id of the node (+1 because the nodes start from 0 but are display from 1 - double the offset of the node to accomodate the 2 digits)
+			// If the id of the node is greater than 9 - apply the node offset twice since the id will have 2 digits - else apply once
 			if(d.id >= 9) {
 				d3.select(this).attr("x", d.x - (nodeIdOffset*2)).attr("y", d.y + nodeIdOffset);
 			} else {
@@ -386,26 +383,18 @@ function dragNode(d) {
 			}
 		}
 	});
-		
-	// if the type of node is scheme the node is a square rotated 45deg so apply different transform - else the node is a circle so apply circle specific action
+
+	// If the type of node is scheme the node is a square rotated 45deg so apply different transform - else the node is a circle so apply circle specific action
 	if(d.type == "scheme") {
 		d3.select(this).attr("transform","rotate(45 "+d.x+" "+d.y+")");
 		d3.select(this).attr("x", d.x - nodeSchemeOffset).attr("y", d.y - nodeSchemeOffset);
 	} else {
 		d3.select(this).attr("cx", d.x).attr("cy", d.y);
 	}
-
-	// Remove an open text overlay
-	removeTextOverlay();
-
-	// Add this element as the selected one
-	removeActive();
-	addActive(this);
 }
 
 function dragEnd() {
-	console.log("dragEnd!");
-
+	// Set the dragging to false so action can be taken on the node
 	dragging = false;
 }
 
@@ -416,13 +405,6 @@ function removeActive() {
 	selectedElement = null;
 	// Remove the active element
 	d3.selectAll("*").classed("active", false);
-	// Remove active from the bottom node text display bar and make it readonly
-	$("#txta-node-text").css("background","lightblue");
-	$("#txta-node-text").prop("readonly", true);
-	// Return the edit button to the edit form and reset editText variable
-	$("#i-edit").removeClass("fa-save");
-	$("#i-edit").addClass("fa-edit");
-	editText = false;
 }
 
 function addActive(element) {
@@ -431,7 +413,7 @@ function addActive(element) {
 	if(selectedElement.node() instanceof SVGLineElement) {
 		d3.select(element).attr("marker-end","url(#arrow-active)");
 	}
-	
+
 	d3.select(element).classed("active", true);
 	addNodeMark(d3.select(element).attr("id"));
 }
@@ -443,17 +425,14 @@ function deleteSVGElements() {
 }
 
 function keyDown() {
-	// D3.event.preventDefault();
 	switch(d3.event.keyCode) {
 		case 46: // Delete
 		case 8: // Backspace (mac)
-			console.log("delete!");
 			// If the selected element is not null and is not being dragged
 			if(selectedElement != null && dragging == false) {
 				// Check if the selected element is a node
 				if(selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
-					console.log("active node!");
-					removeLinksFromNode();	
+					removeLinksFromNode();
 					removeNodeFromArray();
 					// Remove the highlighting and add it back
 					removeHighlighting();
@@ -461,13 +440,11 @@ function keyDown() {
 				}
 				// Check if the selected element is a link
 				if(selectedElement.node() instanceof SVGLineElement) {
-					console.log("active link!");
 					removeLinkFromArray();
 				}
 			}
 			break;
 		case 16: // Shift
-			console.log("shift!");
 			// If the selected element is not null and is not being dragged
 			if(selectedElement != null && dragging == false) {
 				if(selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
@@ -476,11 +453,17 @@ function keyDown() {
 			}
 			break;
 		case 17: // Control
-			console.log("control!");
 			// If the selected element is not null and is not being dragged
 			if(selectedElement != null && dragging == false) {
 				if(selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
-					console.log("selectedElement="+selectedElement.attr("id"));
+					showNodeTextOverlay(selectedElement.attr("id"), false);
+				}
+			}
+			break;
+		case 9: // Tab
+			// If the selected element is not null and is not being dragged
+			if(selectedElement != null && dragging == false) {
+				if(selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
 					showNodeTextOverlay(selectedElement.attr("id"), false);
 				}
 			}
@@ -502,27 +485,27 @@ function removeLinkFromArray() {
 	var removal = data.links.filter(function(l) {
 		return (l.source == source[0] && l.target == target[0]);
 	});
-	
+
 	data.links.splice(data.links.indexOf(removal[0]), 1);
-		
+
 	update();
 }
 
 // Remove node from data object and update
 function removeNodeFromArray() {
 	var removeId = Number(d3.select(selectedElement).node().attr("id"));
-	
-	// Find the exact node
-	var removal = data.nodes.filter(function(n) {
+
+	// Remove the node which has the id of the selected element
+	var removalNode = data.nodes.filter(function(n) {
 		return (n.id == removeId);
 	});
-	console.log("removal="+JSON.stringify(removal[0]));
-	console.log("removal.id="+JSON.stringify(removal[0].id));
-	
-	data.nodes.splice(data.nodes.indexOf(removal[0]), 1);
-	
-	// TODO - Figure out how to spice the range from the highlight object
-	//highlight.ranges.splice(highlight.ranges.indexOf(removal[0].id), 1);
+	data.nodes.splice(data.nodes.indexOf(removalNode[0]), 1);
+
+	// Remove the range which has the id of the selected element
+	var removalRange = highlight.ranges.filter(function(n) {
+		return (n.id == removeId);
+	});
+ 	highlight.ranges.splice(highlight.ranges.indexOf(removalRange[0]), 1);
 
 	update();
 }
@@ -530,16 +513,16 @@ function removeNodeFromArray() {
 // Remove links attached to a node
 function removeLinksFromNode() {
 	var removeId = Number(d3.select(selectedElement).node().attr("id"));
-	
+
 	// Find link with source or target equal to the id
 	var removal = data.links.filter(function(l) {
 		return (l.source == removeId || l.target == removeId);
 	});
-	
+
 	$.each(removal, function(index, value) {
 		data.links.splice(data.links.indexOf(value), 1);
 	});
-		
+
 	update();
 }
 
@@ -549,17 +532,12 @@ function showNodeTextOverlay(id, showAll) {
 	var overlayLengthPerLine = 40;
 	var nodeTextOverLengthPerLine = false;
 
-	// Set the bottom row text display
-	//setTextRow(id);
-	
 	// Get the node which is to have an overlay opened over it
 	var node = data.nodes.filter(function(n) {
 		return (n.id == id);
 	});
 
 	if(activeTextOverlay == false) {
-
-		//if(data.nodes[id].displayText.length > overlayLengthPerLine) {
 		if(node[0].displayText.length > overlayLengthPerLine) {
 			var re = new RegExp('.{1,' + overlayLengthPerLine + '}', 'g');
 			var array = node[0].displayText.match(re);
@@ -583,7 +561,7 @@ function showNodeTextOverlay(id, showAll) {
 			.classed("svg-overlay-text-scheme", function(d) { return node[0].type == "scheme"; })
 			.attr("dy","0.35em")
 			// If the node displayText is over length per line set text to first value of array - else just set text to displayText
-			.text(function() { 
+			.text(function() {
 				if(nodeTextOverLengthPerLine == true) {
 					return array[0];
 				} else {
@@ -612,10 +590,10 @@ function showNodeTextOverlay(id, showAll) {
 					.text(array[index]);
 			});
 		}
-					
+
 		var textBox = d3.select("#svg-overlay"+id);
 		var bbox = textBox.node().getBBox();
-		
+
 		// Rect background for the text overlay - insert the rectangle before the text element
 		rect = svg.insert("rect", "#svg-overlay"+id)
 			.attr("id", "svg-overlay-rect-"+id)
@@ -626,8 +604,8 @@ function showNodeTextOverlay(id, showAll) {
 			.attr("y", bbox.y - 5)
 			.attr("width", bbox.width + 20)
 			.attr("height", bbox.height + 10);
-		
-		// Variable holding open state of text box		
+
+		// Variable holding open state of text box
 		activeTextOverlay = true;
 
 	} else if(showAll == false) {
@@ -643,42 +621,32 @@ function removeTextOverlay() {
 	allActiveTextOverlay = false;
 }
 
-// Show node text overlays on mouseover when enabled
-function mouseOverTextOverlay() {
+function changeMouseOverNodeStatus() {
 	if(nodeMouseOverEnabled == false) {
-		console.log("Enabled nodeMouseover() Text Overlay");
+		nodeMouseOverEnabled = true;
 		// Update button icon to represent action state
 		$("#i-mouseover-toggle").removeClass("fa-mouse-pointer");
 		$("#i-mouseover-toggle").addClass("fa-keyboard-o");
-		// Add mouseover event handler
-		$(".svg-node").on("mouseover", function(e) {
-			var id = $(this).attr("id");
-			// Show node text overlay passing id of the current node with mouseover and
-			showNodeTextOverlay(id, false);
-		});
-		// Add mouseout event handler
-		$(".svg-node").on("mouseout", function(e) {
-			removeTextOverlay();
-		});
-		nodeMouseOverEnabled = true;
-		return;
-	}
-	if(nodeMouseOverEnabled == true) {
-		console.log("Disabled nodeMouseover() Text Overlay");
+	} else {
+		nodeMouseOverEnabled = false;
 		// Revert button icon to represent action state
 		$("#i-mouseover-toggle").removeClass("fa-keyboard-o");
 		$("#i-mouseover-toggle").addClass("fa-mouse-pointer");
-		// Remove mouseover and mouseout event handler
-		$(".svg-node").off("mouseover");
-		$(".svg-node").off("mouseout");
-		nodeMouseOverEnabled = false;
+	}
+}
+
+function mouseOverNode(d) {
+	if(nodeMouseOverEnabled == true) {
+		showNodeTextOverlay(d.id, false);
 		return;
 	}
 }
 
-function showAllTextOverlay() {
-	console.log("showAllTextOverlay()");
+function mouseOutNode(d) {
+	removeTextOverlay();
+}
 
+function showAllTextOverlay() {
 	if(allActiveTextOverlay == false) {
 		$.each(data.nodes, function(index, value) {
 			var id = data.nodes[index].id;
@@ -706,7 +674,7 @@ function addNode(type,schemeName,nodePosition) {
 			var nodeX = ($("svg").width() / 2);
 			var nodeY = ($("svg").height() / 2);
 
-			// If the node request is a text node and has text from a source tab - set node type and store the text selection range in the node object 
+			// If the node request is a text node and has text from a source tab - set node type and store the text selection range in the node object
 			newNode.type = "text";
 
 			// Get selection in the source textarea
@@ -763,7 +731,7 @@ function addNode(type,schemeName,nodePosition) {
 
 			// Get the text the user entered
 			var missingText = $("#txta-missing").val();
-			
+
 			// If the text entered is not empty set the text and displayText property to the value - else return and don't add node
 			if(missingText != "") {
 				newNode.text = missingText;
@@ -852,7 +820,7 @@ function addLink(idStart,idEnd) {
 	var node = d3.selectAll(".svg-node");
 	// Remove text overlay before creating link
 	removeTextOverlay();
-	
+
 	// If the parameter is null - set id1 to the selectedElement id
 	if(idStart == null) {
 		// The first id - the source of the link
@@ -860,14 +828,13 @@ function addLink(idStart,idEnd) {
 	} else {
 		var id1 = idStart;
 	}
-	
+
 	var id1Filter = data.nodes.filter(function(n) {
 		return (n.id == Number(id1));
 	});
 
 	id1Type = id1Filter[0].type;
-	console.log("id1Type="+id1Type);
-	
+
 	// Loop through data.links and check for a link with the source of the current node - if one is found with type scheme - prevent the link being added
 	for(var i = 0; i < data.links.length; i++) {
 		if(data.links[i].source == id1 && id1Type == "scheme") {
@@ -881,22 +848,18 @@ function addLink(idStart,idEnd) {
 	dragLine(id1);
 
 	// Disable the mouseover shortcut to show text overlays
-	nodeMouseOverEnabled = true;
-	mouseOverTextOverlay();
+	//nodeMouseOverEnabled = true;
+	//mouseOverTextOverlay();
 
-	node.on("mouseup", function(d) {	
+	node.on("mouseup", function(d) {
 		// The second id - the target of the link
-		 var id2 = d3.select(this).attr("id");
-
-		console.log("id2="+id2);
-
+		var id2 = d3.select(this).attr("id");
+		
 		var id2Filter = data.nodes.filter(function(n) {
 			return (n.id == Number(id2));
 		});
 
 		id2Type = id2Filter[0].type;
-		console.log("id2Type="+id2Type);
-		
 		
 		// Check for a link with the reverse source and target - if found prevent addition, remove dragline -show modal - return
 		for(var i = 0; i < data.links.length; i++) {
@@ -910,9 +873,6 @@ function addLink(idStart,idEnd) {
 
 		// Check both nodes being linked and if they are both text they can not be linked
 		if(id1Type == "text" && id2Type == "text") {
-			var val = $(document.activeElement).attr("id");
-			console.log(val);
-
 			var position = {};
 			position.x1 = Number(id1Filter[0].x);
 			position.y1 = Number(id1Filter[0].y);
@@ -933,15 +893,11 @@ function addLink(idStart,idEnd) {
 			removeActive();
 			return;
 		}
-
-		console.log("id1="+id1);
-		console.log("id2="+id2);
-
 		// If the source of the link is different to the target
 		if(id1 != id2) {
 			addLinkToData(id1,id2);
 		}
-	});	
+	});
 	// Set the selectedElement to null
 	selectedElement = null;
 }
@@ -953,15 +909,15 @@ function addLinkToData(id1,id2) {
 
 	// Push the link to the data object
 	data.links.push(link);
-	
+
 	update();
 }
 
-function dragLine(id) {	
+function dragLine(id) {
 	var svg = d3.select("svg");
 	var line = d3.select(".svg-link-drag");
 
-	// Check the type of element the selected node 
+	// Check the type of element the selected node
 	if(selectedElement.node() instanceof SVGCircleElement) {
 		// The source X and Y attribute of the node - JQuery used here because D3.js doesnt like only numeric ids
 		var sourceX = $("#"+id).attr("cx");
@@ -992,7 +948,7 @@ function dragLine(id) {
 			.attr("height", nodeSchemeSize)
 			.attr("transform", function(d) { return "rotate(45 " + (sourceX + nodeSchemeOffset) + " " + (sourceY + nodeSchemeOffset) + ")"; })
 			.on("mousedown", mousedown);
-		
+
 		line.on("mouseup", mouseup)
 			.attr("x1", (sourceX + nodeSchemeOffset))
         	.attr("y1", (sourceY + nodeSchemeOffset));
@@ -1000,10 +956,9 @@ function dragLine(id) {
 }
 
 function mousedown() {	
-	console.log("mousedown!");
 	var svg = d3.select("svg");
     var m = d3.mouse(this);
-	
+
 	var line = d3.select(".svg-link-drag")
 		.classed("hidden", false)
 		.attr("marker-end","url(#arrow-drag)")
@@ -1013,36 +968,33 @@ function mousedown() {
     svg.on("mousemove", mousemove);
 }
 
-function mousemove() {
-	console.log("mousemove!");
+function mousemove() {	
 	var line = d3.select(".svg-link-drag");
     var m = d3.mouse(this);
-		
+
     line.attr("x2", m[0])
         .attr("y2", m[1]);
 }
 
 function mouseup() {
-	console.log("mouseup!");
 	removeDragLine();
 }
 
 function removeDragLine() {
 	var svg = d3.select("svg");
 	var line = d3.select(".svg-link-drag");
-		
+
 	// Hide the line and remove the dummy node
 	line.classed("hidden", true);
 	d3.select(".svg-drag-node").remove();
 	svg.on("mousemove", null);
-	
+
 	// Prevent mousing up over a node still completing the link
 	var node = d3.selectAll(".svg-node");
 	node.on("mouseup", null);
 }
 
 function moveElementsToFit() {
-	console.log("moveElementsToFit()");
 	var width = $("#svg-vis").width();
 	var height = $("#svg-vis").height();
 
@@ -1076,30 +1028,7 @@ function moveElementsToFit() {
 			if(value.y <= (0 + nodeOffset)) {
 				data.nodes[index].y = nodeOffset;
 			}
-		}	
+		}
 	});
 	update();
-}
-
-// Log the data object to console
-function logDataToConsole(type) {
-	switch(type) {
-		case "d":
-			console.log("data="+JSON.stringify(data));
-			break;
-		case "n":
-			console.log("data.nodes="+JSON.stringify(data.nodes));
-			break;
-		case "l":
-			console.log("data.links="+JSON.stringify(data.links));
-			break;
-		case "t":
-			console.log("data.tabs="+JSON.stringify(data.tabs));
-			break;
-		case "id":
-			console.log("data.currentNodeID="+JSON.stringify(data.currentNodeID));
-			break;
-		default:
-			console.log("logDataToConsole switch error");
-	}
 }

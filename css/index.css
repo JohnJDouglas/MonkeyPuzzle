@@ -79,10 +79,6 @@ html,body {
 	width: 100%;
 	height: calc(100% - 136px);
 }
-#div-col-right-buttons {
-	position: relative;
-	box-shadow: 0px 2px 2px #737373;
-}
 .height-100-percent {
 	height: 100%;
 }
@@ -172,9 +168,6 @@ html,body {
 .p-settings {
 	margin-bottom: 0px !important;
 }
-.settings-margin {
-	margin-bottom: 15px;
-}
 .modal-margin-top {
 	margin-top: 15px;
 }
@@ -182,7 +175,7 @@ html,body {
 	margin-bottom: 15px;
 }
 .form-control {
-	border-radius:0px;
+	border-radius: 0px;
 }
 .input-settings {
 	margin-bottom: 15px;
@@ -197,12 +190,6 @@ html,body {
 .btn-tab {
 	padding-left: 0px;
 	padding-right: 0px;
-}
-#btn-add-text-node {
-	color: var(--text-color);
-}
-#a-add-scheme-node {
-	color: var(--scheme-color);
 }
 /* Dropdown css */
 .pull-right {

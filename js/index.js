@@ -4,7 +4,7 @@ var numberTabs = 1;
 var activeTab = 1;
 // The maximum number of tabs
 var maxTabs = 10;
-//var wasUnlocked = null;
+// The array of schemes for the double click modal
 var schemesArray = [];
 // The distance a node which is in the same position as another is offset when the upload JSON validation runs
 var findNodeQuandrantOffset = 20;
@@ -28,10 +28,11 @@ $(window).load(function() {
 	setupSchemes();
 	showTab(1);
 	textareaRemoveActive();
-	clipboardSetup();
 	elementSizeCheck();
 	moveElementsToFit();
-	mouseOverTextOverlay();
+	//mouseOverTextOverlay();
+	// DEVELOPER ONLY
+	setDeveloperMode(1);
 
 	window.addEventListener("resize", function(){
 		elementSizeCheck();
@@ -43,11 +44,24 @@ $(window).load(function() {
 	});
 });
 
+function setDeveloperMode(type) {
+	// If the function parameter is 1 - set the developer-mode localStorage item to true - else set to false
+	if(type == 1) {
+		localStorage.setItem("developer-mode","true");
+	} else {
+		localStorage.setItem("developer-mode","false");
+	}
+}
+
+function getSVGDimensions() {
+	var dim = {};
+	dim.w = $("#svg-vis").width();
+	dim.h = $("#svg-vis").height();
+	return dim;
+}
 
 // Function creates the layout which allows resizing
 function setupLayout() {
-	console.log("setupLayout()");
-
 	if(layout != undefined) {
 		layout.destroy();
 	}
@@ -56,20 +70,20 @@ function setupLayout() {
 		$("#txta-source-"+activeTab).data("hwt").destroy();
 	}
 
-	var minS = ($(window).width() * 0.2);
-	var maxS = ($(window).width() * 0.4);
+	var minWPercent = 0.2;
+	var maxWPercent = 0.4;
+	var initialWPercent = 0.3;
 
 	layout = $(".panel-container").layout({
 		center: {
 		},
-		west__size: minS,
 		west: {
-			minSize: minS,
-			maxSize: maxS				
+			minSize: ($(window).width() * minWPercent),
+			maxSize: ($(window).width() * maxWPercent)
 		},
 		onresize_end: function() {
 			elementSizeCheck();
-			moveElementsToFit();	
+			moveElementsToFit();
 		},
 		onclose_end: function() {
 			$("#i-source").removeClass("fa-chevron-left");
@@ -82,6 +96,7 @@ function setupLayout() {
 			moveElementsToFit();
 		}
 	});
+	layout.sizePane("west",($(window).width() * initialWPercent));
 	elementSizeCheck();
 }
 
@@ -90,13 +105,9 @@ function addHighlighting() {
 		$("#txta-source-"+activeTab).data("hwt").destroy();
 	}
 	$("#txta-source-"+activeTab).highlightWithinTextarea(onInput);
-	// Function
+	// Setup mark ids for node setup
 	setupMarks();
 }
-
-// Array of [start,end,tab]
-// situation - tab 1 ( node 0 / node 1) - tab 2 ( node 2 )
-// change tab from 1 to 2 - get all nodes from tab 2 - set the marks to have the id's from this selection 
 
 function removeHighlighting() {
 	if($("#txta-source-"+activeTab).data("hwt") != undefined) {
@@ -110,23 +121,18 @@ function setupMarks() {
 			return i;
 		}
 	});
-	console.log("current="+JSON.stringify(current));
-	
+
 	$("mark").each(function(index) {
-		console.log("mark index="+index);
 		$(this).attr("id","mark-"+current[index].id);
-		console.log("id="+$(this).attr("id"));
 		$(this).attr("class","mark-highlight");
 	});
 }
 
-function addNodeMark(id) {
-	console.log("addNodeMark()");
+function addNodeMark(id) {	
 	$("#mark-"+id).css("background","orange");
 }
 
 function removeNodeMark() {
-	console.log("removeNodeMark()");
 	$(".mark-highlight").css("background","#FFFF00");
 }
 
@@ -135,7 +141,7 @@ function merge(ranges) {
 
 	// Sort ranges by the start value
 	ranges.sort(function(a,b){ return a[0] - b[0] });
-	
+
     ranges.forEach(function(r) {
         if(!result.length || r[0] > result[result.length-1][1]) {
             result.push(r);
@@ -147,47 +153,18 @@ function merge(ranges) {
 }
 
 function onInput() {
-	console.log("ranges="+JSON.stringify(highlight.ranges));
-	console.log("activeTab="+activeTab);
-
 	var tabRanges = [];
 
 	// Create a new array with only the start and end of the range
 	$.each(highlight.ranges, function(index, value) {
-		console.log("value="+JSON.stringify(value.start));
-		//if(highlight.ranges[index].tab == activeTab) {
 		if(value.tab == activeTab) {
 			var element = [];
-			//element[0] = highlight.ranges[index].start;
-			//element[1] = highlight.ranges[index].end;
 			element[0] = value.start;
 			element[1] = value.end;
 			tabRanges.push(element);
 		}
 	});
-
-	console.log("tabRanges="+JSON.stringify(tabRanges));
-
-	var merged = merge(tabRanges);
-	console.log("merged="+JSON.stringify(merged));
-
-
-
-	return merged;
-}
-
-function clipboardSetup() {
-	if(Clipboard.isSupported() == true) {
-		var clipboard = new Clipboard(".btn-clipboard");
-		clipboard.on("success", function(e) {
-			console.log(e);
-						var start = textaSource.selectionStart;
-			var end = textaSource.selectionEnd;
-			var selectedText = textaSource.value.substring(start,end);
-		});
-	} else {
-		$(".btn-clipboard").hide();
-	}
+	return merge(tabRanges);
 }
 
 function setupSchemes() {
@@ -200,14 +177,12 @@ function setupSchemes() {
 		$(this).find('ul.drop-accordian-menu').hide();
 	})
 
-	// Set the onclick to addNode - with scheme type parameter and the value parameter as the text of the link - Fill the schemesArray with all schemes
+	// Set the onclick to addNode - with scheme type parameter and the value parameter as the text of the link
 	$(".a-scheme-option").each(function(index) {
-		//$(".a-scheme-option").eq(index).attr("onclick","addNode(2,'"+$(".a-scheme-option").eq(index).text()+"')");
 		$(this).attr("onclick", "addNode(2,'"+$(this).text()+"')");
 		// Add the value of the text to the array of scheme types
 		schemesArray.push($(this).text());
 	});
-	console.log("schemesArray="+schemesArray);
 }
 
 function elementSizeCheck() {
@@ -270,7 +245,6 @@ function sampleText() {
 }
 
 function textareaRemoveActive() {
-	console.log("textareaRemoveActive()");
 	// When any textarea is clicked, remove the active element from d3.js
 	$(".txta-source").on("focus", function () {
 		removeActive();
@@ -294,7 +268,6 @@ function lockTab() {
 
 		// If the tab title is empty when they lock it - set the title to default (Tab X).
 		if (!$("#txta-tab-" + activeTab).val()) {
-			console.log("tab title empty locking!");
 			$("#txta-tab-" + activeTab).val("Tab " + activeTab);
 		}
 
@@ -312,7 +285,6 @@ function clearSource() {
 }
 
 function uploadText() {
-	console.log("uploadText()");
 	// This function allows the upload button to read and upload the text back to back
 	$("#fileSourceInput").on("click", function (e) {
 		$(this).prop("value", "");
@@ -324,7 +296,6 @@ function uploadText() {
 			var currentFile = e.target.result;
 
 			$("#txta-source-"+activeTab).val("");
-			console.log("text="+currentFile);
 			$("#txta-source-"+activeTab).val(currentFile);
 
 			// Update the value of the data object to include the text uploaded
@@ -341,7 +312,6 @@ function readFile(file, callback) {
 	var reader = new FileReader();
 	reader.onload = callback;
 	reader.readAsText(file);
-	console.log(file.name);
 	// Return the file name
 	return file.name;
 }
@@ -396,16 +366,20 @@ function saveTextAsFile(type) {
 }
 
 function addTab() {
-	// If the current number of tabs is less than the maximum allowed
-	if (numberTabs < maxTabs) {
-		// Insert the new tab after the last tab
-		$(".source-tab:last").after("<div id='div-source-tab-" + (numberTabs + 1) + "' class='source-tab no-padding-lr col-md-1'><button class='btn btn-source btn-block btn-tab' onclick='showTab(" + (numberTabs + 1) + ")'></span>" + (numberTabs + 1) + "</button></div>");
-		// Set the number of tabs
-		numberTabs = $(".source-tab").length;
-		showTab(numberTabs);
-	} else {
-		// Show max tab modal
-		showModal(10);
+	// If the button does not have the disabled class
+	if(!$("#btn-add-tab").hasClass("disabled")) {
+		// If the current number of tabs is less than the maximum allowed
+		if (numberTabs < maxTabs) {
+			// Insert the new tab after the last tab
+			$(".source-tab:last").after("<div id='div-source-tab-" + (numberTabs + 1) + "' class='source-tab no-padding-lr col-md-1'><button class='btn btn-source btn-block btn-tab' onclick='showTab(" + (numberTabs + 1) + ")'></span>" + (numberTabs + 1) + "</button></div>");
+			// Set the number of tabs
+			numberTabs = $(".source-tab").length;
+			showTab(numberTabs);
+			// Disable the add tab button - prevents the modal being spammed
+			if(numberTabs == 10) {
+				$("#btn-add-tab").addClass("disabled");
+			}
+		}
 	}
 }
 
@@ -415,18 +389,8 @@ function removeTab() {
 
 	// If there is only one tab - you can not remove it - else remove tab
 	if (numberTabs == 1) {
-		console.log("removeTab activeTab=" + activeTab);
 		showModal(8);
 	} else {
-		// Log the active tab
-		console.log("activeTab=" + activeTab);
-
-		// Log the contents of each tab text and tab title
-		$(".txta-source").each(function(index) {
-			console.log("txta-source-" + (index + 1) + $("#txta-source-" + (index + 1)).val());
-			console.log("txta-tab-" + (index + 1) + $("#txta-tab-" + (index + 1)).val());
-		});
-
 		// Remove the tab header
 		$("#div-source-tab-" + activeTab).remove();
 
@@ -435,9 +399,6 @@ function removeTab() {
 			if ((index + 1) <= numberTabs) {
 				// If the source id is not the active tab - this is required because we don't want the title of current tab (it is being deleted!)
 				if ($(".txta-source").eq(index).attr("id") != ("txta-source-" + activeTab)) {
-					// Log the contents of each tab text and title
-					console.log("txta-source-" + (index + 1) + "=" + $(".txta-source").eq(index).val());
-					console.log("txta-tab-" + (index + 1) + "=" + $(".txta-tab").eq(index).val());
 					// Add the value in both the tab text and title to arrays
 					sourceTextArray.push($(".txta-source").eq(index).val());
 					sourceTitleArray.push($(".txta-tab").eq(index).val());
@@ -447,12 +408,11 @@ function removeTab() {
 
 		// Correct the number of tabs
 		numberTabs = $(".source-tab").length;
-		console.log("numberTabs=" + Number(numberTabs));
 
-		// Log the arrays
-		console.log("sourceTextArray=" + JSON.stringify(sourceTextArray));
-		console.log("sourceTitleArray=" + JSON.stringify(sourceTitleArray));
-
+		// If the number of tabs is less than the maximum - remove the disabled class
+		if(numberTabs < maxTabs) {
+			$("#btn-add-tab").removeClass("disabled");
+		}
 		// When removing tabs - set the current tab view to the first
 		showTab(1);
 		// Reorder tabs - orders tabs by number and updates button attributes - pass the array of source textarea values to get tabs moved
@@ -463,7 +423,7 @@ function removeTab() {
 function reorderTabs(sourceTextArray, sourceTitleArray) {
 	// For each tab - set the id of the containing div - the button onclick parameter - the button text (note index starts at 0)
 	$(".source-tab").each(function(index) {
-		// Update the tab title container properties - id - the parameter passed in the onclick - the text - the tab titles 
+		// Update the tab title container properties - id - the parameter passed in the onclick - the text - the tab titles
 		$(this).attr("id", "div-source-tab-"+(index+1));
 		$(this).children().attr("onclick", "showTab("+(index+1)+")");
 		$(this).children().text((index+1));
@@ -518,13 +478,10 @@ function showTab(num) {
 		removeHighlighting();
 	}
 	activeTab = num;
-	console.log("activeTab=" + activeTab);
-
 	addHighlighting();
 }
 
 function copyNodeText() {
-	console.log("copyNodeText!");
 	if ($("#txta-node-text").val() != "") {
 		window.prompt("Copy to clipboard: Ctrl+C -> Enter", $("#txta-node-text").val());
 	}
@@ -576,7 +533,6 @@ function saveSVGAsSVG() {
 
 // Allow the data object to be downloaded
 function saveDataAsJSON() {
-	console.log("saveDataAsJSON()");
 	try {
 		var JSONToWrite = JSON.stringify(data);
 		var JSONFileAsBlob = new Blob([JSONToWrite], { type: "octet/stream" });
@@ -608,8 +564,6 @@ function saveDataAsJSON() {
 }
 
 function uploadJSON() {
-	console.log("uploadJSON()");
-	
 	var schema = {
 		"type": "object",
 		"properties": {
@@ -671,7 +625,7 @@ function uploadJSON() {
 									"exclusiveMinimum": false,
 									"maximum": 99,
 									"exclusiveMaximum": false
-								},	
+								},
 								"target": {
 									"type": "integer",
 									"minimum": 0,
@@ -683,7 +637,7 @@ function uploadJSON() {
 							"required": ["source", "target"],
 							"additionalProperties": false
 						}
-				},		
+				},
 				"tabs": {
 					"type": "array",
 						"items": {
@@ -695,10 +649,10 @@ function uploadJSON() {
 									"exclusiveMinimum": false,
 									"maximum": 10,
 									"exclusiveMaximum": false
-								},	
+								},
 								"text": {
 									"type": "string",
-									"minLength": 0						
+									"minLength": 0
 								}
 							},
 							"required": ["tab","text"],
@@ -729,16 +683,9 @@ function uploadJSON() {
 			// Check the uploaded JSON against the JSON Schema
 			var valid = tv4.validate(JSONData, schema);
 
-			console.log("valid="+JSON.stringify(valid));
-			console.log("errors="+JSON.stringify(tv4.error));
-			
 			if(tv4.error == null) {
-				console.log("VALIDATED!");
-				// Pass the parsed data to the checkJSONInput function to validate the data 
-				JSONDataProcessed = checkJSONInput(JSONData);	
-
-				console.log("Corrected JSON="+JSON.stringify(JSONDataProcessed));
-
+				// Pass the parsed data to the checkJSONInput function to validate the data
+				JSONDataProcessed = checkJSONInput(JSONData);
 				data = JSONDataProcessed;
 				update();
 				moveElementsToFit();
@@ -754,16 +701,10 @@ function checkJSONInput(json) {
 	// Reset all ids to be incremental from 0 (for nodes) and 1 (for tabs)
 	json = resetIDs(json);
 
-	console.log("JSON1="+JSON.stringify(json));
-
 	// Set the currentNodeID
 	json = setCurrentNodeID(json);
 
-	console.log("JSON2="+JSON.stringify(json));
-
 	json.nodes = checkNodePositions(json);
-
-	console.log("JSON3="+JSON.stringify(json));
 
 	// Remove links which have a source or target which is higher than any node id
 	json.links = removeInvalidLinks(json);
@@ -773,9 +714,6 @@ function checkJSONInput(json) {
 
 	// Remove links which are the opposite of another link
 	json.links = removeOppositeLinks(json);
-
-	// Display the resulting json object
-	console.log("json="+JSON.stringify(json));
 
 	return json;
 }
@@ -788,7 +726,7 @@ function resetIDs(json) {
 
 	// Update the id of the tabs to start at zero and increment upwards
 	$.each(json.tabs, function(index, value) {
-		json.tabs[index].tab = index;	
+		json.tabs[index].tab = index;
 	});
 
 	return json;
@@ -808,7 +746,6 @@ function checkNodePositions(json) {
 		}
 		r.push(json.nodes[i]);
 	}
-	console.log("r="+JSON.stringify(r));
 	return r;
 }
 
@@ -827,7 +764,7 @@ function updateNodePosition(node) {
 	return node;
 }
 
-function removeInvalidLinks(json) { 
+function removeInvalidLinks(json) {
 	var removal = json.links.filter(function(l) {
 		// If a link has an id which is higher than the number of nodes return it - If a link has the same source and target return it
 		if((l.source > (json.nodes.length - 1) || l.target > (json.nodes.length - 1)) || (l.source == l.target)) {
@@ -870,7 +807,6 @@ function removeOppositeLinks(json) {
 }
 
 function setCurrentNodeID(json) {
-	console.log("setCNID="+JSON.stringify(json));
 	json.currentNodeID = json.nodes.length;
 	return json;
 }

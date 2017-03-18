@@ -14,7 +14,6 @@
 		<script src="js/index.js"></script>
 		<script src="js/modelling.js"></script>
 		<script src="js/modal.js"></script>
-		<script src="js/clipboard.js"></script>
 		<script src="js/saveSvgAsPng.js"></script>
 		<script type="text/javascript" src="js/jquery.layout-latest.js"></script>
 		<link rel="stylesheet" href="css/layout-default-latest.css">
@@ -50,7 +49,7 @@
 							</div>
 							<div class="row">
 								<div id="div-add-tab" class="no-padding-lr col-xs-2 col-md-2">
-									<button class="btn btn-source btn-block" onclick="addTab()"><i class="fa fa-plus"></i></button>
+									<button id="btn-add-tab" class="btn btn-source btn-block" onclick="addTab()"><i class="fa fa-plus"></i></button>
 								</div>
 								<div id="div-source-tab-1" class="source-tab no-padding-lr col-xs-1 col-md-1">
 									<button class="btn btn-source btn-block btn-tab" onclick="showTab(1)"></span>1</button>
@@ -106,12 +105,12 @@
 										<button class="btn btn-menu btn-block" onclick="layout.toggle('west')"><i id="i-source" class="fa fa-chevron-left"></i></button>
 									</div>
 									<div id="div-col-right-button" class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-										<button id="btn-add-text-node" class="btn btn-menu btn-block" onclick="addNode(1)"><i class="fa fa-plus"></i><span class="span-col-right-button-2"> Text</span></button>
+										<button class="btn btn-menu btn-block" onclick="addNode(1)"><i class="fa fa-plus"></i><span class="span-col-right-button-2"> Text</span></button>
 									</div>
 									<div class="col-xs-2 col-md-2 col-lg-2 dropdown no-padding-lr">
 										<div class="pull-right">
 											<div class="btn-block" id="firstLevelNav_small">
-												<button id="a-add-scheme-node" type="button" class="btn btn-menu btn-block dropdown-toggle" data-toggle="dropdown">
+												<button type="button" class="btn btn-menu btn-block dropdown-toggle" data-toggle="dropdown">
 													<i class="fa fa-plus"></i><span><span class="span-col-right-button-2"> Scheme <span class="caret"></span></span></span>
 												</button>
 												<ul class="dropdown-menu pull-right dropdown-wide">
@@ -183,11 +182,10 @@
 										<button class="btn btn-menu btn-block" onclick="showAllTextOverlay()"><i class="fa fa-eye"></i><span class="span-col-right-button-2"> Content</span></button>
 									</div>
 									<div class="col-xs-2 col-md-2 col-lg-2 no-padding-lr">
-										<button id="btn-mouse-overlay" class="btn btn-menu btn-block" onclick="mouseOverTextOverlay()"><i id="i-mouseover-toggle" class="fa fa-mouse-pointer"></i><span class="span-col-right-button-2"> Mouseover</span></button>
+										<button id="btn-mouse-overlay" class="btn btn-menu btn-block" onclick="changeMouseOverNodeStatus()"><i id="i-mouseover-toggle" class="fa fa-mouse-pointer"></i><span class="span-col-right-button-2"> Mouseover</span></button>
 									</div>
 									<div id="div-col-right-button" class="col-xs-3 col-md-3 col-lg-3 no-padding-lr">
 										<button class="btn btn-menu btn-block" onclick="showModal(9)"><span class="span-col-right-button-3">MONKEYPUZZLE</span><span class="span-col-right-button-3-small">MP</span></button>
-										<!--<button class="btn btn-menu btn-block" onclick="setupLayoutHighlighting()"><span class="span-col-right-button-3">Highlight</span><span class="span-col-right-button-3-small">MP</span></button>-->
 									</div>
 								</div>
 							</div>
@@ -359,36 +357,22 @@
 						</div>
 						<div class="modal-body">
 							<p class="modal-text p-settings">Controls</p>
-							<button class="btn btn-settings btn-block settings-margin" data-dismiss="modal" onclick="showModal(4)"><i class="fa fa-keyboard-o"></i> Controls</button>
+							<button class="btn btn-settings btn-block modal-margin-bottom" data-dismiss="modal" onclick="showModal(4)"><i class="fa fa-keyboard-o"></i> Controls</button>
 							<p class="modal-text p-settings">Save Visualisation As</p>
 							<input id="input-SVG-file-name" type="text" class="form-control input-settings" placeholder="model">
 							<div class="col-md-6 col-lg-6 no-padding-l">
-								<button class="btn btn-settings btn-block settings-margin" onclick="saveSVGAsPNG()"><i class="fa fa-save"></i> Visualisation (.PNG)</button>
+								<button class="btn btn-settings btn-block modal-margin-bottom" onclick="saveSVGAsPNG()"><i class="fa fa-save"></i> Visualisation (.PNG)</button>
 							</div>
 							<div class="col-md-6 col-lg-6 no-padding-r">
-								<button class="btn btn-settings btn-block settings-margin" onclick="saveSVGAsSVG()"><i class="fa fa-save"></i> Visualisation (.SVG)</button>
+								<button class="btn btn-settings btn-block modal-margin-bottom" onclick="saveSVGAsSVG()"><i class="fa fa-save"></i> Visualisation (.SVG)</button>
 							</div>
 							<p class="modal-text p-settings">Upload JSON</p>
 							<form style="display:inline;">
-								<span class="btn btn-settings btn-file btn-block settings-margin"><i class="fa fa-upload"></i> Upload JSON<input id="fileJSONInput" class="fileJSONInput" type="file" accept=".json"></span>
+								<span class="btn btn-settings btn-file btn-block modal-margin-bottom"><i class="fa fa-upload"></i> Upload JSON<input id="fileJSONInput" class="fileJSONInput" type="file" accept=".json"></span>
 							</form>
 							<p class="modal-text p-settings">Download JSON</p>
 							<input id="input-download-JSON" type="text" class="form-control input-settings" placeholder="data">
-							<button id="btn-download-JSON" class="btn btn-settings btn-block settings-margin" onclick="saveDataAsJSON()"><i class="fa fa-download"></i> Download JSON</button>
-							<div class="row">
-								<button id="btn-testing" class="btn btn-settings dropdown-toggle btn-settings btn-block" type="button" data-toggle="dropdown">Testing <span class="caret"></span></button>
-									<ul class="dropdown-menu">
-										<li><a href="javascript:logDataToConsole('d')">Data</a></li>
-										<li><a href="javascript:logDataToConsole('n')">Data.nodes</a></li>
-										<li><a href="javascript:logDataToConsole('l')">Data.links</a></li>
-										<li><a href="javascript:logDataToConsole('t')">Data.tabs</a></li>
-										<li><a href="javascript:logDataToConsole('id')">Data.currentNodeID</a></li>
-										<li><a href="javascript:showAllTextOverlay()">showAllTextOverlay</a></li>
-										<li><a href="javascript:removeHighlight()">remHightlight</a></li>
-										<li><a href="javascript:logCount()">logCount</a></li>
-										<li><a href="javascript:showModal(11)">showModal(11)</a></li>
-									</ul>
-							</div>
+							<button id="btn-download-JSON" class="btn btn-settings btn-block" onclick="saveDataAsJSON()"><i class="fa fa-download"></i> Download JSON</button>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="">Close</button>
@@ -425,14 +409,12 @@
 							<div id="div-modal-edit-text-node" class="modal-edit-text-node">
 								<p class="modal-text">Current node text</p>
 								<textarea id="txta-current-node-text" class="txta-modal-edit-node" readonly></textarea>
-								<button class="btn btn-settings modal-margin-top modal-margin-bottom btn-block btn-clipboard" data-clipboard-action="copy" data-clipboard-target="#txta-current-node-text"><i class="fa fa-copy"></i> Text</button>
 								<p class="modal-text">New node text</p>
 								<textarea id="txta-edit-text" class="txta-modal-edit-node"></textarea>
 							</div>
 							<div id="div-modal-edit-scheme-node" class="modal-edit-scheme-node">
 								<p class="modal-text">Current node scheme</p>
 								<textarea id="txta-current-node-scheme" class="txta-modal-edit-node" readonly></textarea>
-								<button class="btn btn-settings modal-margin-top modal-margin-bottom btn-block btn-clipboard" data-clipboard-action="copy" data-clipboard-target="#txta-current-node-scheme"><i class="fa fa-copy"></i> Text</button>
 								<p id="p-current-node-scheme" class="modal-text"></p>
 								<p class="modal-text">New node scheme</p>
 								<select id="select-schemes" class="form-control">
