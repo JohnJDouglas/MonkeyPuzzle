@@ -127,28 +127,28 @@ function update() {
 		.attr("x1", function(d) {
 			// Find the node which has the id of the link source and return the x co-ordinate
 			var x1 = data.nodes.filter(function(n) {
-				if(n.id == d.source) { return (x1 = n.x); }
+				if (n.id == d.source) { return n; }
 			});
 			return x1[0].x;
 		})
 		.attr("y1", function(d) {
 			// Find the node which has the id of the link source and return the y co-ordinate
 			var y1 = data.nodes.filter(function(n) {
-				if(n.id == d.source) { return (y1 = n.y); }
+				if (n.id == d.source) { return n; }
 			});
 			return y1[0].y;
 		})
 		.attr("x2", function(d) {
 			// Find the node which has the id of the link target and return the x co-ordinate
-			var x2 =data.nodes.filter(function(n) {
-				if(n.id == d.target) { return (x2 = n.x); }
+			var x2 = data.nodes.filter(function(n) {
+				if (n.id == d.target) { return n; }
 			});
 			return x2[0].x;
 		})
 		.attr("y2", function(d) {
 			// Find the node which has the id of the link target and return the y co-ordinate
 			var y2 = data.nodes.filter(function(n) {
-				if(n.id == d.target) { return (y2 = n.y); }
+				if (n.id == d.target) { return n; }
 			});
 			return y2[0].y;
 		})
@@ -165,7 +165,7 @@ function update() {
 		.data(data.nodes)
 		.enter()
 		.each(function(d) {
-			if(d.type == "scheme") {
+			if (d.type == "scheme") {
 				d3.select(this)
 					.append("rect")
 					.classed("svg-node", true)
@@ -217,7 +217,7 @@ function update() {
 		.classed("svg-text", true)
 		.classed("no-select", true)
 		// If the id of the node is greater than or equal to 9 (since node ids are +1 so they start at 1) - apply the offset twice since there are two digits - else apply offset once
-		.attr("x", function(d) { if(d.id >= 9) { return d.x - (nodeIdOffset*2); } else { return d.x - nodeIdOffset; }})
+		.attr("x", function(d) { if (d.id >= 9) { return d.x - (nodeIdOffset*2); } else { return d.x - nodeIdOffset; }})
 		.attr("y", function(d) { return d.y + nodeIdOffset; })
 		.text(function(d) { return  d.id + 1; })
 		.attr("pointer-events", "none");
@@ -256,7 +256,7 @@ function doubleClick(d) {
 	removeActive();
 	showModal(11,id);
 
-	if(type[0].type == "text") {
+	if (type[0].type == "text") {
 		// Show text node div and button
 		$(".modal-edit-text-node").show();
 
@@ -264,15 +264,15 @@ function doubleClick(d) {
 		$("#modal-edit-node").on("hide.bs.modal", function(e) {
 			var val = $(document.activeElement).attr("id");
 			// If the activeElement is the edit text node button
-			if(val == "btn-modal-edit-text-node") {
+			if (val == "btn-modal-edit-text-node") {
 				var value = $("#txta-edit-text").val();
 				// If the new value is not empty - update node value
-				if(value != "") {
+				if (value != "") {
 					data.nodes[id].displayText = value;
 
 					// Since the text could be changed to something which is not inside any tab - remove the range which has the id of the selected element
-					var removalRange = highlight.ranges.filter(function(n) {
-						return (n.id == id);
+					var removalRange = highlight.ranges.filter(function(r) {
+						return (r.id == id);
 					});
 					highlight.ranges.splice(highlight.ranges.indexOf(removalRange[0]), 1);
 
@@ -296,11 +296,11 @@ function doubleClick(d) {
 		$("#modal-edit-node").on("hide.bs.modal", function(e) {
 			var val = $(document.activeElement).attr("id");
 			// If the activeElement is the edit scheme node button
-			if(val == "btn-modal-edit-scheme-node") {
+			if (val == "btn-modal-edit-scheme-node") {
 				// Get the selected option from the dropdown
 				var value = $('#select-schemes').find(":selected").text();
 				// If the value is not empty
-				if(value != "") {
+				if (value != "") {
 					data.nodes[id].displayText = value;
 				}
 			}
@@ -329,43 +329,43 @@ function dragNode(d) {
 	d.y = d3.event.y;
 
 	// Containment function for nodes to prevent them being dragged off screen
-	if(d.type == "scheme") {
-		if(d3.event.x >= (getSVGDimensions().w - schemeContainOffset)) {
+	if (d.type == "scheme") {
+		if (d3.event.x >= (getSVGDimensions().w - schemeContainOffset)) {
 			d.x = (getSVGDimensions().w - schemeContainOffset);
 		}
-		if(d3.event.y >= (getSVGDimensions().h - schemeContainOffset)) {
+		if (d3.event.y >= (getSVGDimensions().h - schemeContainOffset)) {
 			d.y = (getSVGDimensions().h - schemeContainOffset);
 		}
-		if(d3.event.x <= (0 + schemeContainOffset)) {
+		if (d3.event.x <= (0 + schemeContainOffset)) {
 			d.x = schemeContainOffset;
 		}
-		if(d3.event.y <= (0 + schemeContainOffset)) {
+		if (d3.event.y <= (0 + schemeContainOffset)) {
 			d.y = schemeContainOffset;
 		}
 	}
 	// Take the nodeRadius and increment it by 1 to account for the border
 	var nodeOffset = nodeRadius + 1;
-	if(d.type == "text") {
-		if(d3.event.x >= (getSVGDimensions().w - nodeOffset)) {
+	if (d.type == "text") {
+		if (d3.event.x >= (getSVGDimensions().w - nodeOffset)) {
 			d.x = (getSVGDimensions().w - nodeOffset);
 		}
-		if(d3.event.y >= (getSVGDimensions().h - nodeOffset)) {
+		if (d3.event.y >= (getSVGDimensions().h - nodeOffset)) {
 			d.y = (getSVGDimensions().h - nodeOffset);
 		}
-		if(d3.event.x <= (0 + nodeOffset)) {
+		if (d3.event.x <= (0 + nodeOffset)) {
 			d.x = nodeOffset;
 		}
-		if(d3.event.y <= (0 + nodeOffset)) {
+		if (d3.event.y <= (0 + nodeOffset)) {
 			d.y = nodeOffset;
 		}
 	}
 
 	// For each link - if the source or target of the link is the same as the current (dragged) element - update this position
 	links.each(function(l) {
-		if(l.source == d.id) {
+		if (l.source == d.id) {
 			d3.select(this).attr("x1", d.x).attr("y1", d.y);
 		}
-		if(l.target == d.id) {
+		if (l.target == d.id) {
 			d3.select(this).attr("x2", d.x).attr("y2", d.y);
 		}
 	});
@@ -374,7 +374,7 @@ function dragNode(d) {
 	nodeId.each(function(l) {
 		if (l == d) {
 			// If the id of the node is greater than 9 - apply the node offset twice since the id will have 2 digits - else apply once
-			if(d.id >= 9) {
+			if (d.id >= 9) {
 				d3.select(this).attr("x", d.x - (nodeIdOffset*2)).attr("y", d.y + nodeIdOffset);
 			} else {
 				d3.select(this).attr("x", d.x - nodeIdOffset).attr("y", d.y + nodeIdOffset);
@@ -383,7 +383,7 @@ function dragNode(d) {
 	});
 
 	// If the type of node is scheme the node is a square rotated 45deg so apply different transform - else the node is a circle so apply circle specific action
-	if(d.type == "scheme") {
+	if (d.type == "scheme") {
 		d3.select(this).attr("transform","rotate(45 "+d.x+" "+d.y+")");
 		d3.select(this).attr("x", d.x - nodeSchemeOffset).attr("y", d.y - nodeSchemeOffset);
 	} else {
@@ -408,7 +408,7 @@ function removeActive() {
 function addActive(element) {
 	selectedElement = d3.select(element);
 	// If the selected element is a SVG line - change the marker to the active one - else its a node so get its text
-	if(selectedElement.node() instanceof SVGLineElement) {
+	if (selectedElement.node() instanceof SVGLineElement) {
 		d3.select(element).attr("marker-end","url(#arrow-active)");
 	}
 
@@ -427,9 +427,9 @@ function keyDown() {
 		case 46: // Delete
 		case 8: // Backspace (mac)
 			// If the selected element is not null and is not being dragged
-			if(selectedElement != null && dragging == false) {
+			if (selectedElement != null && dragging == false) {
 				// Check if the selected element is a node
-				if(selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
+				if (selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
 					removeLinksFromNode();
 					removeNodeFromArray();
 					// Remove the highlighting and add it back
@@ -437,32 +437,32 @@ function keyDown() {
 					addHighlighting();
 				}
 				// Check if the selected element is a link
-				if(selectedElement.node() instanceof SVGLineElement) {
+				if (selectedElement.node() instanceof SVGLineElement) {
 					removeLinkFromArray();
 				}
 			}
 			break;
 		case 16: // Shift
 			// If the selected element is not null and is not being dragged
-			if(selectedElement != null && dragging == false) {
-				if(selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
+			if (selectedElement != null && dragging == false) {
+				if (selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
 					addLink();
 				}
 			}
 			break;
 		case 17: // Control
 			// If the selected element is not null and is not being dragged
-			if(selectedElement != null && dragging == false) {
-				if(selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
+			if (selectedElement != null && dragging == false) {
+				if (selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
 					showNodeTextOverlay(selectedElement.attr("id"), false);
 				}
 			}
 			break;
 		case 9: // Tab
 			// If the selected element is not null and is not being dragged
-			if(selectedElement != null && dragging == false) {
-				if(selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
-					showNodeTextOverlay(selectedElement.attr("id"), false);
+			if (selectedElement != null && dragging == false) {
+				if (selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
+					moveToNodeSourceTab(selectedElement.attr("id"));
 				}
 			}
 			break;
@@ -500,8 +500,8 @@ function removeNodeFromArray() {
 	data.nodes.splice(data.nodes.indexOf(removalNode[0]), 1);
 
 	// Remove the range which has the id of the selected element
-	var removalRange = highlight.ranges.filter(function(n) {
-		return (n.id == removeId);
+	var removalRange = highlight.ranges.filter(function(r) {
+		return (r.id == removeId);
 	});
  	highlight.ranges.splice(highlight.ranges.indexOf(removalRange[0]), 1);
 
@@ -535,14 +535,14 @@ function showNodeTextOverlay(id, showAll) {
 		return (n.id == id);
 	});
 
-	if(activeTextOverlay == false) {
-		if(node[0].displayText.length > overlayLengthPerLine) {
+	if (activeTextOverlay == false) {
+		if (node[0].displayText.length > overlayLengthPerLine) {
 			var re = new RegExp('.{1,' + overlayLengthPerLine + '}', 'g');
 			var array = node[0].displayText.match(re);
 
 			// Trim leading whitespace from array
 			$.each(array, function(index, value) {
-				if(array[index].charAt(0) == " ") {
+				if (array[index].charAt(0) == " ") {
 					// Trim array element
 					array[index] = $.trim(array[index]);
 				}
@@ -560,7 +560,7 @@ function showNodeTextOverlay(id, showAll) {
 			.attr("dy","0.35em")
 			// If the node displayText is over length per line set text to first value of array - else just set text to displayText
 			.text(function() {
-				if(nodeTextOverLengthPerLine == true) {
+				if (nodeTextOverLengthPerLine == true) {
 					return array[0];
 				} else {
 					return node[0].displayText;
@@ -570,11 +570,11 @@ function showNodeTextOverlay(id, showAll) {
 			.attr("y", function() { return node[0].y + nodeTextBoxOffset; });
 
 		// If the node displayText will go over one line - append the additional lines
-		if(nodeTextOverLengthPerLine == true) {
+		if (nodeTextOverLengthPerLine == true) {
 			// Loop through the array and add a line for each element
 			$.each(array, function(index, value) {
 				// Skip the first element - the first element is added above
-				if(index == 0) {
+				if (index == 0) {
 					return true;
 				}
 				// Append tspans with the subsequent lines
@@ -606,7 +606,7 @@ function showNodeTextOverlay(id, showAll) {
 		// Variable holding open state of text box
 		activeTextOverlay = true;
 
-	} else if(showAll == false) {
+	} else if (showAll == false) {
 		// If the function call does not request all text overlays to be shown - remove text overlay
 		removeTextOverlay();
 	}
@@ -619,8 +619,19 @@ function removeTextOverlay() {
 	allActiveTextOverlay = false;
 }
 
+function moveToNodeSourceTab(id) {
+	var tab = highlight.ranges.filter(function(r) {
+		if(r.id == id) {
+			return r;
+		}
+	});
+	// Show the tab which the text was sourced from and set the mark
+	showTab(tab[0].tab);
+	addNodeMark(tab[0].id);
+}
+
 function changeMouseOverNodeStatus() {
-	if(nodeMouseOverEnabled == false) {
+	if (nodeMouseOverEnabled == false) {
 		nodeMouseOverEnabled = true;
 		// Update button icon to represent action state
 		$("#i-mouseover-toggle").removeClass("fa-mouse-pointer");
@@ -634,7 +645,7 @@ function changeMouseOverNodeStatus() {
 }
 
 function mouseOverNode(d) {
-	if(nodeMouseOverEnabled == true) {
+	if (nodeMouseOverEnabled == true) {
 		console.log("activeTextOverlay="+activeTextOverlay);
 		showNodeTextOverlay(d.id, false);
 		return;
@@ -646,7 +657,7 @@ function mouseOutNode(d) {
 }
 
 function showAllTextOverlay() {
-	if(allActiveTextOverlay == false) {
+	if (allActiveTextOverlay == false) {
 		$.each(data.nodes, function(index, value) {
 			var id = data.nodes[index].id;
 
@@ -683,12 +694,11 @@ function addNode(type,schemeName,nodePosition) {
 			var end = textaSource.selectionEnd;
 			var selectedText = textaSource.value.substring(start,end);
 
-			if(selectedText != "") {
+			if (selectedText != "") {
 				newNode.text = selectedText;
 				newNode.displayText = selectedText;
 
 				// Highlighting
-				//var range = [start, end];
 				var range = {};
 				range.start = start;
 				range.end = end;
@@ -732,7 +742,7 @@ function addNode(type,schemeName,nodePosition) {
 			var missingText = $("#txta-missing").val();
 
 			// If the text entered is not empty set the text and displayText property to the value - else return and don't add node
-			if(missingText != "") {
+			if (missingText != "") {
 				newNode.text = missingText;
 				newNode.displayText = missingText;
 			} else {
@@ -776,7 +786,7 @@ function findNewNodePosition(nodeX, nodeY) {
 
 	// Find whether or not a node is already in the centre of the svg
 	data.nodes.filter(function(n) {
-		if((n.x == nodeX) && (n.y == nodeY)) {
+		if ((n.x == nodeX) && (n.y == nodeY)) {
 			originalPositionTaken = true;
 		}
 	});
@@ -786,7 +796,7 @@ function findNewNodePosition(nodeX, nodeY) {
 	var newY = 0;
 
 	// If the original position passed to this function has been taken - run the loop and find a new position - else add the node at the original position
-	if(originalPositionTaken == true) {
+	if (originalPositionTaken == true) {
 		while(originalPositionTaken == true) {
 			addNodeOffset = addNodeOffset + addNodeIncrement;
 			newX = nodeX + addNodeOffset;
@@ -795,12 +805,12 @@ function findNewNodePosition(nodeX, nodeY) {
 			var newPositionTaken = false;
 
 			data.nodes.filter(function(n) {
-				if((n.x == newX) && (n.y == newY)) {
+				if ((n.x == newX) && (n.y == newY)) {
 					newPositionTaken = true;
 				}
 			});
 
-			if(newPositionTaken == false) {
+			if (newPositionTaken == false) {
 				var newPos = {};
 				newPos.x = newX;
 				newPos.y = newY;
@@ -821,7 +831,7 @@ function addLink(idStart,idEnd) {
 	removeTextOverlay();
 
 	// If the parameter is null - set id1 to the selectedElement id
-	if(idStart == null) {
+	if (idStart == null) {
 		// The first id - the source of the link
 		var id1 = d3.select(selectedElement).node().attr("id");
 	} else {
@@ -836,7 +846,7 @@ function addLink(idStart,idEnd) {
 
 	// Loop through data.links and check for a link with the source of the current node - if one is found with type scheme - prevent the link being added
 	for(var i = 0; i < data.links.length; i++) {
-		if(data.links[i].source == id1 && id1Type == "scheme") {
+		if (data.links[i].source == id1 && id1Type == "scheme") {
 			showModal(2);
 			removeActive();
 			return;
@@ -862,7 +872,7 @@ function addLink(idStart,idEnd) {
 		
 		// Check for a link with the reverse source and target - if found prevent addition, remove dragline -show modal - return
 		for(var i = 0; i < data.links.length; i++) {
-			if(data.links[i].source == id2 && data.links[i].target == id1) {
+			if (data.links[i].source == id2 && data.links[i].target == id1) {
 				// Show modal 3
 				showModal(3);
 				removeDragLine();
@@ -871,7 +881,7 @@ function addLink(idStart,idEnd) {
 		}
 
 		// Check both nodes being linked and if they are both text they can not be linked
-		if(id1Type == "text" && id2Type == "text") {
+		if (id1Type == "text" && id2Type == "text") {
 			var position = {};
 			position.x1 = Number(id1Filter[0].x);
 			position.y1 = Number(id1Filter[0].y);
@@ -893,7 +903,7 @@ function addLink(idStart,idEnd) {
 			return;
 		}
 		// If the source of the link is different to the target
-		if(id1 != id2) {
+		if (id1 != id2) {
 			addLinkToData(id1,id2);
 		}
 	});
@@ -917,7 +927,7 @@ function dragLine(id) {
 	var line = d3.select(".svg-link-drag");
 
 	// Check the type of element the selected node
-	if(selectedElement.node() instanceof SVGCircleElement) {
+	if (selectedElement.node() instanceof SVGCircleElement) {
 		// The source X and Y attribute of the node - JQuery used here because D3.js doesnt like only numeric ids
 		var sourceX = $("#"+id).attr("cx");
 		var sourceY = $("#"+id).attr("cy");
@@ -998,33 +1008,33 @@ function moveElementsToFit() {
 	var height = $("#svg-vis").height();
 
 	$.each(data.nodes, function(index, value) {
-		if(value.type == "scheme") {
-			if(value.x >= (width - schemeContainOffset)) {
+		if (value.type == "scheme") {
+			if (value.x >= (width - schemeContainOffset)) {
 				data.nodes[index].x = (width - schemeContainOffset);
 			}
-			if(value.y >= (height - schemeContainOffset)) {
+			if (value.y >= (height - schemeContainOffset)) {
 				data.nodes[index].y = (height - schemeContainOffset);
 			}
-			if(value.x <= (0 + schemeContainOffset)) {
+			if (value.x <= (0 + schemeContainOffset)) {
 				data.nodes[index].x = schemeContainOffset;
 			}
-			if(value.y <= (0 + schemeContainOffset)) {
+			if (value.y <= (0 + schemeContainOffset)) {
 				data.nodes[index].y = schemeContainOffset;
 			}
 		}
 		// Increment the node radius by 1 to push entire node inside container
 		var nodeOffset = nodeRadius + 1
-		if(value.type == "text") {
-			if(value.x >= (width - nodeOffset)) {
+		if (value.type == "text") {
+			if (value.x >= (width - nodeOffset)) {
 				data.nodes[index].x = (width - nodeOffset);
 			}
-			if(value.y >= (height - nodeOffset)) {
+			if (value.y >= (height - nodeOffset)) {
 				data.nodes[index].y = (height - nodeOffset);
 			}
-			if(value.x <= (0 + nodeOffset)) {
+			if (value.x <= (0 + nodeOffset)) {
 				data.nodes[index].x = nodeOffset;
 			}
-			if(value.y <= (0 + nodeOffset)) {
+			if (value.y <= (0 + nodeOffset)) {
 				data.nodes[index].y = nodeOffset;
 			}
 		}

@@ -12,7 +12,7 @@ var findNodeQuandrantOffset = 20;
 var layout;
 /*
 $(window).bind("beforeunload",function() {
-	if( $("#txta-source-1").val() != "" || $("#txta-source-2").val() != "" || ($("#txta-source-3").val() != "" || $("#txta-source-4").val() != "" || ($("#txta-source-5").val() != "" ||
+	if ( $("#txta-source-1").val() != "" || $("#txta-source-2").val() != "" || ($("#txta-source-3").val() != "" || $("#txta-source-4").val() != "" || ($("#txta-source-5").val() != "" ||
 	$("#txta-source-6").val() != "" || $("#txta-source-7").val() != "" || $("#txta-source-8").val() != "" || $("#txta-source-9").val() != "" || $("#txta-source-10").val() != "") )) {
 		return confirm("Confirm refresh");
 	}
@@ -47,7 +47,7 @@ $(window).load(function() {
 
 function setDeveloperMode(type) {
 	// If the function parameter is 1 - set the developer-mode localStorage item to true - else set to false
-	if(type == 1) {
+	if (type == 1) {
 		localStorage.setItem("developer-mode","true");
 	} else {
 		localStorage.setItem("developer-mode","false");
@@ -63,11 +63,11 @@ function getSVGDimensions() {
 
 // Function creates the layout which allows resizing
 function setupLayout() {
-	if(layout != undefined) {
+	if (layout != undefined) {
 		layout.destroy();
 	}
 
-	if($("#txta-source-"+activeTab).data("hwt") != undefined) {
+	if ($("#txta-source-"+activeTab).data("hwt") != undefined) {
 		$("#txta-source-"+activeTab).data("hwt").destroy();
 	}
 
@@ -102,7 +102,7 @@ function setupLayout() {
 }
 
 function addHighlighting() {
-	if($("#txta-source-"+activeTab).data("hwt") != undefined) {
+	if ($("#txta-source-"+activeTab).data("hwt") != undefined) {
 		$("#txta-source-"+activeTab).data("hwt").destroy();
 	}
 	$("#txta-source-"+activeTab).highlightWithinTextarea(onInput);
@@ -111,14 +111,14 @@ function addHighlighting() {
 }
 
 function removeHighlighting() {
-	if($("#txta-source-"+activeTab).data("hwt") != undefined) {
+	if ($("#txta-source-"+activeTab).data("hwt") != undefined) {
 		$("#txta-source-"+activeTab).data("hwt").destroy();
 	}
 }
 
 function setupMarks() {
 	var current = highlight.ranges.filter(function(i) {
-		if(i.tab == activeTab) {
+		if (i.tab == activeTab) {
 			return i;
 		}
 	});
@@ -129,7 +129,8 @@ function setupMarks() {
 	});
 }
 
-function addNodeMark(id) {	
+function addNodeMark(id) {
+	console.log("id="+id);	
 	$("#mark-"+id).css("background","orange");
 }
 
@@ -144,7 +145,7 @@ function merge(ranges) {
 	ranges.sort(function(a,b){ return a[0] - b[0] });
 
     ranges.forEach(function(r) {
-        if(!result.length || r[0] > result[result.length-1][1]) {
+        if (!result.length || r[0] > result[result.length-1][1]) {
             result.push(r);
         } else {
             result[result.length-1][1] = r[1];
@@ -158,7 +159,7 @@ function onInput() {
 
 	// Create a new array with only the start and end of the range
 	$.each(highlight.ranges, function(index, value) {
-		if(value.tab == activeTab) {
+		if (value.tab == activeTab) {
 			var element = [];
 			element[0] = value.start;
 			element[1] = value.end;
@@ -188,31 +189,31 @@ function setupSchemes() {
 
 function elementSizeCheck() {
 	// LEFT PANEL
-	if($("#div-col-left-button-top").width() < 120) {
+	if ($("#div-col-left-button-top").width() < 120) {
 		$(".span-col-left-button-top").hide();
 	} else {
 		$(".span-col-left-button-top").show();
 	}
-	if($("#div-col-left-button-bottom").width() < 120) {
+	if ($("#div-col-left-button-bottom").width() < 120) {
 		$(".span-col-left-button-bottom").hide();
 	} else {
 		$(".span-col-left-button-bottom").show();
 	}
 	// RIGHT PANEL
 	// Not current used - col-md-1 button is only a chevron for source panel toggle
-	if($("#div-col-right-button.col-md-1").width() < 120) {
+	if ($("#div-col-right-button.col-md-1").width() < 120) {
 		$(".span-col-right-button-1").hide();
 	} else {
 		$(".span-col-right-button-1").show();
 	}
 	// Text, Scheme, Content, and Mouseover Overlay button
-	if($("#div-col-right-button.col-md-2").width() < 105) {
+	if ($("#div-col-right-button.col-md-2").width() < 105) {
 		$(".span-col-right-button-2").hide();
 	} else {
 		$(".span-col-right-button-2").show();
 	}
 	// Monkeypuzzle button - this hides MONKEYPUZZLE text and shows MP instead of only hiding the text
-	if($("#div-col-right-button.col-md-3").width() < 130) {
+	if ($("#div-col-right-button.col-md-3").width() < 130) {
 		$(".span-col-right-button-3").hide();
 		$(".span-col-right-button-3-small").show();
 	} else {
@@ -323,7 +324,7 @@ function saveTextAsFile(type) {
 		switch (Number(type)) {
 			case 1:
 				var textToWrite = $("#txta-source-"+activeTab).val();
-				if(textToWrite == "") {
+				if (textToWrite == "") {
 					break;
 				}
 				var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
@@ -368,7 +369,7 @@ function saveTextAsFile(type) {
 
 function addTab() {
 	// If the button does not have the disabled class
-	if(!$("#btn-add-tab").hasClass("disabled")) {
+	if (!$("#btn-add-tab").hasClass("disabled")) {
 		// If the current number of tabs is less than the maximum allowed
 		if (numberTabs < maxTabs) {
 			// Insert the new tab after the last tab
@@ -377,7 +378,7 @@ function addTab() {
 			numberTabs = $(".source-tab").length;
 			showTab(numberTabs);
 			// Disable the add tab button - prevents the modal being spammed
-			if(numberTabs == 10) {
+			if (numberTabs == 10) {
 				$("#btn-add-tab").addClass("disabled");
 			}
 		}
@@ -411,7 +412,7 @@ function removeTab() {
 		numberTabs = $(".source-tab").length;
 
 		// If the number of tabs is less than the maximum - remove the disabled class
-		if(numberTabs < maxTabs) {
+		if (numberTabs < maxTabs) {
 			$("#btn-add-tab").removeClass("disabled");
 		}
 		// When removing tabs - set the current tab view to the first
@@ -459,8 +460,8 @@ function showTab(num) {
 	$("#txta-tab-"+num).show();
 
 	// If the tab is locked when you show it - set the lock icon else set the unlock icon
-	//if($("#txta-tab-"+num).prop("readonly") && $("#txta-source-"+num).prop("readonly")) {
-	if($("#txta-source-"+num).prop("readonly")) {
+	//if ($("#txta-tab-"+num).prop("readonly") && $("#txta-source-"+num).prop("readonly")) {
+	if ($("#txta-source-"+num).prop("readonly")) {
 		$("#i-lock-tab").removeClass("fa-lock");
 		$("#i-lock-tab").addClass("fa-unlock");
 		$("#span-lock").text(" Unlock Tab");
@@ -475,7 +476,7 @@ function showTab(num) {
 	$("#div-source-tab-"+num).children().addClass("active-tab");
 
 	// Remove highlighting when switching tabs - if is used to check if the highlighting has been initialised
-	if($(".hwt-container").length) {
+	if ($(".hwt-container").length) {
 		removeHighlighting();
 	}
 	activeTab = num;
@@ -684,7 +685,7 @@ function uploadJSON() {
 			// Check the uploaded JSON against the JSON Schema
 			var valid = tv4.validate(JSONData, schema);
 
-			if(tv4.error == null) {
+			if (tv4.error == null) {
 				// Pass the parsed data to the checkJSONInput function to validate the data
 				JSONDataProcessed = checkJSONInput(JSONData);
 				data = JSONDataProcessed;
@@ -738,7 +739,7 @@ function checkNodePositions(json) {
 	var r = [];
 	o: for(var i = 0; i < json.nodes.length; i++) {
 		for(var j = 0; j < r.length; j++) {
-			if(((Number(r[j].x) == Number(json.nodes[i].x)) && (Number(r[j].y) == Number(json.nodes[i].y)))) {
+			if (((Number(r[j].x) == Number(json.nodes[i].x)) && (Number(r[j].y) == Number(json.nodes[i].y)))) {
 				// Update the node position since it is equal to a previous node
 				json.nodes[i] = updateNodePosition(json.nodes[i]);
 				r.push(json.nodes[i]);
@@ -752,12 +753,12 @@ function checkNodePositions(json) {
 
 function updateNodePosition(node) {
 	// Offset the node based on which quadrant of the screen it is located in
-	if(node.x < ($("#svg-vis").width() / 2)) {
+	if (node.x < ($("#svg-vis").width() / 2)) {
 		node.x = (node.x - findNodeQuandrantOffset);
 	} else {
 		node.x = (node.x + findNodeQuandrantOffset);
 	}
-	if(node.y < ($("#svg-vis").height() / 2)) {
+	if (node.y < ($("#svg-vis").height() / 2)) {
 		node.y = (node.y - findNodeQuandrantOffset);
 	} else {
 		node.y = (node.y + findNodeQuandrantOffset);
@@ -768,7 +769,7 @@ function updateNodePosition(node) {
 function removeInvalidLinks(json) {
 	var removal = json.links.filter(function(l) {
 		// If a link has an id which is higher than the number of nodes return it - If a link has the same source and target return it
-		if((l.source > (json.nodes.length - 1) || l.target > (json.nodes.length - 1)) || (l.source == l.target)) {
+		if ((l.source > (json.nodes.length - 1) || l.target > (json.nodes.length - 1)) || (l.source == l.target)) {
 			return l;
 		};
 	});
@@ -784,7 +785,7 @@ function removeDuplicateLinks(json) {
 	var r = [];
 	o: for(var i = 0; i < json.links.length; i++) {
 		for(var j = 0; j < r.length; j++) {
-			if(r[j].source == json.links[i].source && r[j].target == json.links[i].target) {
+			if (r[j].source == json.links[i].source && r[j].target == json.links[i].target) {
 				continue o;
 			}
 		}
@@ -798,7 +799,7 @@ function removeOppositeLinks(json) {
 	var r = [];
 	o: for(var i = 0; i < json.links.length; i++) {
 		for(var j = 0; j < r.length; j++) {
-			if(r[j].source == json.links[i].target && r[j].target == json.links[i].source) {
+			if (r[j].source == json.links[i].target && r[j].target == json.links[i].source) {
 				continue o;
 			}
 		}
