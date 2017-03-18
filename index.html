@@ -9,13 +9,14 @@
 		<script src="js/jquery-ui.min.js"></script>
 		<!--<script src="https://d3js.org/d3.v4.js"></script>-->
 		<script src="js/d3.min.js"></script>
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>		
 		<script src="js/tv4.js"></script>
 		<script src="js/index.js"></script>
 		<script src="js/modelling.js"></script>
 		<script src="js/modal.js"></script>
 		<script src="js/saveSvgAsPng.js"></script>
 		<script type="text/javascript" src="js/jquery.layout-latest.js"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
 		<link rel="stylesheet" href="css/layout-default-latest.css">
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -359,7 +360,7 @@
 							<p class="modal-text p-settings">Controls</p>
 							<button class="btn btn-settings btn-block modal-margin-bottom" data-dismiss="modal" onclick="showModal(4)"><i class="fa fa-keyboard-o"></i> Controls</button>
 							<p class="modal-text p-settings">Save Visualisation As</p>
-							<input id="input-SVG-file-name" type="text" class="form-control input-settings" placeholder="model">
+							<input id="input-SVG-file-name" type="text" class="form-control modal-margin-bottom" placeholder="model">
 							<div class="col-md-6 col-lg-6 no-padding-l">
 								<button class="btn btn-settings btn-block modal-margin-bottom" onclick="saveSVGAsPNG()"><i class="fa fa-save"></i> Visualisation (.PNG)</button>
 							</div>
@@ -371,7 +372,7 @@
 								<span class="btn btn-settings btn-file btn-block modal-margin-bottom"><i class="fa fa-upload"></i> Upload JSON<input id="fileJSONInput" class="fileJSONInput" type="file" accept=".json"></span>
 							</form>
 							<p class="modal-text p-settings">Download JSON</p>
-							<input id="input-download-JSON" type="text" class="form-control input-settings" placeholder="data">
+							<input id="input-download-JSON" type="text" class="form-control modal-margin-bottom" placeholder="data">
 							<button id="btn-download-JSON" class="btn btn-settings btn-block" onclick="saveDataAsJSON()"><i class="fa fa-download"></i> Download JSON</button>
 						</div>
 						<div class="modal-footer">

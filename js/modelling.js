@@ -662,7 +662,6 @@ function changeMouseOverNodeStatus() {
 
 function mouseOverNode(d) {
 	if (nodeMouseOverEnabled == true) {
-		console.log("activeTextOverlay="+activeTextOverlay);
 		showNodeTextOverlay(d.id, false);
 		return;
 	}

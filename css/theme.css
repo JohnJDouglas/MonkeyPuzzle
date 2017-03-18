@@ -1,5 +1,8 @@
 body {
   background: var(--background-color);
+  font-family: "Open Sans" !important;
+	font-style: normal !important; 
+  font-variant: normal !important; 
 }
 p {
 	font-size: 18px !important;
@@ -17,14 +20,6 @@ p {
 }
 .btn-default:focus {
   background: var(--source-color);
-}
-.btn-primary {
-  border-color: var(--primary-color);
-  background: var(--primary-color);
-}
-.btn-primary:focus {
-  border-color: var(--primary-color);
-  background: var(--primary-color);
 }
 .color-warning {
   background: var(--warning-color) !important;

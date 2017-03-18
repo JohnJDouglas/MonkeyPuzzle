@@ -130,7 +130,6 @@ function setupMarks() {
 }
 
 function addNodeMark(id) {
-	console.log("id="+id);
 	$("#mark-"+id).addClass("active");
 }
 

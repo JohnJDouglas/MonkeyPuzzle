@@ -56,12 +56,3 @@
 	fill: #000;
 	stroke-width: 0.1;
 }
-.svg-scheme-text {
-	fill: #000;
-	font-weight: bold;
-}
-.svg-rect-example {
-	stroke: blue;
-	stroke-width: 2;
-	fill: lightblue;
-}
