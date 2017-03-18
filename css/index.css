@@ -112,6 +112,9 @@ html,body {
 	padding-left: 0px;
 	padding-right: 0px;
 }
+.hwt-content mark.active {
+	background: var(--active-color);
+}
 .txta-source {
 	width: 100%;
 	height: 100%;

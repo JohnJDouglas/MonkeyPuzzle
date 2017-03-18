@@ -313,11 +313,6 @@ function doubleClick(d) {
 function dragStart() {
 	// Set dragging to true - done (in drag start) to prevent nodes from being dragged from underneath the addLink element rendered on-top
 	dragging = true;
-	// Remove an open text overlay
-	removeTextOverlay();
-	// Add this element as the selected one
-	removeActive();
-	addActive(this);
 }
 
 function dragNode(d) {
@@ -454,7 +449,10 @@ function keyDown() {
 			// If the selected element is not null and is not being dragged
 			if (selectedElement != null && dragging == false) {
 				if (selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
-					showNodeTextOverlay(selectedElement.attr("id"), false);
+					// Prevent the overlay being spammed when the control key repeats by checking for an open overlay
+					if (activeTextOverlay == false) {
+						showNodeTextOverlay(selectedElement.attr("id"), false);
+					}
 				}
 			}
 			break;
@@ -524,6 +522,20 @@ function removeLinksFromNode() {
 	update();
 }
 
+function showAllTextOverlay() {
+	if (allActiveTextOverlay == false) {
+		$.each(data.nodes, function(index, value) {
+			var id = data.nodes[index].id;
+
+			activeTextOverlay = false;
+
+			showNodeTextOverlay(id, true);
+		});
+		allActiveTextOverlay = true;
+	}
+	selectedElement = null;
+}
+
 function showNodeTextOverlay(id, showAll) {
 	var svg = d3.select("svg");
 	// Number of characters per line
@@ -540,6 +552,7 @@ function showNodeTextOverlay(id, showAll) {
 			var re = new RegExp('.{1,' + overlayLengthPerLine + '}', 'g');
 			var array = node[0].displayText.match(re);
 
+			
 			// Trim leading whitespace from array
 			$.each(array, function(index, value) {
 				if (array[index].charAt(0) == " ") {
@@ -608,7 +621,7 @@ function showNodeTextOverlay(id, showAll) {
 
 	} else if (showAll == false) {
 		// If the function call does not request all text overlays to be shown - remove text overlay
-		removeTextOverlay();
+		//removeTextOverlay();
 	}
 }
 
@@ -621,13 +634,16 @@ function removeTextOverlay() {
 
 function moveToNodeSourceTab(id) {
 	var tab = highlight.ranges.filter(function(r) {
-		if(r.id == id) {
+		if (r.id == id) {
 			return r;
 		}
 	});
-	// Show the tab which the text was sourced from and set the mark
-	showTab(tab[0].tab);
-	addNodeMark(tab[0].id);
+	// If the tab the node was added from is different to the current (active) tab - show the tab which the text was sourced from and set the mark
+	if (tab[0].tab != activeTab) {
+		console.log("different tab!");
+		showTab(tab[0].tab);
+		addNodeMark(tab[0].id);
+	}	
 }
 
 function changeMouseOverNodeStatus() {
@@ -653,21 +669,10 @@ function mouseOverNode(d) {
 }
 
 function mouseOutNode(d) {
-	removeTextOverlay();
-}
-
-function showAllTextOverlay() {
+	// If all the text overlays are shown - dont remove since this feature may be used to see all nodes
 	if (allActiveTextOverlay == false) {
-		$.each(data.nodes, function(index, value) {
-			var id = data.nodes[index].id;
-
-			activeTextOverlay = false;
-
-			showNodeTextOverlay(id, true);
-		});
-		allActiveTextOverlay = true;
+		removeTextOverlay();
 	}
-	selectedElement = null;
 }
 
 function addNode(type,schemeName,nodePosition) {
@@ -855,10 +860,6 @@ function addLink(idStart,idEnd) {
 
 	// Function which displays the drag line
 	dragLine(id1);
-
-	// Disable the mouseover shortcut to show text overlays
-	//nodeMouseOverEnabled = true;
-	//mouseOverTextOverlay();
 
 	node.on("mouseup", function(d) {
 		// The second id - the target of the link

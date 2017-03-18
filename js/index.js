@@ -130,12 +130,12 @@ function setupMarks() {
 }
 
 function addNodeMark(id) {
-	console.log("id="+id);	
-	$("#mark-"+id).css("background","orange");
+	console.log("id="+id);
+	$("#mark-"+id).addClass("active");
 }
 
 function removeNodeMark() {
-	$(".mark-highlight").css("background","#FFFF00");
+	$(".mark-highlight").removeClass("active");
 }
 
 function merge(ranges) {
