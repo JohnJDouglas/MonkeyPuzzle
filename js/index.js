@@ -30,7 +30,6 @@ $(window).load(function() {
 	textareaRemoveActive();
 	elementSizeCheck();
 	moveElementsToFit();
-	//mouseOverTextOverlay();
 	// DEVELOPER ONLY
 	setDeveloperMode(1);
 
@@ -42,6 +41,8 @@ $(window).load(function() {
 	$(".txta-source").on("keyup onpaste oncut", function () {
 		data.tabs[(activeTab-1)].text = this.value;
 	});
+
+	console.log("Loading finished!");
 });
 
 function setDeveloperMode(type) {
@@ -255,20 +256,20 @@ function textareaRemoveActive() {
 
 function lockTab() {
 	// If the current tab (source and title) is readonly (locked) unlock it - else lock it
-	if ($("#txta-tab-" + activeTab).prop("readonly") && $("#txta-source-" + activeTab).prop("readonly")) {
-		$("#txta-tab-" + activeTab).prop("readonly", false);
-		$("#txta-source-" + activeTab).prop("readonly", false);
+	if ($("#txta-tab-"+activeTab).attr("readonly") && $("#txta-source-"+activeTab).attr("readonly")) {
+		$("#txta-tab-"+activeTab).attr("readonly", false);
+		$("#txta-source-"+activeTab).attr("readonly", false);
 
 		$("#i-lock-tab").removeClass("fa-unlock");
 		$("#i-lock-tab").addClass("fa-lock");
 		$("#span-lock").text(" Lock Tab");
 	} else {
-		$("#txta-tab-" + activeTab).prop("readonly", true);
-		$("#txta-source-" + activeTab).prop("readonly", true);
+		$("#txta-tab-"+activeTab).attr("readonly", true);
+		$("#txta-source-"+activeTab).attr("readonly", true);
 
 		// If the tab title is empty when they lock it - set the title to default (Tab X).
-		if (!$("#txta-tab-" + activeTab).val()) {
-			$("#txta-tab-" + activeTab).val("Tab " + activeTab);
+		if (!$("#txta-tab-"+activeTab).val()) {
+			$("#txta-tab-"+activeTab).val("Tab "+activeTab);
 		}
 
 		$("#i-lock-tab").removeClass("fa-lock");
@@ -279,9 +280,9 @@ function lockTab() {
 
 function clearSource() {
 	// Clear the textarea of the current tab source
-	$("#txta-source-" + activeTab).val("");
+	$("#txta-source-"+activeTab).val("");
 	// Clear the textarea of the current tab title
-	$("#txta-tab-" + activeTab).val("");
+	$("#txta-tab-"+activeTab).val("");
 }
 
 function uploadText() {

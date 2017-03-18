@@ -45,8 +45,6 @@ var data = {
 
 // The object holding highlighting state
 var highlight = {
-	//highlightRanges: [{"tab": 1, range: [[0,10,20],[1,24,35],[2,33,40],[3,12,19],[4,50,60]]}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
-	//ranges: [{"tab": 1, range: []}, {"tab": 2, range: []},{"tab": 3, range: []}, {"tab": 4, range: []}, {"tab": 5, range: []}, {"tab": 6, range: []}, {"tab": 7, range: []}, {"tab": 8, range: []}, {"tab": 9, range: []}, {"tab": 10, range: []}],
 	ranges: [],
 	highlightColor: "#FFFF00"
 };
@@ -637,6 +635,7 @@ function changeMouseOverNodeStatus() {
 
 function mouseOverNode(d) {
 	if(nodeMouseOverEnabled == true) {
+		console.log("activeTextOverlay="+activeTextOverlay);
 		showNodeTextOverlay(d.id, false);
 		return;
 	}
