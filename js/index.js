@@ -282,7 +282,7 @@ function clearSource() {
 	// Clear the textarea of the current tab source
 	$("#txta-source-"+activeTab).val("");
 	// Clear the textarea of the current tab title
-	$("#txta-tab-"+activeTab).val("");
+	$("#txta-tab-"+activeTab).val("Tab "+activeTab);
 }
 
 function uploadText() {
