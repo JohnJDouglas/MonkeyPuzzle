@@ -367,17 +367,17 @@ function saveTextAsFile(type) {
 }
 
 function addTab() {
-	// If the button does not have the disabled class
+	// If the button does not have the disabled class (Added when the number of tabs is at the maximum)
 	if (!$("#btn-add-tab").hasClass("disabled")) {
 		// If the current number of tabs is less than the maximum allowed
 		if (numberTabs < maxTabs) {
 			// Insert the new tab after the last tab
-			$(".source-tab:last").after("<div id='div-source-tab-" + (numberTabs + 1) + "' class='source-tab no-padding-lr col-md-1'><button class='btn btn-source btn-block btn-tab' onclick='showTab(" + (numberTabs + 1) + ")'></span>" + (numberTabs + 1) + "</button></div>");
+			$(".source-tab:last").after("<div id='div-source-tab-" + (numberTabs + 1) + "' class='source-tab no-padding-lr col-xs-1 col-md-1'><button class='btn btn-source btn-block btn-tab' onclick='showTab(" + (numberTabs + 1) + ")'></span>" + (numberTabs + 1) + "</button></div>");
 			// Set the number of tabs
 			numberTabs = $(".source-tab").length;
 			showTab(numberTabs);
 			// Disable the add tab button - prevents the modal being spammed
-			if (numberTabs == 10) {
+			if (numberTabs == maxTabs) {
 				$("#btn-add-tab").addClass("disabled");
 			}
 		}
@@ -393,11 +393,11 @@ function removeTab() {
 		showModal(8);
 	} else {
 		// Remove the tab header
-		$("#div-source-tab-" + activeTab).remove();
+		$("#div-source-tab-"+activeTab).remove();
 
 		// Loop through each source
 		$(".txta-source").each(function(index) {
-			if ((index + 1) <= numberTabs) {
+			if ((index+1) <= numberTabs) {
 				// If the source id is not the active tab - this is required because we don't want the title of current tab (it is being deleted!)
 				if ($(".txta-source").eq(index).attr("id") != ("txta-source-" + activeTab)) {
 					// Add the value in both the tab text and title to arrays
@@ -459,7 +459,6 @@ function showTab(num) {
 	$("#txta-tab-"+num).show();
 
 	// If the tab is locked when you show it - set the lock icon else set the unlock icon
-	//if ($("#txta-tab-"+num).prop("readonly") && $("#txta-source-"+num).prop("readonly")) {
 	if ($("#txta-source-"+num).prop("readonly")) {
 		$("#i-lock-tab").removeClass("fa-lock");
 		$("#i-lock-tab").addClass("fa-unlock");
@@ -651,12 +650,16 @@ function uploadJSON() {
 									"maximum": 10,
 									"exclusiveMaximum": false
 								},
+								"title": {
+									"type": "string",
+									"minLength": 0
+								},
 								"text": {
 									"type": "string",
 									"minLength": 0
 								}
 							},
-							"required": ["tab","text"],
+							"required": ["tab","title","text"],
 							"additionalProperties": false
 						}
 				},
@@ -716,6 +719,14 @@ function checkJSONInput(json) {
 	// Remove links which are the opposite of another link
 	json.links = removeOppositeLinks(json);
 
+	// Set all the text for each tab
+	json.tabs = setupTabs(json.tabs);
+
+	return json;
+}
+
+function setCurrentNodeID(json) {
+	json.currentNodeID = json.nodes.length;
 	return json;
 }
 
@@ -725,9 +736,9 @@ function resetIDs(json) {
 		json.nodes[index].id = index;
 	});
 
-	// Update the id of the tabs to start at zero and increment upwards
+	// Update the ids of the tabs to start at one and increment upwards
 	$.each(json.tabs, function(index, value) {
-		json.tabs[index].tab = index;
+		json.tabs[index].tab = (index+1);
 	});
 
 	return json;
@@ -807,7 +818,66 @@ function removeOppositeLinks(json) {
 	return r;
 }
 
-function setCurrentNodeID(json) {
-	json.currentNodeID = json.nodes.length;
+function setupTabs(json) {
+	var r = [];
+	
+	// Loop through each tab and if the text is not empty - add the text to the new array
+	$.each(json, function(index, value) {
+		if(value.text != "") {
+			var element = {};
+			element.text = value.text;
+			element.title = value.title;
+			r.push(element);
+		}
+	});
+	
+	// Clear the text of all tabs
+	$.each(json, function(index, value) {
+		json[index].text = "";
+		json[index].title = "Tab "+(index+1);
+	});
+	
+	// If the number of tabs is less than the length of the array - add tabs and set the text of those tabs - else remove tabs and set the values of those tabs
+	if(numberTabs < r.length) {
+		for(var i = numberTabs; i < r.length; i++) {
+			addTab();
+		}
+
+		$.each(json, function(index,value) {
+			if (index < r.length) {
+				value.text = r[index].text;
+				value.title = r[index].title;
+			} else {
+				value.text = "";
+				value.title = "Tab "+(index+1);
+			}
+		});
+
+		$.each(json, function(index,value) {
+			// If the index of the loop is less than the number of elements in the new array
+			if (index < r.length) {
+				$("#txta-source-"+(index+1)).val(r[index].text);
+				$("#txta-tab-"+(index+1)).val(r[index].title);
+			} else {
+				$("#txta-source-"+(index+1)).val("");
+				$("#txta-tab-"+(index+1)).val("Tab "+(index+1));
+			}
+		});
+		// Show tab one
+		showTab(1);
+	} else {
+		// Loop through all the tabs from the number which currently exist - until the number in the uploaded JSON
+		for(var j = numberTabs; j > r.length; j--) {
+			activeTab = j;
+			removeTab();
+		}
+		// For each tab - set the value of the textareas (tab/title) to the value of the array 
+		for(var k = 0; k < r.length; k++) {
+			$("#txta-source-"+(k+1)).val(r[k].text);
+			$("#txta-tab-"+(k+1)).val(r[k].title);
+		}
+		// Show tab one
+		showTab(1);
+	}
 	return json;
 }

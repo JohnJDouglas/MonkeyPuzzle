@@ -1,6 +1,6 @@
 {
 	"nodes":[{"id":0,"x":200,"y":450,"text":"lorem","displayText":"lorem","type":"text"},{"id":1,"x":400,"y":400,"text":"ipsum","displayText":"ipsum","type":"scheme"},{"id":2,"x":400,"y":400,"text":"ipsum","displayText":"ipsum","type":"scheme"}],
 	"links":[{"source":0,"target":1},{"source":1,"target":2},{"source":1,"target":2},{"source":1,"target":3},{"source":2,"target":2},{"source":2,"target":1}],
-	"tabs":[{"tab":1,"text":""},{"tab":2,"text":""},{"tab":3,"text":""},{"tab":4,"text":""},{"tab":5,"text":""},{"tab":6,"text":""},{"tab":7,"text":""},{"tab":8,"text":""},{"tab":9,"text":""},{"tab":10,"text":""}],
+	"tabs":[{"tab":1,"title":"Lid","text":"Lorem ipsum dolor."},{"tab":2,"title":"L","text":"Lorem"},{"tab":3,"title":"","text":""},{"tab":4,"title":"i","text":"ipsum"},{"tab":5,"title":"","text":""},{"tab":6,"title":"","text":""},{"tab":7,"title":"","text":""},{"tab":8,"title":"","text":""},{"tab":9,"title":"","text":""},{"tab":10,"title":"","text":""}],
 	"currentNodeID":0
 }
