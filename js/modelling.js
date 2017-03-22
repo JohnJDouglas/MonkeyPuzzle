@@ -319,8 +319,8 @@ function dragNode(d) {
 	var nodeId = svg.selectAll(".svg-text");
 	var links = svg.selectAll(".svg-link");
 
-	// If all the text overlays are currently open - close them when dragging begins
-	if (allActiveTextOverlay == true) {
+	// If any text overlays are currently open - close them when dragging begins
+	if (allActiveTextOverlay == true || activeTextOverlay == true) {
 		removeTextOverlay();
 	}
 
