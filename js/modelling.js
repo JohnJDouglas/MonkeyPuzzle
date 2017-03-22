@@ -455,7 +455,7 @@ function keyDown() {
 				if (selectedElement.node() instanceof SVGCircleElement || selectedElement.node() instanceof SVGRectElement) {
 					// Prevent the overlay being spammed when the control key repeats by checking for an open overlay
 					if (activeTextOverlay == false) {
-						showNodeTextOverlay(selectedElement.attr("id"), false);
+						showNodeTextOverlay(selectedElement.attr("id"));
 					}
 				}
 			}
@@ -533,14 +533,14 @@ function showAllTextOverlay() {
 
 			activeTextOverlay = false;
 
-			showNodeTextOverlay(id, true);
+			showNodeTextOverlay(id);
 		});
 		allActiveTextOverlay = true;
 	}
 	selectedElement = null;
 }
 
-function showNodeTextOverlay(id, showAll) {
+function showNodeTextOverlay(id) {
 	var svg = d3.select("svg");
 	// Number of characters per line
 	var overlayLengthPerLine = 40;
@@ -553,6 +553,7 @@ function showNodeTextOverlay(id, showAll) {
 
 	if (activeTextOverlay == false) {
 		if (node[0].displayText.length > overlayLengthPerLine) {
+			// Create an array of lines based on the value of the overlayLengthPerLine variable
 			var re = new RegExp('.{1,' + overlayLengthPerLine + '}', 'g');
 			var array = node[0].displayText.match(re);
 
@@ -662,7 +663,7 @@ function changeMouseOverNodeStatus() {
 function mouseOverNode(d) {
 	// If the option for having node text overlays open on node mouse is set to true
 	if (nodeMouseOverEnabled == true) {
-		showNodeTextOverlay(d.id, false);
+		showNodeTextOverlay(d.id);
 	}
 }
 
