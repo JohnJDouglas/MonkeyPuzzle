@@ -242,7 +242,6 @@ function click(d) {
 
 // When double clicking a node - show modal to edit text
 function doubleClick(d) {
-	console.log("doubleClick!");
 	d3.event.stopPropagation();
 
 	var id = selectedElement.attr("id");
@@ -623,15 +622,10 @@ function showNodeTextOverlay(id, showAll) {
 
 		// Variable holding open state of text box
 		activeTextOverlay = true;
-
-	} else if (showAll == false) {
-		// If the function call does not request all text overlays to be shown - remove text overlay
-		//removeTextOverlay();
 	}
 }
 
 function removeTextOverlay() {
-	console.log("removeTextOverlay!");
 	// Remove other text boxes and set active to false
 	d3.selectAll(".svg-text-overlay, .svg-overlay").remove();
 	activeTextOverlay = false;
@@ -646,7 +640,6 @@ function moveToNodeSourceTab(id) {
 	});
 	// If the tab the node was added from is different to the current (active) tab - show the tab which the text was sourced from and set the mark
 	if (tab[0].tab != activeTab) {
-		console.log("different tab!");
 		showTab(tab[0].tab);
 		addNodeMark(tab[0].id);
 	}
