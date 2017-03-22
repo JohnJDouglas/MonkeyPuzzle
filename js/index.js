@@ -54,6 +54,17 @@ function setDeveloperMode(type) {
 	}
 }
 
+function openWord(strFilePath) {
+		var yourSite = "http://www.yoursite.com";
+		openWordDocPath(yourSite + strFilePath);
+}
+function openWordDocPath(strLocation) {
+		var objWord;
+		objWord = new ActiveXObject("Word.Application");
+		objWord.Visible = true;
+		objWord.Documents.Open(strLocation);
+}
+
 function getSVGDimensions() {
 	var dim = {};
 	dim.w = $("#svg-vis").width();
@@ -820,7 +831,7 @@ function removeOppositeLinks(json) {
 
 function setupTabs(json) {
 	var r = [];
-	
+
 	// Loop through each tab and if the text is not empty - add the text to the new array
 	$.each(json, function(index, value) {
 		if(value.text != "") {
@@ -830,13 +841,13 @@ function setupTabs(json) {
 			r.push(element);
 		}
 	});
-	
+
 	// Clear the text of all tabs
 	$.each(json, function(index, value) {
 		json[index].text = "";
 		json[index].title = "Tab "+(index+1);
 	});
-	
+
 	// If the number of tabs is less than the length of the array - add tabs and set the text of those tabs - else remove tabs and set the values of those tabs
 	if(numberTabs < r.length) {
 		for(var i = numberTabs; i < r.length; i++) {
@@ -871,7 +882,7 @@ function setupTabs(json) {
 			activeTab = j;
 			removeTab();
 		}
-		// For each tab - set the value of the textareas (tab/title) to the value of the array 
+		// For each tab - set the value of the textareas (tab/title) to the value of the array
 		for(var k = 0; k < r.length; k++) {
 			$("#txta-source-"+(k+1)).val(r[k].text);
 			$("#txta-tab-"+(k+1)).val(r[k].title);

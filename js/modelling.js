@@ -236,13 +236,13 @@ function update() {
 
 function click(d) {
 	d3.event.stopPropagation();
-	removeTextOverlay();
 	removeActive();
 	addActive(this);
 }
 
 // When double clicking a node - show modal to edit text
 function doubleClick(d) {
+	console.log("doubleClick!");
 	d3.event.stopPropagation();
 
 	var id = selectedElement.attr("id");
@@ -319,6 +319,11 @@ function dragNode(d) {
 	var svg = d3.select("svg");
 	var nodeId = svg.selectAll(".svg-text");
 	var links = svg.selectAll(".svg-link");
+
+	// If all the text overlays are currently open - close them when dragging begins
+	if (allActiveTextOverlay == true) {
+		removeTextOverlay();
+	}
 
 	d.x = d3.event.x;
 	d.y = d3.event.y;
@@ -552,7 +557,7 @@ function showNodeTextOverlay(id, showAll) {
 			var re = new RegExp('.{1,' + overlayLengthPerLine + '}', 'g');
 			var array = node[0].displayText.match(re);
 
-			
+
 			// Trim leading whitespace from array
 			$.each(array, function(index, value) {
 				if (array[index].charAt(0) == " ") {
@@ -626,6 +631,7 @@ function showNodeTextOverlay(id, showAll) {
 }
 
 function removeTextOverlay() {
+	console.log("removeTextOverlay!");
 	// Remove other text boxes and set active to false
 	d3.selectAll(".svg-text-overlay, .svg-overlay").remove();
 	activeTextOverlay = false;
@@ -643,7 +649,7 @@ function moveToNodeSourceTab(id) {
 		console.log("different tab!");
 		showTab(tab[0].tab);
 		addNodeMark(tab[0].id);
-	}	
+	}
 }
 
 function changeMouseOverNodeStatus() {
@@ -661,15 +667,15 @@ function changeMouseOverNodeStatus() {
 }
 
 function mouseOverNode(d) {
+	// If the option for having node text overlays open on node mouse is set to true
 	if (nodeMouseOverEnabled == true) {
 		showNodeTextOverlay(d.id, false);
-		return;
 	}
 }
 
 function mouseOutNode(d) {
-	// If all the text overlays are shown - dont remove since this feature may be used to see all nodes
-	if (allActiveTextOverlay == false) {
+	// If all the text overlays are shown and the node mouseover option is on - remove since this is used to see all nodes
+	if (allActiveTextOverlay == false && nodeMouseOverEnabled == true) {
 		removeTextOverlay();
 	}
 }
@@ -863,13 +869,13 @@ function addLink(idStart,idEnd) {
 	node.on("mouseup", function(d) {
 		// The second id - the target of the link
 		var id2 = d3.select(this).attr("id");
-		
+
 		var id2Filter = data.nodes.filter(function(n) {
 			return (n.id == Number(id2));
 		});
 
 		id2Type = id2Filter[0].type;
-		
+
 		// Check for a link with the reverse source and target - if found prevent addition, remove dragline -show modal - return
 		for(var i = 0; i < data.links.length; i++) {
 			if (data.links[i].source == id2 && data.links[i].target == id1) {
@@ -964,7 +970,7 @@ function dragLine(id) {
 	}
 }
 
-function mousedown() {	
+function mousedown() {
 	var svg = d3.select("svg");
     var m = d3.mouse(this);
 
@@ -977,7 +983,7 @@ function mousedown() {
     svg.on("mousemove", mousemove);
 }
 
-function mousemove() {	
+function mousemove() {
 	var line = d3.select(".svg-link-drag");
     var m = d3.mouse(this);
 
