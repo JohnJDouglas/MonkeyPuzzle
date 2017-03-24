@@ -30,8 +30,6 @@ $(window).load(function() {
 	textareaRemoveActive();
 	elementSizeCheck();
 	moveElementsToFit();
-	// DEVELOPER ONLY
-	setDeveloperMode(1);
 
 	window.addEventListener("resize", function(){
 		elementSizeCheck();
@@ -44,26 +42,6 @@ $(window).load(function() {
 
 	console.log("Loading finished!");
 });
-
-function setDeveloperMode(type) {
-	// If the function parameter is 1 - set the developer-mode localStorage item to true - else set to false
-	if (type == 1) {
-		localStorage.setItem("developer-mode","true");
-	} else {
-		localStorage.setItem("developer-mode","false");
-	}
-}
-
-function openWord(strFilePath) {
-		var yourSite = "http://www.yoursite.com";
-		openWordDocPath(yourSite + strFilePath);
-}
-function openWordDocPath(strLocation) {
-		var objWord;
-		objWord = new ActiveXObject("Word.Application");
-		objWord.Visible = true;
-		objWord.Documents.Open(strLocation);
-}
 
 function getSVGDimensions() {
 	var dim = {};

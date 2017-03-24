@@ -1,0 +1,24 @@
+{
+	"nodes":[
+						{"id":0,"x":200,"y":450,"text":"lorem","displayText":"lorem","type":"text"},
+						{"id":1,"x":400,"y":400,"text":"Default","displayText":"Default","type":"scheme"},
+						{"id":2,"x":400,"y":400,"text":"Default","displayText":"Default","type":"scheme"}
+					],
+	"links":[
+						{"source":0,"target":1},
+						{"source":1,"target":2}
+					],
+	"tabs":[
+						{"tab":1,"title":"","text":""},
+						{"tab":2,"title":"Lorem","text":"Lorem ipsum dolor."},
+						{"tab":3,"title":"Ipsum","text":"Ipsum"},
+						{"tab":4,"title":"","text":""},
+						{"tab":5,"title":"Dolor","text":"Dolor"},
+						{"tab":6,"title":"","text":""},
+						{"tab":7,"title":"","text":""},
+						{"tab":8,"title":"","text":""},
+						{"tab":9,"title":"","text":""},
+						{"tab":10,"title":"","text":""}
+				],
+	"currentNodeID":0
+}

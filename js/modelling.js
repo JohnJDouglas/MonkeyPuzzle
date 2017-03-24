@@ -25,21 +25,10 @@ var addNodeIncrement = 20;
 // Node mouseover overlay status
 var nodeMouseOverEnabled = false;
 
-/*
-// The object holding the existing visualisation data
-var data = {
-	"nodes": [{"id": 0, "x": 200, "y": 400, "text": "lorem", "displayText": "lorem", "type":"text"},{"id": 1, "x": 400, "y": 400, "text": "ipsum", "displayText": "ipsum", "type":"scheme"},{"id": 2, "x": 400, "y": 200, "text": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "displayText": "dolor sit amet, consectetur adipiscing elit. Donec in sagittis magna. Quisque augue nisl, aliquet vel vehicula sit amet, lobortis at ex. Donec quis lacinia lorem. Pellentesque venenatis eget lacus ac sagittis.", "type":"text"},{"id": 3, "x": 600, "y": 400, "text": "sit", "displayText": "sit", "type":"scheme"},{"id": 4, "x": 400, "y": 600, "text": "amet", "displayText": "amet", "type":"text"}],
-	//"links": [{"source":2,"target":3},{"source":1,"target":2}],
-	"links": [{"source":2,"target":3}],
-	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
-	"currentNodeID": 0
-};
-*/
-
 var data = {
 	"nodes": [],
 	"links": [],
-	"tabs": [{"tab": 1, "text": ""}, {"tab": 2, "text": ""}, {"tab": 3, "text": ""}, {"tab": 4, "text": ""}, {"tab": 5, "text": ""}, {"tab": 6, "text": ""}, {"tab": 7, "text": ""}, {"tab": 8, "text": ""}, {"tab": 9, "text": ""}, {"tab": 10, "text": ""}],
+	"tabs": [{"tab": 1, "title": "Tab 1", "text": ""}, {"tab": 2, "title": "Tab 2", "text": ""}, {"tab": 3, "title": "Tab 3", "text": ""}, {"tab": 4, "title": "Tab 4", "text": ""}, {"tab": 5, "title": "Tab 5", "text": ""}, {"tab": 6, "title": "Tab 6", "text": ""}, {"tab": 7, "title": "Tab 7", "text": ""}, {"tab": 8, "title": "Tab 8", "text": ""}, {"tab": 9, "title": "Tab 9", "text": ""}, {"tab": 10, "title": "Tab 10", "text": ""}],
 	"currentNodeID": 0
 };
 
@@ -184,6 +173,7 @@ function update() {
 					.on("click", click)
 					.on("dblclick", doubleClick)
 					.call(d3.drag()
+						.on("start", dragStart)
 						.on("drag", dragNode)
 						.on("end", dragEnd));
 			} else {
@@ -309,7 +299,7 @@ function doubleClick(d) {
 	}
 }
 
-function dragStart() {
+function dragStart(d) {
 	// Set dragging to true - done (in drag start) to prevent nodes from being dragged from underneath the addLink element rendered on-top
 	dragging = true;
 }
@@ -553,10 +543,9 @@ function showNodeTextOverlay(id) {
 
 	if (activeTextOverlay == false) {
 		if (node[0].displayText.length > overlayLengthPerLine) {
+			console.log("TOO LONG!");
 			// Create an array of lines based on the value of the overlayLengthPerLine variable
-			var re = new RegExp('.{1,' + overlayLengthPerLine + '}', 'g');
-			var array = node[0].displayText.match(re);
-
+			var array = splitter(node[0].displayText, overlayLengthPerLine);
 
 			// Trim leading whitespace from array
 			$.each(array, function(index, value) {
@@ -624,6 +613,21 @@ function showNodeTextOverlay(id) {
 		// Variable holding open state of text box
 		activeTextOverlay = true;
 	}
+}
+
+function splitter(str, l){
+    var strs = [];
+    while(str.length > l){
+        var pos = str.substring(0, l).lastIndexOf(' ');
+        pos = pos <= 0 ? l : pos;
+        strs.push(str.substring(0, pos));
+        var i = str.indexOf(' ', pos)+1;
+        if(i < pos || i > pos+l)
+            i = pos;
+        str = str.substring(i);
+    }
+    strs.push(str);
+    return strs;
 }
 
 function removeTextOverlay() {
@@ -902,6 +906,7 @@ function addLink(idStart,idEnd) {
 			removeActive();
 			return;
 		}
+
 		// If the source of the link is different to the target
 		if (id1 != id2) {
 			addLinkToData(id1,id2);
