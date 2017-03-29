@@ -543,7 +543,6 @@ function showNodeTextOverlay(id) {
 
 	if (activeTextOverlay == false) {
 		if (node[0].displayText.length > overlayLengthPerLine) {
-			console.log("TOO LONG!");
 			// Create an array of lines based on the value of the overlayLengthPerLine variable
 			var array = splitter(node[0].displayText, overlayLengthPerLine);
 
