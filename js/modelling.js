@@ -149,8 +149,8 @@ function update() {
 		.style("stroke-width", 2)
 		.classed("hidden", true);
 
-	// Circles representing nodes
-	nodes = svg.selectAll("circle")
+	// Elements representing nodes
+	nodes = svg.selectAll("rect, circle")
 		.data(data.nodes)
 		.enter()
 		.each(function(d) {
@@ -170,7 +170,6 @@ function update() {
 					.attr("transform", function(d) { return "rotate(45 " + d.x + " " + d.y + ")"; })
 					.on("mouseover", mouseOverNode)
 					.on("mouseout", mouseOutNode)
-					.on("click", click)
 					.on("dblclick", doubleClick)
 					.call(d3.drag()
 						.on("start", dragStart)
@@ -190,7 +189,6 @@ function update() {
 					.attr("r", nodeRadius)
 					.on("mouseover", mouseOverNode)
 					.on("mouseout", mouseOutNode)
-					.on("click", click)
 					.on("dblclick", doubleClick)
 					.call(d3.drag()
 						.on("start", dragStart)
@@ -300,8 +298,10 @@ function doubleClick(d) {
 }
 
 function dragStart(d) {
-	// Set dragging to true - done (in drag start) to prevent nodes from being dragged from underneath the addLink element rendered on-top
+	// Set dragging to true - done (in drag start) to prevent nodes from being dragged from underneath the addLink dummy element rendered on-top
 	dragging = true;
+	removeActive();
+	addActive(this);
 }
 
 function dragNode(d) {
